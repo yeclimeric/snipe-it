@@ -43,7 +43,7 @@ class _5267_A extends _5267
             static::writeText(
                 $pdf, $record->get('title'),
                 $pa->x1, $pa->y1,
-                'freesans', '', self::TITLE_SIZE, 'L',
+                'stsongstdlight', '', self::TITLE_SIZE, 'L',
                 $pa->w, self::TITLE_SIZE, true, 0
             );
         }

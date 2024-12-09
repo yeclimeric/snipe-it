@@ -153,7 +153,7 @@ class DefaultLabel extends RectangleSheet
             static::writeText(
                 $pdf, $record->get('title'),
                 $textX1, 0,
-                'freesans', 'b', $this->textSize, 'L',
+                'stsongstdlight', 'b', $this->textSize, 'L',
                 $textW, $this->textSize,
                 true, 0
             );
@@ -170,7 +170,7 @@ class DefaultLabel extends RectangleSheet
                 static::writeText(
                     $pdf, (($field['label']) ? $field['label'].' ' : '') . $field['value'],
                     $textX1, $textY,
-                    'freesans', '', $this->textSize, 'L',
+                    'stsongstdlight', '', $this->textSize, 'L',
                     $textW, $this->textSize,
                     true, 0
                 );

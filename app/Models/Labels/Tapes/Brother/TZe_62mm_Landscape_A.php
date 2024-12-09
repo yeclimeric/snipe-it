@@ -79,7 +79,7 @@ class TZe_62mm_Landscape_A extends TZe_62mm_Landscape
             static::writeText(
                 $pdf, $record->get('title'),
                 $currentX, $currentY,
-                'freesans', '', self::TITLE_SIZE, 'L',
+                'stsongstdlight', '', self::TITLE_SIZE, 'L',
                 $pa->w - $currentX, self::TITLE_SIZE, true, 0
             );
             $currentY += self::TITLE_SIZE + self::TITLE_MARGIN;
@@ -89,7 +89,7 @@ class TZe_62mm_Landscape_A extends TZe_62mm_Landscape
             static::writeText(
                 $pdf, $field['label'],
                 $currentX, $currentY,
-                'freesans', '', self::LABEL_SIZE, 'L',
+                'stsongstdlight', '', self::LABEL_SIZE, 'L',
                 $pa->w - $currentX, self::LABEL_SIZE, true, 0, 0
             );
             $currentY += self::LABEL_SIZE + self::LABEL_MARGIN;

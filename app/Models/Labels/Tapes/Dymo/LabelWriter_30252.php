@@ -56,7 +56,7 @@ class LabelWriter_30252 extends LabelWriter
             static::writeText(
                 $pdf, $record->get('title'),
                 $currentX, $currentY,
-                'freesans', '', self::TITLE_SIZE, 'L',
+                'stsongstdlight', '', self::TITLE_SIZE, 'L',
                 $usableWidth, self::TITLE_SIZE, true, 0
             );
             $currentY += self::TITLE_SIZE + self::TITLE_MARGIN;
@@ -66,7 +66,7 @@ class LabelWriter_30252 extends LabelWriter
             static::writeText(
                 $pdf, $field['label'],
                 $currentX, $currentY,
-                'freesans', '', self::LABEL_SIZE, 'L',
+                'stsongstdlight', '', self::LABEL_SIZE, 'L',
                 $usableWidth, self::LABEL_SIZE, true, 0, 0
             );
             $currentY += self::LABEL_SIZE + self::LABEL_MARGIN;

@@ -65,7 +65,7 @@ class L7162_B extends L7162
             static::writeText(
                 $pdf, $record->get('title'),
                 $currentX, $currentY,
-                'freesans', '', self::TITLE_SIZE, 'L',
+                'stsongstdlight', '', self::TITLE_SIZE, 'L',
                 $usableWidth, self::TITLE_SIZE, true, 0
             );
             $currentY += self::TITLE_SIZE + self::TITLE_MARGIN;
@@ -75,7 +75,7 @@ class L7162_B extends L7162
             static::writeText(
                 $pdf, $field['label'],
                 $currentX, $currentY,
-                'freesans', '', self::LABEL_SIZE, 'L',
+                'stsongstdlight', '', self::LABEL_SIZE, 'L',
                 $usableWidth, self::LABEL_SIZE, true, 0
             );
             $currentY += self::LABEL_SIZE + self::LABEL_MARGIN;
