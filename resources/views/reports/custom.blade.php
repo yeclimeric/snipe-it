@@ -565,6 +565,18 @@
 
               </div>
 
+              <!-- Last Audit/Update window -->
+              <div class="form-group last_updated-range{{ ($errors->has('last_updated_start') || $errors->has('last_updated_end')) ? ' has-error' : '' }}">
+                  <label for="last_updated_start" class="col-md-3 control-label">Last Updated Before</label>
+                            <div class="dropdown col-md-7">
+                                    <a class="dropdown-item" href="#">30</a>
+                                    <a class="dropdown-item" href="#">60</a>
+                                    <a class="dropdown-item" href="#">90</a>
+                            </div>
+
+
+              </div>
+
             <div class="col-md-9 col-md-offset-3">
             <label class="form-control">
                 <input type="checkbox" name="exclude_archived" value="1" @checked($template->checkmarkValue('exclude_archived', '0')) />
