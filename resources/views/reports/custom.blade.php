@@ -565,16 +565,18 @@
 
               </div>
 
-              <!-- Last Audit/Update window -->
-              <div class="form-group last_updated-range{{ ($errors->has('last_updated_start') || $errors->has('last_updated_end')) ? ' has-error' : '' }}">
-                  <label for="last_updated_start" class="col-md-3 control-label">Last Updated Before</label>
-                            <div class="dropdown col-md-7">
-                                    <a class="dropdown-item" href="#">30</a>
-                                    <a class="dropdown-item" href="#">60</a>
-                                    <a class="dropdown-item" href="#">90</a>
+              <!-- Last Updated before -->
+              <div class="form-group">
+                  <label for="last_updated_before" class="col-md-3 control-label">{{ trans('general.updated_before' ) }}</label>
+                            <div class="input-group col-md-3">
+{{--                                <input class="form-control" type="text" name="last_updated_before" value="{{ $template->textValue('last_updated_before'), old('last_updated_before') }}" aria-label="last_updated_before">--}}
+
+                                                                <select>
+                                    <option value="#">30 {{ trans('general.days_ago' ) }}</option>
+                                    <option value="#">60 {{ trans('general.days_ago' ) }}</option>
+                                    <option value="#">90 {{ trans('general.days_ago' ) }}</option>
+                                </select>
                             </div>
-
-
               </div>
 
             <div class="col-md-9 col-md-offset-3">
