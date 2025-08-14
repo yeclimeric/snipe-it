@@ -740,9 +740,16 @@ class ReportsController extends Controller
                 $assets->whereBetween('assets.updated_at', [$request->input('last_updated_start'), $request->input('last_updated_end')]);
             }
 
+            if(($request->filled('last_updated_before'))){
+                $lastupdatedwindow = Carbon::parse(today()->subDays($request->input('last_updated_before')));
+                $assets->whereBetween('assets.updated_at', [(date( "Y-m-d", 1990-01-01)), $lastupdatedwindow]);
+                dd($lastupdatedwindow);
+            }
+
             if ($request->filled('exclude_archived')) {
                 $assets->notArchived();
             }
+
             if ($request->input('deleted_assets') == 'include_deleted') {
                 $assets->withTrashed();
             }
