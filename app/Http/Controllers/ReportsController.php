@@ -742,8 +742,7 @@ class ReportsController extends Controller
 
             if(($request->filled('last_updated_before'))){
                 $lastupdatedwindow = Carbon::parse(today()->subDays($request->input('last_updated_before')));
-                $assets->whereBetween('assets.updated_at', [(date( "Y-m-d", 1990-01-01)), $lastupdatedwindow]);
-                dd($lastupdatedwindow);
+                $assets->whereBetween('assets.updated_at', [(date( "Y-m-d", 1900-01-01)), $lastupdatedwindow]);
             }
 
             if ($request->filled('exclude_archived')) {
