@@ -568,13 +568,17 @@
               <!-- Last Updated before -->
               <div class="form-group">
                   <label for="last_updated_before" class="col-md-3 control-label">{{ trans('general.updated_before') }}</label>
-                            <div class="input-group col-md-3">
-                                <select class="form-control" type="number" name="last_updated_before" aria-label="last_updated_before">
-                                    <option value="30" @selected(old('last_updated_before', $template->selectValue('last_updated_before')) == '30')>30 {{ trans('general.days_ago' ) }}</option>
-                                    <option value="60" @selected(old('last_updated_before', $template->selectValue('last_updated_before')) == '60')>60 {{ trans('general.days_ago' ) }}</option>
-                                    <option value="90" @selected(old('last_updated_before', $template->selectValue('last_updated_before')) == '90')>90 {{ trans('general.days_ago' ) }}</option>
-                                </select>
-                            </div>
+                        <div class="input-group col-md-2">
+                             <input class="form-control input-group" type="number" min="0" name="last_updated_before" value="{{ $template->textValue('last_updated_before', old('last_updated_before')) }}" aria-label="last_updated_before">
+                            {{ trans('general.days_ago') }}
+                        </div>
+
+                  @if ($errors->has('last_updated_before'))
+                      <div class="col-md-9 col-lg-offset-3">
+                          {!! $errors->first('last_updated_before', '<span class="alert-msg" aria-hidden="true"><i class="fas fa-times" aria-hidden="true"></i> :message</span>') !!}
+                      </div>
+                  @endif
+
               </div>
 
             <div class="col-md-9 col-md-offset-3">
