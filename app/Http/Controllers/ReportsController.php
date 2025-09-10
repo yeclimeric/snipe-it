@@ -29,6 +29,7 @@ use League\Csv\EscapeFormula;
 use App\Http\Requests\CustomAssetReportRequest;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\RedirectResponse;
+use function Livewire\before;
 
 /**
  * This controller handles all actions related to Reports for
@@ -742,7 +743,8 @@ class ReportsController extends Controller
 
             if(($request->filled('last_updated_before'))){
                 $last_updated_window = Carbon::parse(today()->subDays($request->input('last_updated_before')));
-                $assets->whereBetween('assets.updated_at', [(date( "Y-m-d", 1900-01-01)), $last_updated_window]);
+                $assets->whereNotBetween('assets.updated_at', [$last_updated_window,today()])
+                ->get($assets,before());
             }
 
             if ($request->filled('exclude_archived')) {
