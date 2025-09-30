@@ -562,7 +562,6 @@
                           {!! $errors->first('last_updated_end', '<span class="alert-msg" aria-hidden="true"><i class="fas fa-times" aria-hidden="true"></i> :message</span>') !!}
                       </div>
                   @endif
-
               </div>
 
               <!-- Last Updated before -->
@@ -578,7 +577,6 @@
                           {!! $errors->first('last_updated_before', '<span class="alert-msg" aria-hidden="true"><i class="fas fa-times" aria-hidden="true"></i> :message</span>') !!}
                       </div>
                   @endif
-
               </div>
 
             <div class="col-md-9 col-md-offset-3">
