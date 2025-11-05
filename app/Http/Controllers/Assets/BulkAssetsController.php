@@ -409,7 +409,6 @@ class BulkAssetsController extends Controller
                     $unassigned = $asset->assigned_to == '';
                     $deployable = $updated_status->deployable == '1' && $asset->assetstatus?->deployable == '1';
                     $pending =  $updated_status->pending === 1;
-
                     if ($unassigned || $deployable || $pending) {
                         $this->update_array['status_id'] = $updated_status->id;
                     }
