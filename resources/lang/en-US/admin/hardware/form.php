@@ -57,7 +57,7 @@ return [
     'asset_location_update_default' => 'Update only default location',
     'asset_location_update_actual' => 'Update only actual location',
     'asset_not_deployable' => 'That asset status is not deployable. This asset cannot be checked out.',
-    'asset_not_deployable_checkin' => '{1} That asset status is not deployable. Using this status label will check in the asset.|[2,*] That asset status in not deployable. Using this status label will check in all checked out assets.',
+    'asset_not_deployable_checkin' => '{1} That asset status is not deployable. Using this status label will check in the asset.|[2,*] That asset status in not deployable. Using this status label will result in no change.',
     'asset_deployable' => 'This asset can be checked out.',
     'processing_spinner' => 'Processing... (This might take a bit of time on large files)',
     'processing' => 'Processing... ',
