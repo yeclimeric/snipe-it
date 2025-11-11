@@ -306,7 +306,7 @@
                     if (data == true) {
                         $("#selected_status_status").removeClass('text-danger');
                         $("#selected_status_status").addClass('text-success');
-                        $("#selected_status_status").html('<x-icon type="checkmark" /> {{ trans('admin/hardware/form.asset_deployable')}}');
+                        $("#selected_status_status").html('<x-icon type="checkmark" /> {{ trans_choice('admin/hardware/form.asset_deployable', 2)}}');
 
 
                     } else {
