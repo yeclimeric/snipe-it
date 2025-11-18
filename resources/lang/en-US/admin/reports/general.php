@@ -20,4 +20,5 @@ return [
     'select_a_template' => 'Select a Template',
     'template_name' => 'Template Name',
     'update_template' => 'Update Template',
+    'share_template' => 'Share Template',
 ];
