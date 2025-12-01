@@ -684,6 +684,8 @@
             <div class="row">
                 <div class="col-md-12">
                 @if (request()->routeIs('report-templates.show'))
+                            <span class="text-center">{!!  ($template->share_report_template=='1' ? '<i class="fa fa-check text-success"></i>'." ".(trans('admin/reports/general.template_shared')) : '<i class="fa fa-times text-danger"></i>'." ".(trans('admin/reports/general.template_not_shared')) )!!}</>
+
                         <a
                                 href="{{ route('report-templates.edit', $template) }}"
                                 class="btn btn-sm btn-warning btn-social btn-block"
@@ -711,8 +713,7 @@
                         </a>
                     </span>
 
-
-                @endif
+                    @endif
                 </div>
             </div>
         @endif
