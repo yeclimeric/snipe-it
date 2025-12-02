@@ -23,6 +23,7 @@ class ReportTemplate extends Model
         'created_by',
         'name',
         'options',
+        'share_report_template',
     ];
 
     protected $rules = [
