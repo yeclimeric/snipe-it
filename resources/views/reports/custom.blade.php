@@ -79,12 +79,15 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-7 col-md-offset-7">
-                        <label class="form-control">
-                            <input type="checkbox" name="shared_report_template" value="1" @checked($template->checkmarkValue('shared_report_template')) />
-                            {{ trans('admin/reports/general.share_template') }}
-                        </label>
-                    </div>
+
+                    @if($template->created_by == User::class('users.id'))
+                        <div class="col-md-7 col-md-offset-7">
+                            <label class="form-control">
+                                <input type="checkbox" name="shared_report_template" value="1" @checked($template->checkmarkValue('shared_report_template')) />
+                                {{ trans('admin/reports/general.share_template') }}
+                            </label>
+                        </div>
+                    @endif
                 @endif
 
         </div><!-- /.box-header -->
