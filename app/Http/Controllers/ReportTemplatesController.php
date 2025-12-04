@@ -64,7 +64,7 @@ class ReportTemplatesController extends Controller
             'options' => $request->except(['_token', 'name']),
         ]);
 
-        if($request->user->id == $request->created_by) {
+        if($reportTemplate->created_by == $request->user()->id) {
             $reportTemplate->update([
                 'share_report_template' => $request->share_report_template,
             ]);

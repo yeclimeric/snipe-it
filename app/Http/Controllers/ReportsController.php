@@ -652,6 +652,7 @@ class ReportsController extends Controller
 
             if($request->filled('share_report_template')) {
                 //to fill with logic for the report template and NOT the assets retrieved by the query
+                //do we scope here or??
             }
 
 
