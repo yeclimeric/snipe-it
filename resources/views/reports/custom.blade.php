@@ -80,7 +80,7 @@
                         </div>
                     </div>
 
-                    @if($template->created_by == User::class('users.id'))
+                    @if($template->created_by)
                         <div class="col-md-7 col-md-offset-7">
                             <label class="form-control">
                                 <input type="checkbox" name="shared_report_template" value="1" @checked($template->checkmarkValue('shared_report_template')) />

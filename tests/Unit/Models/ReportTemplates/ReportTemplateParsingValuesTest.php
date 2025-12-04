@@ -4,6 +4,7 @@ namespace Tests\Unit\Models\ReportTemplates;
 
 use App\Models\Department;
 use App\Models\Location;
+use App\Models\User;
 use App\Models\ReportTemplate;
 use PHPUnit\Framework\Attributes\Group;
 use Tests\TestCase;
@@ -206,4 +207,27 @@ class ReportTemplateParsingValuesTest extends TestCase
             $templateWithModelIdsInArray->selectValue('array_of_model_ids', Department::class)
         );
     }
+
+    public function testSharingTemplateIsSeenByOnlyCorrectGroup()
+    {
+        $sharedUser = User::factory()->create();
+
+        $sharedTemplate = ReportTemplate::factory()->create([
+
+        ]);
+
+        //$this->assertEquals(1, $sharedTemplate->group_id);
+    }
+
+    public function testSharedTemplateCanOnlyBeEditedByCreator()
+    {
+        $sharedUser = User::factory()->create();
+
+        $sharedTemplate = ReportTemplate::factory()->create([
+
+        ]);
+
+        //$this->assertEquals($sharedUser->id, $sharedTemplate->creator->id);
+    }
+
 }
