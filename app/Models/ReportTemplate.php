@@ -39,14 +39,16 @@ class ReportTemplate extends Model
 
     protected static function booted()
     {
-        // Scope to current user
-//        static::addGlobalScope(
-//            'current_user', function (Builder $builder) {
-//                if (auth()->check()) {
-//                    $builder->where('created_by', auth()->id());
-//                }
-//            }
-//        );
+        // Scope to current user or if template is shared
+        static::addGlobalScope(
+            'current_user', function (Builder $builder) {
+
+                if (auth()->check()) {
+                    $builder->where('created_by', auth()->id())
+                        ->orWhere('share_report_template', 1);
+                }
+            }
+        );
     }
 
     /**
