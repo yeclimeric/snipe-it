@@ -19,7 +19,7 @@ class ReportTemplatesController extends Controller
 
         $report = $request->user()->reportTemplates()->create([
             'name' => $validated['name'],
-            'options' => $request->except(['_token', 'name']),
+            'options' => $request->except(['_token', 'name','share_report_template']),
             'share_report_template' => $request->has('share_report_template'),
         ]);
 
@@ -61,12 +61,12 @@ class ReportTemplatesController extends Controller
 
         $reportTemplate->update([
             'name' => $validated['name'],
-            'options' => $request->except(['_token', 'name']),
+            'options' => $request->except(['_token', 'name','share_report_template']),
         ]);
 
         if($reportTemplate->created_by == $request->user()->id) {
             $reportTemplate->update([
-                'share_report_template' => $request->share_report_template,
+                'share_report_template' => $request->boolean('share_report_template'),
             ]);
         }
 
