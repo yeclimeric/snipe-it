@@ -80,6 +80,7 @@
                         </div>
                     </div>
 
+
                     @if($template->created_by == auth()->id())
                         <div class="col-md-7 col-md-offset-7">
                             <label class="form-control">
@@ -686,7 +687,13 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <span class="text-center">{!!  ($template->share_report_template=='1' ? '<i class="fa fa-check text-success"></i>'." ".(trans('admin/reports/general.template_shared')) : '<i class="fa fa-times text-danger"></i>'." ".(trans('admin/reports/general.template_not_shared')) )!!}</span>
+
+                    @if($template->created_by == auth()->id())
+                    <span class="text-center">{!!  ($template->share_report_template=='1' ? '<i class="fa fa-check text-success"></i>'." ".(trans('admin/reports/general.template_shared_with_others')) : '<i class="fa fa-times text-danger"></i>'." ".(trans('admin/reports/general.template_not_shared')) )!!}</span>
+                    @else
+                        <span class="text-center">{!!  ($template->share_report_template=='1' ? '<i class="fa fa-check text-success"></i>'." ".(trans('admin/reports/general.template_shared')) : '<i class="fa fa-times text-danger"></i>'." ".(trans('admin/reports/general.template_not_shared')) )!!}</span>
+                    @endif
+
                         @if($template->created_by == auth()->id())
                             @if (request()->routeIs('report-templates.show'))
                                 <a
