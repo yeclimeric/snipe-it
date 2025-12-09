@@ -701,7 +701,7 @@
                                     class="btn btn-sm btn-warning btn-social btn-block"
                                     data-tooltip="true"
                                     title="{{ trans('admin/reports/general.update_template') }}"
-                                    style="margin-bottom: 5px;"
+                                    style="margin-bottom: 5px; margin-top: 5px;"
                                 >
                                     <x-icon type="edit" />
                                     {{ trans('general.update') }}
