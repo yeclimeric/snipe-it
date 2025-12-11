@@ -688,38 +688,41 @@
             <div class="row">
                 <div class="col-md-12">
 
-                    @if($template->created_by == auth()->id())
-                    <span class="text-center">{!!  ($template->share_report_template=='1' ? '<i class="fa fa-check text-success"></i>'." ".(trans('admin/reports/general.template_shared_with_others')) : '<i class="fa fa-times text-danger"></i>'." ".(trans('admin/reports/general.template_not_shared')) )!!}</span>
-                    @else
-                        <span class="text-center">{!!  ($template->share_report_template=='1' ? '<i class="fa fa-check text-success"></i>'." ".(trans('admin/reports/general.template_shared')) : '<i class="fa fa-times text-danger"></i>'." ".(trans('admin/reports/general.template_not_shared')) )!!}</span>
-                    @endif
+                    <div style="margin-bottom: 5px;">
+                        @if($template->name)
+                            @if($template->created_by == auth()->id())
+                                <span class="text-center">{!!  ($template->share_report_template=='1' ? '<i class="fa fa-check text-success"></i>'." ".(trans('admin/reports/general.template_shared_with_others')) : '<i class="fa fa-times text-danger"></i>'." ".(trans('admin/reports/general.template_not_shared')) )!!}</span>
+                            @else
+                                <span class="text-center">{!!  ($template->share_report_template=='1' ? '<i class="fa fa-check text-success"></i>'." ".(trans('admin/reports/general.template_shared')) : '<i class="fa fa-times text-danger"></i>'." ".(trans('admin/reports/general.template_not_shared')) )!!}</span>
+                            @endif
+                        @endif
+                    </div>
 
-                        @if($template->created_by == auth()->id())
-                            @if (request()->routeIs('report-templates.show'))
-                                <a
-                                    href="{{ route('report-templates.edit', $template) }}"
-                                    class="btn btn-sm btn-warning btn-social btn-block"
-                                    data-tooltip="true"
-                                    title="{{ trans('admin/reports/general.update_template') }}"
-                                    style="margin-bottom: 5px; margin-top: 5px;"
-                                >
-                                    <x-icon type="edit" />
-                                    {{ trans('general.update') }}
-                                </a>
-                            <span data-tooltip="true" title="{{ trans('general.delete') }}">
-                                <a href="#"
-                                    class="btn btn-sm btn-danger btn-social btn-block delete-asset"
-                                    data-toggle="modal"
-                                    data-title="{{ trans('general.delete') }}"
-                                    data-content="{{ trans('general.delete_confirm', ['item' => $template->name]) }}"
-                                    data-target="#dataConfirmModal"
-                                    type="button"
-                                >
-                                    <x-icon type="delete" />
-                                    {{ trans('general.delete') }}
-                                </a>
-                            </span>
-                           @endif
+
+                        @if (request()->routeIs('report-templates.show'))
+                            <a
+                                href="{{ route('report-templates.edit', $template) }}"
+                                class="btn btn-sm btn-warning btn-social btn-block"
+                                data-tooltip="true"
+                                title="{{ trans('admin/reports/general.update_template') }}"
+                                style="margin-bottom: 5px;"
+                            >
+                                <x-icon type="edit" />
+                                {{ trans('general.update') }}
+                            </a>
+                        <span data-tooltip="true" title="{{ trans('general.delete') }}">
+                            <a href="#"
+                                class="btn btn-sm btn-danger btn-social btn-block delete-asset"
+                                data-toggle="modal"
+                                data-title="{{ trans('general.delete') }}"
+                                data-content="{{ trans('general.delete_confirm', ['item' => $template->name]) }}"
+                                data-target="#dataConfirmModal"
+                                type="button"
+                            >
+                                <x-icon type="delete" />
+                                {{ trans('general.delete') }}
+                            </a>
+                        </span>
                        @endif
                 </div>
             </div>
