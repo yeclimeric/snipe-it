@@ -699,6 +699,7 @@
                     </div>
 
 
+                    @if($template->created_by == auth()->id())
                         @if (request()->routeIs('report-templates.show'))
                             <a
                                 href="{{ route('report-templates.edit', $template) }}"
@@ -724,6 +725,7 @@
                             </a>
                         </span>
                        @endif
+                    @endif
                 </div>
             </div>
         @endif

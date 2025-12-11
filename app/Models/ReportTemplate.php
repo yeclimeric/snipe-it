@@ -30,6 +30,7 @@ class ReportTemplate extends Model
         'name' => [
             'required',
             'string',
+            'unique_undeleted:report_templates,name',
         ],
         'options' => [
             'required',
