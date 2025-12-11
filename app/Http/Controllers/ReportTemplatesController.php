@@ -56,19 +56,17 @@ class ReportTemplatesController extends Controller
     {
         $this->authorize('reports.view');
 
-        // Ignore "options" rules since data does not come in under that key...
-        $validated = $request->validate(Arr::except((new ReportTemplate)->getRules(), 'options'));
-
-        $reportTemplate->update([
-            'name' => $validated['name'],
+        $properties = [
+            'name' => $request->input('name'),
             'options' => $request->except(['_token', 'name','share_report_template']),
-        ]);
+            'share_report_template' => $reportTemplate->share_report_template,
+        ];
 
-        if($reportTemplate->created_by == $request->user()->id) {
-            $reportTemplate->update([
-                'share_report_template' => $request->boolean('share_report_template'),
-            ]);
+        if ($reportTemplate->created_by == $request->user()->id) {
+            $properties['share_report_template'] = $request->boolean('share_report_template');
         }
+
+        $reportTemplate->update($properties);
 
         session()->flash('success', trans('admin/reports/message.update.success'));
 
