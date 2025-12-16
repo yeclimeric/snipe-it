@@ -8,8 +8,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\Console\Helper\ProgressIndicator;
 
-ini_set('max_execution_time', env('IMPORT_TIME_LIMIT', 600)); //600 seconds = 10 minutes
-ini_set('memory_limit', env('IMPORT_MEMORY_LIMIT', '500M'));
 
 /**
  * Class ObjectImportCommand
@@ -52,14 +50,17 @@ class ObjectImportCommand extends Command
      */
     public function handle()
     {
+        ini_set('max_execution_time', env('IMPORT_TIME_LIMIT', 600)); //600 seconds = 10 minutes
+        ini_set('memory_limit', env('IMPORT_MEMORY_LIMIT', '500M'));
+
         $this->progressIndicator = new ProgressIndicator($this->output);
 
         $filename = $this->argument('filename');
-        $class = title_case($this->option('item-type'));
+        $class = ucfirst($this->option('item-type'));
         $classString = "App\\Importer\\{$class}Importer";
         $importer = new $classString($filename);
         $importer->setCallbacks([$this, 'log'], [$this, 'progress'], [$this, 'errorCallback'])
-                 ->setUserId($this->option('user_id'))
+                 ->setCreatedBy($this->option('user_id'))
                  ->setUpdating($this->option('update'))
                  ->setShouldNotify($this->option('send-welcome'))
                  ->setUsernameFormat($this->option('username_format'));

@@ -27,19 +27,22 @@
         {{ trans('admin/statuslabels/table.status_type') }}
     </label>
     <div class="col-md-7 required">
-        {{ Form::select('statuslabel_types', $statuslabel_types, $item->getStatuslabelType(), array('class'=>'select2', 'style'=>'width: 100%; min-width:400px', 'aria-label'=>'statuslabel_types')) }}
+        <x-input.select
+            name="statuslabel_types"
+            :options="$statuslabel_types"
+            :selected="$item->getStatuslabelType()"
+            style="width: 100%; min-width:400px"
+            aria-label="statuslabel_types"
+        />
         {!! $errors->first('statuslabel_types', '<span class="alert-msg" aria-hidden="true"><i class="fas fa-times" aria-hidden="true"></i> :message</span>') !!}
     </div>
 </div>
 
 <!-- Chart color -->
 <div class="form-group{{ $errors->has('color') ? ' has-error' : '' }}">
-    {{ Form::label('color', trans('admin/statuslabels/table.color'), ['class' => 'col-md-3 control-label']) }}
+    <label for="color" class="col-md-3 control-label">{{ trans('admin/statuslabels/table.color') }}</label>
     <div class="col-md-9">
-        <div class="input-group color">
-            {{ Form::text('color', old('color', $item->color), array('class' => 'form-control col-md-10', 'maxlength'=>'20')) }}
-            <div class="input-group-addon"><i></i></div>
-        </div><!-- /.input group -->
+        <x-input.colorpicker :item="$item" id="color" :value="old('color', ($item->color ?? '#f4f4f4'))" name="color" id="color" />
         {!! $errors->first('color', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
     </div>
 </div>
@@ -69,17 +72,3 @@
 
 @stop
 
-@section('moar_scripts')
-    <!-- bootstrap color picker -->
-    <script nonce="{{ csrf_token() }}">
-
-        $(function() {
-            $('.color').colorpicker({
-                color: `{{ old('color', $item->color) ?: '#AA3399' }}`,
-                format: 'hex'
-            });
-        });
-
-    </script>
-
-@stop

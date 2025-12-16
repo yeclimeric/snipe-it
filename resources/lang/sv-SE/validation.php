@@ -26,11 +26,12 @@ return [
     'before' => ':attribute-fältet måste vara ett datum före :date.',
     'before_or_equal' => ':attribute-fältet måste vara ett datum före eller samma som :date.',
     'between' => [
-        'array' => ':attribute-fältet måste ha mellan :min och :max artiklar.',
+        'array' => ':attribute-fältet måste ha mellan :min och :max objekt.',
         'file' => ':attribute-fältet måste vara mellan :min och :max kilobyte.',
         'numeric' => ':attribute-fältet måste vara mellan :min och :max.',
         'string' => ':attribute-fältet måste vara mellan :min och :max tecken.',
     ],
+    'valid_regex' => 'The regular expression is invalid.',
     'boolean' => 'Attributfältet måste vara sant eller felaktigt.',
     'can' => ':attribute-fältet innehåller ett otillåtet värde.',
     'confirmed' => ':attribute-fältets bekräftelse matchar inte.',
@@ -57,13 +58,13 @@ return [
     'file' => ':attribute-fältet måste vara en fil.',
     'filled' => ':attribute fältet måste ha ett värde.',
     'gt' => [
-        'array' => ':attribute-fältet måste ha mer än :value artiklar.',
+        'array' => ':attribute-fältet måste ha mer än :value objekt.',
         'file' => ':attribute-fältet måste vara större än :value kilobyte.',
         'numeric' => ':attribute-fältet måste vara större än :value.',
         'string' => ':attribute-fältet måste vara större än :value tecken.',
     ],
     'gte' => [
-        'array' => ':attribute-fältet måste ha :value artiklar eller fler.',
+        'array' => ':attribute-fältet måste ha :value objekt eller fler.',
         'file' => ':attribute-fältet måste vara större än eller lika med :value kilobyte.',
         'numeric' => ':attribute-fältet måste vara större än eller lika med :value.',
         'string' => ':attribute-fältet måste vara större än eller lika med :value tecken.',
@@ -81,20 +82,20 @@ return [
     'list' => ':attribute-fältet måste vara en lista.',
     'lowercase' => ':attribute-fältet måste skrivas med gemener.',
     'lt' => [
-        'array' => ':attribute-fältet måste ha färre än :value artiklar.',
+        'array' => ':attribute-fältet måste ha färre än :value objekt.',
         'file' => ':attribute-fältet måste vara mindre än :value kilobyte.',
         'numeric' => ':attribute-fältet måste vara mindre än :value.',
         'string' => ':attribute-fältet måste vara färre än :value tecken.',
     ],
     'lte' => [
-        'array' => ':attribute-fältet får inte ha fler än :value artiklar.',
+        'array' => ':attribute-fältet får inte ha fler än :value objekt.',
         'file' => ':attribute-fältet måste vara mindre än eller lika med :value kilobyte.',
         'numeric' => ':attribute-fältet måste vara mindre än eller lika med :value.',
         'string' => ':attribute-fältet måste vara färre än eller lika med :value tecken.',
     ],
     'mac_address' => ':attribute-fältet måste vara en giltig MAC-adress.',
     'max' => [
-        'array' => ':attribute-fältet får inte ha fler än :max artiklar.',
+        'array' => ':attribute-fältet får inte ha fler än :max objekt.',
         'file' => ':attribute-fältet får inte vara större än :max kilobyte.',
         'numeric' => ':attribute-fältet får inte vara större än :max.',
         'string' => ':attribute-fältet får inte vara fler än :max tecken.',
@@ -103,7 +104,7 @@ return [
     'mimes' => ':attribute-fältet måste vara av filtyp: :values.',
     'mimetypes' => ':attribute-fältet måste vara av filtyp: :values.',
     'min' => [
-        'array' => ':attribute-fältet måste ha färre än :min artiklar.',
+        'array' => ':attribute-fältet måste ha färre än :min objekt.',
         'file' => ':attribute-fältet måste vara minst :min kilobyte.',
         'numeric' => ':attribute-fältet måste vara minst :min.',
         'string' => ':attribute-fältet måste innehålla minst :min tecken.',
@@ -125,7 +126,7 @@ return [
         'symbols' => ':attribute-fältet måste innehåll minst en symbol.',
         'uncompromised' => ':attribute-fältet har upptäckts i en dataläcka. Vänligen ange ett annat :attribute.',
     ],
-    'percent'       => 'Avskrivningsminimum måste vara mellan 0 och 100 när avskrivningstypen är i procent.',
+    'percent'       => 'Värdeminskningsminimum måste vara mellan 0 och 100 när värdeminskningstypen är i procent.',
 
     'present' => ':attribute fältet måste finnas.',
     'present_if' => ':attribute-fältet måste vara ifyllt om :other är :value.',
@@ -172,7 +173,8 @@ return [
     'url' => ':attribute-fältet måste vara en giltig URL.',
     'ulid' => ':attribute-fältet måste vara ett giltigt ULID.',
     'uuid' => ':attribute-fältet måste vara ett giltigt UUID.',
-
+    'fmcs_location' => 'Full multiple company support and location scoping is enabled in the Admin Settings, and the selected location and selected company are not compatible.',
+    'is_unique_across_company_and_location' => 'The :attribute must be unique within the selected company and location.',
 
     /*
     |--------------------------------------------------------------------------
@@ -185,14 +187,18 @@ return [
     |
     */
 
+    'email_array'      => 'En eller flera e-postadresser är ogiltiga.',
+    'checkboxes'           => ':attribute innehåller ogiltiga alternativ.',
+    'radio_buttons'        => ':attribute är ogiltigt.',
+    
     'custom' => [
         'alpha_space' => 'Fältet :attribute innehåller ett tecken som inte är tillåtet.',
-        'email_array'      => 'En eller flera e-postadresser är ogiltiga.',
+
         'hashed_pass'      => 'Ditt nuvarande lösenord är felaktigt',
         'dumbpwd'          => 'Det angivna lösenordet är för vanligt.',
-        'statuslabel_type' => 'Du måste ange en giltig typ av statusetikett',
+        'statuslabel_type' => 'Du måste ange en giltig statusetikett',
         'custom_field_not_found'          => 'Detta fält verkar inte existera, vänligen dubbelkolla dina anpassade fält.',
-        'custom_field_not_found_on_model' => 'Detta fält verkar existera, men är inte tillgängligt på denna tillgångsmodells fältuppsättning.',
+        'custom_field_not_found_on_model' => 'Detta fält verkar existera, men är inte tillgängligt på tillgångsmodellens fältuppsättning.',
 
         // date_format validation with slightly less stupid messages. It duplicates a lot, but it gets the job done :(
         // We use this because the default error message for date_format reflects php Y-m-d, which non-PHP
@@ -204,15 +210,13 @@ return [
         'expected_checkin.date_format'  =>  ':attribute måste vara ett giltigt datum i YYYY-MM-DD format',
         'start_date.date_format'        =>  ':attribute måste vara ett giltigt datum i YYYY-MM-DD format',
         'end_date.date_format'          =>  ':attribute måste vara ett giltigt datum i YYYY-MM-DD format',
-        'checkboxes'           => ':attribute innehåller ogiltiga alternativ.',
-        'radio_buttons'        => ':attribute är ogiltigt.',
-        'invalid_value_in_field' => 'Ogiltigt värde som ingår i detta fält',
+        'invalid_value_in_field' => 'Ogiltigt värde i detta fält',
 
         'ldap_username_field' => [
             'not_in' =>         '<code>sAMAccountName</code> (blandade gemener och versaler) kommer sannolikt inte att fungera. Du bör använda <code>samaccountname</code> (gemener) istället.'
         ],
         'ldap_auth_filter_query' => ['not_in' => '<code>uid=samaccountname</code> är förmodligen inte ett giltigt aut-filter. Du vill förmodligen ha <code>uid=</code> '],
-        'ldap_filter' => ['regex' => 'Detta värde bör förmodligen inte vara inom parantes.'],
+        'ldap_filter' => ['regex' => 'Detta värde bör sannolikt inte vara inom parantes.'],
 
         ],
     /*
@@ -236,7 +240,7 @@ return [
     */
 
     'generic' => [
-        'invalid_value_in_field' => 'Ogiltigt värde som ingår i detta fält',
+        'invalid_value_in_field' => 'Ogiltigt värde i detta fält',
         'required' => 'Detta fält är obligatoriskt',
         'email' => 'Vänligen ange en giltig e-postadress',
     ],

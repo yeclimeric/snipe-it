@@ -2,8 +2,8 @@
 
 return array(
 
-    'accepted'                  => 'Si guul leh ayaad u aqbashay hantidan.',
-    'declined'                  => 'Si guul leh ayaad u diiday hantidan.',
+    'accepted'                  => 'You have successfully accepted this item.',
+    'declined'                  => 'You have successfully declined this item.',
     'bulk_manager_warn'	        => 'Isticmaalayaashaada si guul leh ayaa loo cusboonaysiiyay, si kastaba ha ahaatee gelitaanka maamulahaaga lama kaydin sababtoo ah maareeyaha aad dooratay sidoo kale waxa uu ku jiray liiska isticmaalayaasha ee la tafatiray, isticmaalayaashuna waxa laga yaabaa in aanay noqon maamulahooda. Fadlan dooro isticmaalayaashaada mar labaad, marka laga reebo maamulaha.',
     'user_exists'               => 'Isticmaale ayaa hore u jiray!',
     'user_not_found'            => 'User does not exist or you do not have permission view them.',
@@ -69,7 +69,7 @@ return array(
     ),
 
     'inventorynotification' => array(
-        'error'   => 'Isticmaalahaan ma laha wax iimayl ah oo la dhigay,',
+        'error'   => 'Isticmaalahaan ma heysto Email loo abuuray.',
         'success' => 'Isticmaalaha waa la ogeysiiyay wax ku saabsan alaabtooda hadda.'
     )
 );

@@ -14,13 +14,15 @@ return array(
     'update' => array(
         'error'   => 'دسته بندی به روزرسانی نشد.لطفا دوباره تلاش کنید.',
         'success' => 'دسته بندی با موفقیت به روزرسانی شد.',
-        'cannot_change_category_type'   => 'You cannot change the category type once it has been created',
+        'cannot_change_category_type'   => 'شما نمیتوانید نوع دسته بندی را بعد از ایجاد آن تغییر دهید',
     ),
 
     'delete' => array(
-        'confirm'   => 'آیا از حذف این دسته بندی اطمینان دارید؟',
-        'error'   => 'اشکال در حذف دسته بندی.لطفا دوباره تلاش کنید.',
-        'success' => 'دسته بندی با موفقیت حذف شد.'
+        'confirm'                => 'آیا از حذف این دسته بندی اطمینان دارید؟',
+        'error'                  => 'اشکال در حذف دسته بندی.لطفا دوباره تلاش کنید.',
+        'success'                => '',
+        'bulk_success'           => 'Categories were deleted successfully.',
+        'partial_success'        => 'Category deleted successfully. See additional information below. | :count categories were deleted successfully. See additional information below.',
     )
 
 );
