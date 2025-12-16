@@ -41,16 +41,18 @@ return array(
     ),
 
     'checkout' => array(
-        'error'   => 'C\'è stato un problema nell\'estrazione della licenza. Riprova.',
-        'success' => 'La licenza è stata estratta con successo',
+        'error'   => 'Problema durante l\'assegnazione della Licenza. Riprova.',
+        'success' => 'La licenza è stata assegnata con successo',
         'not_enough_seats' => 'Non ci sono abbastanza copie della licenza disponibili per l\'assegnazione',
         'mismatch' => 'Lo slot di licenza fornito non corrisponde alla licenza',
         'unavailable' => 'Questo slot non è disponibile per l\'Assegnazione.',
+        'license_is_inactive' => 'Questa licenza è scaduta o terminata.',
     ),
 
     'checkin' => array(
-        'error'   => 'C\'è stato un problema nella registrazione della licenza. Riprova.',
-        'success' => 'La licenza è stata registrata con successo'
+        'error'   => 'C\'è stato un problema nella restituzione della licenza. Riprova.',
+        'not_reassignable' => 'Licenza già utilizzata',
+        'success' => 'La licenza è stata restituita con successo'
     ),
 
 );

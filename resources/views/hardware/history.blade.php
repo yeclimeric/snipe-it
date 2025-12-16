@@ -6,9 +6,6 @@
     @parent
 @stop
 
-@section('header_right')
-    <a href="{{ route('hardware.index') }}" class="btn btn-default"> {{ trans('general.back') }}</a>
-@stop
 
 {{-- Page content --}}
 @section('content')
@@ -68,7 +65,7 @@
                             <div class="form-group">
                                 <div class="col-md-9 col-md-offset-2">
 
-                                    <label class="btn btn-default" aria-hidden="true">
+                                    <label class="btn btn-theme" aria-hidden="true">
                                         {{ trans('button.select_file')  }}
                                         <input type="file" name="user_import_csv" class="js-uploadFile" id="uploadFile" data-maxsize="user_import_csv" accept=".csv,.xls,.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/plain" style="display:none; max-width: 90%" aria-label="user_import_csv" aria-hidden="true"{{ (config('app.lock_passwords')===true) ? ' disabled' : ''}}>
                                     </label>
@@ -87,7 +84,7 @@
                             <div class="form-group">
                                 <div class="col-sm-10 col-md-offset-2">
                                     <label class="form-control">
-                                        {{ Form::checkbox('match_firstnamelastname', '1', old('match_firstnamelastname')) }}
+                                        <input type="checkbox" name="match_firstnamelastname" value="1" @checked(old('match_firstnamelastname'))>
                                         <!-- enclosing span needed for the checkbox CSS to work properly, since there's HTML in the label text -->
                                         <span>
                                             {!!  trans('admin/hardware/general.csv_import_match_f-l') !!}
@@ -100,7 +97,7 @@
                             <div class="form-group">
                                 <div class="col-sm-10 col-md-offset-2">
                                     <label class="form-control">
-                                        {{ Form::checkbox('match_flastname', '1', old('match_flastname')) }}
+                                        <input type="checkbox" name="match_flastname" value="1" @checked(old('match_flastname'))>
                                         <!-- enclosing span needed for the checkbox CSS to work properly, since there's HTML in the label text -->
                                         <span>
                                         {!!  trans('admin/hardware/general.csv_import_match_initial_last') !!}
@@ -113,7 +110,7 @@
                             <div class="form-group">
                                 <div class="col-sm-10 col-md-offset-2">
                                     <label class="form-control">
-                                    {{ Form::checkbox('match_firstname', '1', old('match_firstname')) }}
+                                        <input type="checkbox" name="match_firstname" value="1" @checked(old('match_firstname'))>
                                         <!-- enclosing span needed for the checkbox CSS to work properly, since there's HTML in the label text -->
                                         <span>
                                             {!! trans('admin/hardware/general.csv_import_match_first') !!}
@@ -126,7 +123,7 @@
                             <div class="form-group">
                                 <div class="col-sm-10 col-md-offset-2">
                                     <label class="form-control">
-                                        {{ Form::checkbox('match_email', '1', old('match_email')) }}
+                                        <input type="checkbox" name="match_email" value="1" @checked(old('match_email'))>
                                         <!-- enclosing span needed for the checkbox CSS to work properly, since there's HTML in the label text -->
                                         <span>
                                         {!!  trans('admin/hardware/general.csv_import_match_email') !!}
@@ -139,7 +136,7 @@
                             <div class="form-group">
                                 <div class="col-sm-10 col-md-offset-2">
                                     <label class="form-control">
-                                        {{ Form::checkbox('match_username', '1', old('match_username')) }}
+                                        <input type="checkbox" name="match_username" value="1" @checked(old('match_username'))>
                                         <!-- enclosing span needed for the checkbox CSS to work properly, since there's HTML in the label text -->
                                         <span>
                                             {!!  trans('admin/hardware/general.csv_import_match_username') !!}

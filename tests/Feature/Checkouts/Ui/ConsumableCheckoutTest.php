@@ -22,6 +22,12 @@ class ConsumableCheckoutTest extends TestCase
             ->assertForbidden();
     }
 
+    public function testPageRenders()
+    {
+        $this->actingAs(User::factory()->superuser()->create())
+            ->get(route('consumables.checkout.show', Consumable::factory()->create()->id))
+            ->assertOk();
+    }
     public function testValidationWhenCheckingOutConsumable()
     {
         $this->actingAs(User::factory()->checkoutConsumables()->create())
@@ -51,6 +57,7 @@ class ConsumableCheckoutTest extends TestCase
             ]);
 
         $this->assertTrue($user->consumables->contains($consumable));
+        $this->assertHasTheseActionLogs($consumable, ['create', 'checkout']);
     }
 
     public function testUserSentNotificationUponCheckout()
@@ -124,7 +131,7 @@ class ConsumableCheckoutTest extends TestCase
                 'assigned_qty' => 1,
             ])
             ->assertStatus(302)
-            ->assertRedirect(route('consumables.show', ['consumable' => $consumable->id]));
+            ->assertRedirect(route('consumables.show', $consumable));
     }
 
     public function testConsumableCheckoutPagePostIsRedirectedIfRedirectSelectionIsTarget()
@@ -140,7 +147,7 @@ class ConsumableCheckoutTest extends TestCase
                 'assigned_qty' => 1,
             ])
             ->assertStatus(302)
-            ->assertRedirect(route('users.show', ['user' => $user]));
+            ->assertRedirect(route('users.show', $user));
     }
 
 }

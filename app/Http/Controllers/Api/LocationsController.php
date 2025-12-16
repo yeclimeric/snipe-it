@@ -3,17 +3,22 @@
 namespace App\Http\Controllers\Api;
 
 use App\Helpers\Helper;
-use App\Http\Requests\ImageUploadRequest;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ImageUploadRequest;
+use App\Http\Transformers\AccessoriesTransformer;
 use App\Http\Transformers\AssetsTransformer;
 use App\Http\Transformers\LocationsTransformer;
 use App\Http\Transformers\SelectlistTransformer;
+use App\Models\Accessory;
+use App\Models\AccessoryCheckout;
 use App\Models\Asset;
+use App\Models\Company;
 use App\Models\Location;
+use App\Models\Setting;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use Illuminate\Http\JsonResponse;
 
 class LocationsController extends Controller
 {
@@ -28,26 +33,34 @@ class LocationsController extends Controller
     {
         $this->authorize('view', Location::class);
         $allowed_columns = [
-            'id',
-            'name',
+            'accessories_count',
             'address',
             'address2',
-            'city',
-            'state',
-            'country',
-            'zip',
-            'created_at',
-            'updated_at',
-            'manager_id',
-            'image',
-            'assigned_assets_count',
-            'users_count',
             'assets_count',
             'assigned_assets_count',
-            'assets_count',
             'rtd_assets_count',
+            'accessories_count',
+            'assigned_accessories_count',
+            'components_count',
+            'consumables_count',
+            'users_count',
+            'children_count',
+            'city',
+            'country',
+            'created_at',
             'currency',
+            'id',
+            'image',
             'ldap_ou',
+            'company_id',
+            'manager_id',
+            'name',
+            'rtd_assets_count',
+            'state',
+            'updated_at',
+            'zip',
+            'tag_color',
+            'notes',
             ];
 
         $locations = Location::with('parent', 'manager', 'children')->select([
@@ -68,11 +81,28 @@ class LocationsController extends Controller
             'locations.image',
             'locations.ldap_ou',
             'locations.currency',
-        ])->withCount('assignedAssets as assigned_assets_count')
+            'locations.company_id',
+            'locations.tag_color',
+            'locations.tag_color',
+            'locations.notes',
+            'locations.created_by',
+            'locations.deleted_at',
+        ])
+            ->withCount('assignedAssets as assigned_assets_count')
             ->withCount('assets as assets_count')
+            ->withCount('assignedAccessories as assigned_accessories_count')
+            ->withCount('accessories as accessories_count')
             ->withCount('rtd_assets as rtd_assets_count')
             ->withCount('children as children_count')
-            ->withCount('users as users_count');
+            ->withCount('users as users_count')
+            ->withCount('consumables as consumables_count')
+            ->withCount('components as components_count')
+            ->with('adminuser');
+
+        // Only scope locations if the setting is enabled
+        if (Setting::getSettings()->scope_locations_fmcs) {
+            $locations = Company::scopeCompanyables($locations);
+        }
 
         if ($request->filled('search')) {
             $locations = $locations->TextSearch($request->input('search'));
@@ -106,6 +136,22 @@ class LocationsController extends Controller
             $locations->where('locations.manager_id', '=', $request->input('manager_id'));
         }
 
+        if ($request->filled('company_id')) {
+            $locations->where('locations.company_id', '=', $request->input('company_id'));
+        }
+
+        if ($request->filled('parent_id')) {
+            $locations->where('locations.parent_id', '=', $request->input('parent_id'));
+        }
+
+        if ($request->input('status') == 'deleted') {
+            $locations->onlyTrashed();
+        }
+
+        if ($request->filled('tag_color')) {
+            $locations->where('tag_color', '=', $request->input('locations.tag_color'));
+        }
+
         // Make sure the offset and limit are actually integers and do not exceed system limits
         $offset = ($request->input('offset') > $locations->count()) ? $locations->count() : app('api_offset_value');
         $limit = app('api_limit_value');
@@ -121,6 +167,9 @@ class LocationsController extends Controller
                 break;
             case 'manager':
                 $locations->OrderManager($order);
+                break;
+            case 'company':
+                $locations->OrderCompany($order);
                 break;
             default:
                 $locations->orderBy($sort, $order);
@@ -149,6 +198,15 @@ class LocationsController extends Controller
         $location->fill($request->all());
         $location = $request->handleImages($location);
 
+        // Only scope location if the setting is enabled
+        if (Setting::getSettings()->scope_locations_fmcs) {
+            $location->company_id = Company::getIdForCurrentUser($request->get('company_id'));
+            // check if parent is set and has a different company
+            if ($location->parent_id && Location::find($location->parent_id)->company_id != $location->company_id) {
+                response()->json(Helper::formatStandardApiResponse('error', null, 'different company than parent'));
+            }    
+        }
+
         if ($location->save()) {
             return response()->json(Helper::formatStandardApiResponse('success', (new LocationsTransformer)->transformLocation($location), trans('admin/locations/message.create.success')));
         }
@@ -166,7 +224,7 @@ class LocationsController extends Controller
     public function show($id) : JsonResponse | array
     {
         $this->authorize('view', Location::class);
-        $location = Location::with('parent', 'manager', 'children')
+        $location = Location::with('parent', 'manager', 'children', 'company')
             ->select([
                 'locations.id',
                 'locations.name',
@@ -182,11 +240,19 @@ class LocationsController extends Controller
                 'locations.updated_at',
                 'locations.image',
                 'locations.currency',
+                'locations.company_id',
+                'locations.notes',
+                'locations.tag_color',
             ])
             ->withCount('assignedAssets as assigned_assets_count')
             ->withCount('assets as assets_count')
+            ->withCount('assignedAccessories as assigned_accessories_count')
+            ->withCount('accessories as accessories_count')
             ->withCount('rtd_assets as rtd_assets_count')
+            ->withCount('children as children_count')
             ->withCount('users as users_count')
+            ->withCount('consumables as consumables_count')
+            ->withCount('components as components_count')
             ->findOrFail($id);
 
         return (new LocationsTransformer)->transformLocation($location);
@@ -209,6 +275,19 @@ class LocationsController extends Controller
         $location->fill($request->all());
         $location = $request->handleImages($location);
 
+        if ($request->filled('company_id')) {
+            // Only scope location if the setting is enabled
+            if (Setting::getSettings()->scope_locations_fmcs) {
+                $location->company_id = Company::getIdForCurrentUser($request->get('company_id'));
+                // check if there are related objects with different company
+                if (Helper::test_locations_fmcs(false, $id, $location->company_id)) {
+                    return response()->json(Helper::formatStandardApiResponse('error', null, 'error scoped locations'));
+                }                
+            } else {
+                $location->company_id = $request->get('company_id');
+            }
+        }
+
         if ($location->isValid()) {
 
             $location->save();
@@ -224,13 +303,37 @@ class LocationsController extends Controller
         return response()->json(Helper::formatStandardApiResponse('error', null, $location->getErrors()));
     }
 
+
     public function assets(Request $request, Location $location) : JsonResponse | array
+    {
+        $this->authorize('view', Asset::class);
+        $this->authorize('view', $location);
+        $assets = Asset::where('location_id', '=', $location->id)->with('model', 'model.category', 'assetstatus', 'location', 'company', 'defaultLoc');
+        $assets = $assets->get();
+        return (new AssetsTransformer)->transformAssets($assets, $assets->count(), $request);
+    }
+
+    public function assignedAssets(Request $request, Location $location) : JsonResponse | array
     {
         $this->authorize('view', Asset::class);
         $this->authorize('view', $location);
         $assets = Asset::where('assigned_to', '=', $location->id)->where('assigned_type', '=', Location::class)->with('model', 'model.category', 'assetstatus', 'location', 'company', 'defaultLoc');
         $assets = $assets->get();
         return (new AssetsTransformer)->transformAssets($assets, $assets->count(), $request);
+    }
+
+    public function assignedAccessories(Request $request, Location $location) : JsonResponse | array
+    {
+        $this->authorize('view', Accessory::class);
+        $this->authorize('view', $location);
+        $accessory_checkouts = AccessoryCheckout::LocationAssigned()->where('assigned_to', $location->id)->with('adminuser')->with('accessories');
+
+        $offset = ($request->input('offset') > $accessory_checkouts->count()) ? $accessory_checkouts->count() : app('api_offset_value');
+        $limit = app('api_limit_value');
+
+        $total = $accessory_checkouts->count();
+        $accessory_checkouts = $accessory_checkouts->skip($offset)->take($limit)->get();
+        return (new LocationsTransformer)->transformCheckedoutAccessories($accessory_checkouts, $total);
     }
 
     /**
@@ -244,11 +347,15 @@ class LocationsController extends Controller
     {
         $this->authorize('delete', Location::class);
         $location = Location::withCount('assignedAssets as assigned_assets_count')
+            ->withCount('assignedAssets as assigned_assets_count')
             ->withCount('assets as assets_count')
+            ->withCount('assignedAccessories as assigned_accessories_count')
+            ->withCount('accessories as accessories_count')
             ->withCount('rtd_assets as rtd_assets_count')
             ->withCount('children as children_count')
             ->withCount('users as users_count')
-            ->withCount('accessories as accessories_count')
+            ->withCount('consumables as consumables_count')
+            ->withCount('components as components_count')
             ->findOrFail($id);
 
         if (! $location->isDeletable()) {
@@ -303,7 +410,13 @@ class LocationsController extends Controller
             'locations.name',
             'locations.parent_id',
             'locations.image',
+            'locations.tag_color',
         ]);
+
+        // Only scope locations if the setting is enabled
+        if (Setting::getSettings()->scope_locations_fmcs) {
+            $locations = Company::scopeCompanyables($locations);
+        }
 
         $page = 1;
         if ($request->filled('page')) {

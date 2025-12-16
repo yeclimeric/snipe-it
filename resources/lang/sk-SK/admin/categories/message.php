@@ -14,13 +14,15 @@ return array(
     'update' => array(
         'error'   => 'Kategóriu sa nepodarilo aktualizovať, skúste prosím znovu',
         'success' => 'Kategória bola úspešne aktualizovaná.',
-        'cannot_change_category_type'   => 'You cannot change the category type once it has been created',
+        'cannot_change_category_type'   => 'Nie je možné upraviť kategóriu potom čo bola vytvorená',
     ),
 
     'delete' => array(
-        'confirm'   => 'Ste si istý, že chceete odstrániť túto kategóriu?',
-        'error'   => 'Pri odstraňovaní kategórie sa vyskytla chyba. Skúste prosím znovu.',
-        'success' => 'Kategória bola úspešne odstránená.'
+        'confirm'                => 'Ste si istý, že chceete odstrániť túto kategóriu?',
+        'error'                  => 'Pri odstraňovaní kategórie sa vyskytla chyba. Skúste prosím znovu.',
+        'success'                => 'Kategória bola úspešne odstránená.',
+        'bulk_success'           => 'Kategórie boli úspešne odstránené.',
+        'partial_success'        => 'Kategória bola úspešne odstránená. Podrobné informácie nižšie. | :count kategórií bolo úspešne odstránených. Podrobné informácie nižšie.',
     )
 
 );

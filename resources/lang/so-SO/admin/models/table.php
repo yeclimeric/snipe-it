@@ -10,8 +10,7 @@ return array(
     'numassets' 			=> 'Hantida',
     'title'					=> 'Qaababka Hantida',
     'update'				=> 'Cusbooneysii Qaabka Hantida',
-    'view'					=> 'Daawo Qaabka Hantida',
-    'update'				=> 'Cusbooneysii Qaabka Hantida',
-    'clone'				=> 'Qaabka Clone',
-    'edit'				=> 'Wax ka beddel Model',
+    'view'					=> 'Soo bandhig Qaabka Hantida',
+    'clone'				    => 'Qaabka Clone',
+    'edit'				    => 'Wax ka beddel Model',
 );

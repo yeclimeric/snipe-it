@@ -3,12 +3,13 @@
 return array(
 
     'does_not_exist' => 'Lokalizacja nie istnieje.',
-    'assoc_users'    => 'This location is not currently deletable because it is the location of record for at least one asset or user, has assets assigned to it, or is the parent location of another location. Please update your records to no longer reference this location and try again. ',
-    'assoc_assets'	 => 'Lokalizacja obecnie jest skojarzona z minimum jednym aktywem i nie może zostać usunięta. Uaktualnij właściwości aktywów tak aby nie było relacji z tą lokalizacją i spróbuj ponownie. ',
+    'assoc_users'    => 'Tej lokalizacji nie można obecnie usunąć, ponieważ istnieje co najmniej jeden środek lub użytkownik przypisany do niej bądź jest to lokalizacja nadrzędna względem innej lokalizacji. Zaktualizuj problematyczne odwołania i spróbuj ponownie.',
+    'assoc_assets'	 => 'Lokalizacja obecnie jest skojarzona z minimum jednym środkiem i nie może zostać usunięta. Uaktualnij właściwości środków tak, aby nie było relacji z tą lokalizacją i spróbuj ponownie. ',
     'assoc_child_loc'	 => 'Lokalizacja obecnie jest rodzicem minimum jeden innej lokalizacji i nie może zostać usunięta. Uaktualnij właściwości lokalizacji tak aby nie było relacji z tą lokalizacją i spróbuj ponownie. ',
-    'assigned_assets' => 'Przypisane aktywa',
+    'assigned_assets' => 'Przypisane środki',
     'current_location' => 'Bieżąca lokalizacja',
-    'open_map' => 'Open in :map_provider_icon Maps',
+    'open_map' => 'Otwórz w mapach :map_provider_icon',
+    'deleted_warning' => 'Ta lokalizacja została usunięta. Przywróć lokalizację przed wprowadzeniem zmian.',
 
 
     'create' => array(
@@ -22,8 +23,8 @@ return array(
     ),
 
     'restore' => array(
-        'error'   => 'Location was not restored, please try again',
-        'success' => 'Location restored successfully.'
+        'error'   => 'Lokalizacja nie została przywrócona, spróbuj ponownie',
+        'success' => 'Lokalizacja została przywrócona pomyślnie.'
     ),
 
     'delete' => array(
