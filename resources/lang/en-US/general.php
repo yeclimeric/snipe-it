@@ -264,6 +264,7 @@ return [
     'request_item'          => 'Request this item',
     'external_link_tooltip' => 'External link to',
     'save'  				=> 'Save',
+    'save_copy'             => 'Save Copy',
     'select_var'            => 'Select :thing... ', // this will eventually replace all of our other selects
     'select'				=> 'Select',
     'select_all'            => 'Select All',
