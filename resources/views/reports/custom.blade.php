@@ -646,9 +646,17 @@
 
         </div> <!-- /.box-body-->
             <div class="box-footer text-right">
-                @if (request()->routeIs('report-templates.edit'))
+                @if (request()->routeIs('report-templates.edit') && $template->created_by != auth()->id())
+                    {{--but how do we make this copy. can only get here if we force type, but then do we let this happen or just not hide the edit/copy.
+                    maybe make the edit button a COPY button if you aren't the creator. i might like this idea.
+                    that way, we UP FRONT allow a copy to be made once something is shared with you, and then its yours to edit and fumble around with off the cuff--}}
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-check icon-white" aria-hidden="true"></i>
+                        {{ trans('general.save_copy') }}
+                    </button>
+                @elseif(request()->routeIs('report-templates.edit'))
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-download icon-white" aria-hidden="true"></i>
                         {{ trans('general.save') }}
                     </button>
                 @else
