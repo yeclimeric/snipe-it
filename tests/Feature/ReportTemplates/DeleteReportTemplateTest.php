@@ -33,6 +33,11 @@ class DeleteReportTemplateTest extends TestCase implements TestsPermissionsRequi
         $this->assertModelExists($reportTemplate);
     }
 
+    public function testCannotDeleteAnotherUsersSharedReportTemplate()
+    {
+        $this->markTestIncomplete();
+    }
+
     public function testCanDeleteAReportTemplate()
     {
         $user = User::factory()->canViewReports()->create();

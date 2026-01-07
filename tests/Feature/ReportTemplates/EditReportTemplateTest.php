@@ -28,6 +28,16 @@ class EditReportTemplateTest extends TestCase implements TestsPermissionsRequire
             ->assertStatus(302);
     }
 
+    public function testCannotLoadEditPageForAnotherUsersSharedReportTemplate()
+    {
+        $user = User::factory()->canViewReports()->create();
+        $reportTemplate = ReportTemplate::factory()->shared()->create();
+
+        $this->actingAs($user)
+            ->get(route('report-templates.edit', $reportTemplate))
+            ->assertStatus(302);
+    }
+
     public function testCanLoadEditReportTemplatePage()
     {
         $user = User::factory()->canViewReports()->create();

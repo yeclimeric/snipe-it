@@ -20,6 +20,14 @@ class ReportTemplateFactory extends Factory
                 'id' => '1',
             ],
             'created_by' => User::factory(),
+            'share_report_template' => 0,
         ];
+    }
+
+    public function shared()
+    {
+        return $this->state(function () {
+            return['share_report_template' => 1];
+        });
     }
 }

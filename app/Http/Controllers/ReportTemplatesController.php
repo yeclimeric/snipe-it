@@ -46,6 +46,12 @@ class ReportTemplatesController extends Controller
     {
         $this->authorize('reports.view');
 
+        if ($reportTemplate->created_by != auth()->id()){
+            return redirect()
+                ->route('report-templates.show', $reportTemplate)
+                ->withError(trans('general.report_not_editable'));
+        }
+
         return view('reports/custom', [
             'customfields' => CustomField::get(),
             'template' => $reportTemplate,
@@ -55,6 +61,12 @@ class ReportTemplatesController extends Controller
     public function update(Request $request, ReportTemplate $reportTemplate): RedirectResponse
     {
         $this->authorize('reports.view');
+
+        if ($reportTemplate->created_by != auth()->id()){
+            return redirect()
+                ->route('report-templates.show', $reportTemplate)
+                ->withError(trans('general.report_not_editable'));
+        }
 
         $properties = [
             'name' => $request->input('name'),

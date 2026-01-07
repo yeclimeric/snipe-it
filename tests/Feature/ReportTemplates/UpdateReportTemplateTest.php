@@ -20,9 +20,31 @@ class UpdateReportTemplateTest extends TestCase implements TestsPermissionsRequi
 
     public function testCannotUpdateAnotherUsersReportTemplate()
     {
+        $reportTemplate = ReportTemplate::factory()->create(['name' => 'Original']);
+
         $this->actingAs(User::factory()->canViewReports()->create())
-            ->post(route('report-templates.update', ReportTemplate::factory()->create()))
+            ->post(route('report-templates.update', $reportTemplate), [
+                'name' => 'Changed',
+                'options' => $reportTemplate->options,
+            ])
             ->assertStatus(302);
+
+        $this->assertEquals('Original', $reportTemplate->fresh()->name);
+    }
+
+    public function testCannotUpdateAnotherUsersSharedReportTemplate()
+    {
+        $reportTemplate = ReportTemplate::factory()->shared()->create(['name' => 'Original']);
+
+        $this->actingAs(User::factory()->canViewReports()->create())
+            ->post(route('report-templates.update', $reportTemplate), [
+                'name' => 'Changed',
+                'options' => $reportTemplate->options,
+            ])
+            ->assertStatus(302)
+            ->assertSessionHas('error', trans('general.report_not_editable'));
+
+        $this->assertEquals('Original', $reportTemplate->fresh()->name);
     }
 
     public function testUpdatingReportTemplateRequiresValidFields()

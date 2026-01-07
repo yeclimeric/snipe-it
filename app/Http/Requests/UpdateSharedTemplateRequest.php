@@ -29,10 +29,10 @@ class UpdateSharedTemplateRequest extends CustomAssetReportRequest
         $rules = array_merge(
             parent::rules(),
             (new ReportTemplate)->getRules(),
-            [
-                if ($this->created_by == auth()->id()) {
-                } //so how do we apply this rule. is it allow or restrict?
-            ],
+//            [
+//                if ($this->created_by == auth()->id()) {
+//                } //so how do we apply this rule. is it allow or restrict?
+//            ],
         );
         return $rules;
     }

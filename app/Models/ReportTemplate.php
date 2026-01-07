@@ -17,6 +17,8 @@ class ReportTemplate extends Model
     use UniqueUndeletedTrait;
     use ValidatingTrait;
 
+    protected $table = 'report_templates';
+
     protected $casts = [
         'options' => 'array',
     ];
