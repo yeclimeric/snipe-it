@@ -207,27 +207,4 @@ class ReportTemplateParsingValuesTest extends TestCase
             $templateWithModelIdsInArray->selectValue('array_of_model_ids', Department::class)
         );
     }
-
-    public function testSharingTemplateIsSeenByOnlyCorrectGroup()
-    {
-        $sharedUser = User::factory()->create();
-
-        $sharedTemplate = ReportTemplate::factory()->create([
-
-        ]);
-
-        //$this->assertEquals(1, $sharedTemplate->group_id);
-    }
-
-    public function testSharedTemplateCanOnlyBeEditedByCreator()
-    {
-        $sharedUser = User::factory()->create();
-
-        $sharedTemplate = ReportTemplate::factory()->create([
-
-        ]);
-
-        //$this->assertEquals($sharedUser->id, $sharedTemplate->creator->id);
-    }
-
 }
