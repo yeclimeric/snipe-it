@@ -55,40 +55,34 @@
                 @endif
 
                 @if (request()->routeIs('report-templates.edit'))
-                    <div class="row">
-                        <div class="col-md-7 col-md-offset-4">
-                            <div class="{{ $errors->has('name') ? ' has-error' : '' }}">
-                                <label
-                                    for="name"
-                                    class="col-md-4 control-label"
-                                >
-                                    {{ trans('admin/reports/general.template_name') }}
+                    <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
+                        <label
+                            for="name"
+                            class="col-md-2 control-label"
+                        >
+                            {{ trans('admin/reports/general.template_name') }}
+                        </label>
+                        <div class="col-md-4">
+                            <input
+                                class="form-control"
+                                placeholder=""
+                                name="name"
+                                type="text"
+                                id="name"
+                                value="{{ $template->name }}"
+                                required
+                            >
+                            {!! $errors->first('name', '<span class="alert-msg" aria-hidden="true"><i class="fas fa-times" aria-hidden="true"></i> :message</span>') !!}
+                        </div>
+                        @if ($template->created_by == auth()->id())
+                            <div class="col-md-3">
+                                <label class="form-control">
+                                    <input type="checkbox" name="share_report_template" value="1" @checked($template->share_report_template) />
+                                    {{ trans('admin/reports/general.share_template') }}
                                 </label>
-                                <div class="col-md-8">
-                                    <input
-                                        class="form-control"
-                                        placeholder=""
-                                        name="name"
-                                        type="text"
-                                        id="name"
-                                        value="{{ $template->name }}"
-                                        required
-                                    >
-                                </div>
-                                {!! $errors->first('name', '<span class="alert-msg" aria-hidden="true"><i class="fas fa-times" aria-hidden="true"></i> :message</span>') !!}
                             </div>
-                        </div>
+                        @endif
                     </div>
-
-
-                    @if($template->created_by == auth()->id())
-                        <div class="col-md-7 col-md-offset-7">
-                            <label class="form-control">
-                                <input type="checkbox" name="share_report_template" value="1" @checked($template->share_report_template) />
-                                {{ trans('admin/reports/general.share_template') }}
-                            </label>
-                        </div>
-                    @endif
                 @endif
 
         </div><!-- /.box-header -->
