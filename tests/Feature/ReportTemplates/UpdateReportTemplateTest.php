@@ -95,6 +95,32 @@ class UpdateReportTemplateTest extends TestCase implements TestsPermissionsRequi
 
     public function testCanShareAReportTemplate()
     {
-        $this->markTestIncomplete();
+        $user = User::factory()->canViewReports()->create();
+
+        $reportTemplate = ReportTemplate::factory()->notShared()->for($user, 'creator')->create([
+            'name' => 'Original Name',
+            'options' => [
+                'category' => 1,
+                'by_category_id' => 2,
+                'company' => 1,
+            ],
+        ]);
+
+        $this->actingAs($user)
+            ->post(route('report-templates.update', $reportTemplate), [
+                'name' => 'Updated Name',
+                'options' => [
+                    'category' => 1,
+                    'by_category_id' => 2,
+                    'company' => 1,
+                ],
+                'share_report_template' => 1,
+            ])
+            ->assertRedirectToRoute('report-templates.show', $reportTemplate->id);
+
+        $reportTemplate->refresh();
+        $this->assertEquals(1, $reportTemplate->share_report_template);
+        $this->assertEquals('Updated Name', $reportTemplate->name);
+
     }
 }
