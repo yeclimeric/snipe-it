@@ -17,7 +17,7 @@ class DeleteReportTemplateTest extends TestCase implements TestsPermissionsRequi
 
         $this->actingAs(User::factory()->create())
             ->post(route('report-templates.destroy', $reportTemplate->id))
-            ->assertStatus(302);
+            ->assertRedirect(route('reports/custom'));
 
         $this->assertNotSoftDeleted($reportTemplate);
     }
@@ -28,7 +28,7 @@ class DeleteReportTemplateTest extends TestCase implements TestsPermissionsRequi
 
         $this->actingAs(User::factory()->canViewReports()->create())
             ->delete(route('report-templates.destroy', $reportTemplate->id))
-            ->assertStatus(302)
+            ->assertRedirect(route('reports/custom'))
             ->assertSessionHas('error', trans('general.generic_model_not_found', ['model' => 'report template']));
 
         $this->assertNotSoftDeleted($reportTemplate);
@@ -40,7 +40,7 @@ class DeleteReportTemplateTest extends TestCase implements TestsPermissionsRequi
 
         $this->actingAs(User::factory()->canViewReports()->create())
             ->delete(route('report-templates.destroy', $reportTemplate->id))
-            ->assertStatus(302)
+            ->assertRedirect(route('report-templates.show', $reportTemplate->id))
             ->assertSessionHas('error', trans('general.generic_model_not_found', ['model' => 'report template']));
 
         $this->assertNotSoftDeleted($reportTemplate);

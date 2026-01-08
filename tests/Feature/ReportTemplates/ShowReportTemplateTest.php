@@ -15,7 +15,7 @@ class ShowReportTemplateTest extends TestCase implements TestsPermissionsRequire
     {
         $this->actingAs(User::factory()->create())
             ->get(route('report-templates.show', ReportTemplate::factory()->create()))
-            ->assertStatus(302);
+            ->assertRedirectToRoute('reports/custom');
     }
 
     public function testCanLoadASavedReportTemplate()
@@ -38,7 +38,8 @@ class ShowReportTemplateTest extends TestCase implements TestsPermissionsRequire
 
         $this->actingAs(User::factory()->canViewReports()->create())
             ->get(route('report-templates.show', $reportTemplate))
-            ->assertStatus(302);
+            ->assertRedirectToRoute('reports/custom')
+            ->assertSessionHas('error', trans('general.generic_model_not_found', ['model' => 'report template']));;
     }
 
     public function testCanLoadAnotherUsersSavedReportTemplateIfShared()
