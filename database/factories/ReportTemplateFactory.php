@@ -30,4 +30,11 @@ class ReportTemplateFactory extends Factory
             return['share_report_template' => 1];
         });
     }
+
+    public function notShared()
+    {
+        return $this->state(function () {
+            return ['share_report_template' => 0];
+        });
+    }
 }

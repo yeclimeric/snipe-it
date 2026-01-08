@@ -66,7 +66,7 @@ class UpdateReportTemplateTest extends TestCase implements TestsPermissionsRequi
     {
         $user = User::factory()->canViewReports()->create();
 
-        $reportTemplate = ReportTemplate::factory()->for($user, 'creator')->create([
+        $reportTemplate = ReportTemplate::factory()->notShared()->for($user, 'creator')->create([
             'name' => 'Original Name',
             'options' => [
                 'category' => 1,
@@ -85,6 +85,7 @@ class UpdateReportTemplateTest extends TestCase implements TestsPermissionsRequi
             ->assertRedirectToRoute('report-templates.show', $reportTemplate->id);
 
         $reportTemplate->refresh();
+        $this->assertEquals(0, $reportTemplate->share_report_template);
         $this->assertEquals('Updated Name', $reportTemplate->name);
         $this->assertEquals(0, $reportTemplate->checkmarkValue('category'));
         $this->assertEquals([], $reportTemplate->selectValues('by_category_id'));
