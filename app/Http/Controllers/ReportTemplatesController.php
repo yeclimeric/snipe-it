@@ -19,7 +19,7 @@ class ReportTemplatesController extends Controller
 
         $report = $request->user()->reportTemplates()->create([
             'name' => $validated['name'],
-            'options' => $request->except(['_token', 'name','share_report_template']),
+            'options' => $request->except(['_token', 'name', 'share_report_template']),
             'share_report_template' => $request->has('share_report_template'),
         ]);
 
@@ -46,7 +46,7 @@ class ReportTemplatesController extends Controller
     {
         $this->authorize('reports.view');
 
-        if ($reportTemplate->created_by != auth()->id()){
+        if ($reportTemplate->created_by != auth()->id()) {
             return redirect()
                 ->route('report-templates.show', $reportTemplate)
                 ->withError(trans('general.report_not_editable'));
@@ -62,7 +62,7 @@ class ReportTemplatesController extends Controller
     {
         $this->authorize('reports.view');
 
-        if ($reportTemplate->created_by != auth()->id()){
+        if ($reportTemplate->created_by != auth()->id()) {
             return redirect()
                 ->route('report-templates.show', $reportTemplate)
                 ->withError(trans('general.report_not_editable'));
@@ -90,6 +90,12 @@ class ReportTemplatesController extends Controller
     public function destroy(ReportTemplate $reportTemplate): RedirectResponse
     {
         $this->authorize('reports.view');
+
+        if ($reportTemplate->creator()->isNot(auth()->user())) {
+            return redirect()
+                ->route('report-templates.show', $reportTemplate)
+                ->withError(trans('general.generic_model_not_found', ['model' => 'report template']));
+        }
 
         $reportTemplate->delete();
 
