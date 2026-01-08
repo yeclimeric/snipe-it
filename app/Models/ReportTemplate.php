@@ -40,6 +40,9 @@ class ReportTemplate extends Model
             'required',
             'array',
         ],
+        'share_report_template' => [
+            'boolean',
+        ],
     ];
 
     protected static function booted()

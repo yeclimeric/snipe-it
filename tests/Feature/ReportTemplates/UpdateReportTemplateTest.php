@@ -69,7 +69,6 @@ class UpdateReportTemplateTest extends TestCase implements TestsPermissionsRequi
         $reportTemplate = ReportTemplate::factory()->for($user, 'creator')->create([
             'name' => 'Original Name',
             'options' => [
-                'id' => 1,
                 'category' => 1,
                 'by_category_id' => 2,
                 'company' => 1,
@@ -80,17 +79,21 @@ class UpdateReportTemplateTest extends TestCase implements TestsPermissionsRequi
         $this->actingAs($user)
             ->post(route('report-templates.update', $reportTemplate), [
                 'name' => 'Updated Name',
-                'id' => 1,
                 'company' => 1,
                 'by_company_id' => [3],
-            ]);
+            ])
+            ->assertRedirectToRoute('report-templates.show', $reportTemplate->id);
 
         $reportTemplate->refresh();
         $this->assertEquals('Updated Name', $reportTemplate->name);
-        $this->assertEquals(1, $reportTemplate->checkmarkValue('id'));
         $this->assertEquals(0, $reportTemplate->checkmarkValue('category'));
         $this->assertEquals([], $reportTemplate->selectValues('by_category_id'));
         $this->assertEquals(1, $reportTemplate->checkmarkValue('company'));
         $this->assertEquals([3], $reportTemplate->selectValues('by_company_id'));
+    }
+
+    public function testCanShareAReportTemplate()
+    {
+        $this->markTestIncomplete();
     }
 }

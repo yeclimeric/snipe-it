@@ -68,9 +68,11 @@ class ReportTemplatesController extends Controller
                 ->withError(trans('general.report_not_editable'));
         }
 
+        $validated = $request->validate(Arr::except($reportTemplate->getRules(), 'options'));
+
         $properties = [
-            'name' => $request->input('name'),
-            'options' => $request->except(['_token', 'name','share_report_template']),
+            'name' => $validated['name'],
+            'options' => Arr::except($request->all(), ['_token', 'id', 'name', 'share_report_template']),
             'share_report_template' => $reportTemplate->share_report_template,
         ];
 
