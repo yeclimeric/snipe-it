@@ -68,10 +68,8 @@ class ReportTemplatesController extends Controller
                 ->withError(trans('general.report_not_editable'));
         }
 
-        $validated = $request->validate(Arr::except($reportTemplate->getRules(), 'options'));
-
         $properties = [
-            'name' => $validated['name'],
+            'name' => $request->input('name'),
             'options' => Arr::except($request->all(), ['_token', 'id', 'name', 'share_report_template']),
             'share_report_template' => $reportTemplate->share_report_template,
         ];
@@ -80,7 +78,13 @@ class ReportTemplatesController extends Controller
             $properties['share_report_template'] = $request->boolean('share_report_template');
         }
 
-        $reportTemplate->update($properties);
+        $reportTemplate->fill($properties);
+
+        if ($reportTemplate->isInvalid()) {
+            return redirect()->back()->withInput()->withErrors($reportTemplate->getErrors());
+        }
+
+        $reportTemplate->save();
 
         session()->flash('success', trans('admin/reports/message.update.success'));
 
