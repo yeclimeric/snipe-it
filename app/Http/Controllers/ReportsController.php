@@ -452,7 +452,7 @@ class ReportsController extends Controller
 
             $header = [];
 
-            if($request->filled('share_report_template')) {
+            if($request->filled('is_shared')) {
                 $header[] = trans('admin/reports/general.share_template');
             }
 
@@ -650,7 +650,7 @@ class ReportsController extends Controller
             $executionTime = microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'];
             Log::debug('Added headers: '.$executionTime);
 
-            if($request->filled('share_report_template')) {
+            if($request->filled('is_shared')) {
                 //to fill with logic for the report template and NOT the assets retrieved by the query
                 //do we scope here or??
             }
