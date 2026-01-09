@@ -19,8 +19,8 @@ class ReportTemplatesController extends Controller
 
         $report = $request->user()->reportTemplates()->create([
             'name' => $validated['name'],
-            'options' => $request->except(['_token', 'name', 'share_report_template']),
-            'share_report_template' => $request->has('share_report_template'),
+            'options' => $request->except(['_token', 'name', 'is_shared']),
+            'is_shared' => $request->has('is_shared'),
         ]);
 
         session()->flash('success', trans('admin/reports/message.create.success'));
@@ -70,12 +70,12 @@ class ReportTemplatesController extends Controller
 
         $properties = [
             'name' => $request->input('name'),
-            'options' => Arr::except($request->all(), ['_token', 'id', 'name', 'share_report_template']),
-            'share_report_template' => $reportTemplate->share_report_template,
+            'options' => Arr::except($request->all(), ['_token', 'id', 'name', 'is_shared']),
+            'is_shared' => $reportTemplate->is_shared,
         ];
 
         if ($reportTemplate->created_by == $request->user()->id) {
-            $properties['share_report_template'] = $request->boolean('share_report_template');
+            $properties['is_shared'] = $request->boolean('is_shared');
         }
 
         $reportTemplate->fill($properties);

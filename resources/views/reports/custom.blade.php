@@ -77,7 +77,7 @@
                         @if ($template->created_by == auth()->id())
                             <div class="col-md-3">
                                 <label class="form-control">
-                                    <input type="checkbox" name="share_report_template" value="1" @checked($template->share_report_template) />
+                                    <input type="checkbox" name="is_shared" value="1" @checked($template->is_shared) />
                                     {{ trans('admin/reports/general.share_template') }}
                                 </label>
                             </div>
@@ -685,9 +685,9 @@
                     <div style="margin-bottom: 5px;">
                         @if($template->name)
                             @if($template->created_by == auth()->id())
-                                <span class="text-center">{!!  ($template->share_report_template=='1' ? '<i class="fa fa-check text-success"></i>'." ".(trans('admin/reports/general.template_shared_with_others')) : '<i class="fa fa-times text-danger"></i>'." ".(trans('admin/reports/general.template_not_shared')) )!!}</span>
+                                <span class="text-center">{!!  ($template->is_shared ? '<i class="fa fa-check text-success"></i>'." ".(trans('admin/reports/general.template_shared_with_others')) : '<i class="fa fa-times text-danger"></i>'." ".(trans('admin/reports/general.template_not_shared')) )!!}</span>
                             @else
-                                <span class="text-center">{!!  ($template->share_report_template=='1' ? '<i class="fa fa-check text-success"></i>'." ".(trans('admin/reports/general.template_shared')) : '<i class="fa fa-times text-danger"></i>'." ".(trans('admin/reports/general.template_not_shared')) )!!}</span>
+                                <span class="text-center">{!!  ($template->is_shared ? '<i class="fa fa-check text-success"></i>'." ".(trans('admin/reports/general.template_shared')) : '<i class="fa fa-times text-danger"></i>'." ".(trans('admin/reports/general.template_not_shared')) )!!}</span>
                             @endif
                         @endif
                     </div>

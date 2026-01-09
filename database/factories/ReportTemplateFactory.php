@@ -20,21 +20,21 @@ class ReportTemplateFactory extends Factory
                 'id' => '1',
             ],
             'created_by' => User::factory(),
-            'share_report_template' => 0,
+            'is_shared' => 0,
         ];
     }
 
     public function shared()
     {
         return $this->state(function () {
-            return['share_report_template' => 1];
+            return['is_shared' => 1];
         });
     }
 
     public function notShared()
     {
         return $this->state(function () {
-            return ['share_report_template' => 0];
+            return ['is_shared' => 0];
         });
     }
 }

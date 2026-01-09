@@ -85,7 +85,7 @@ class UpdateReportTemplateTest extends TestCase implements TestsPermissionsRequi
             ->assertRedirectToRoute('report-templates.show', $reportTemplate->id);
 
         $reportTemplate->refresh();
-        $this->assertEquals(0, $reportTemplate->share_report_template);
+        $this->assertEquals(0, $reportTemplate->is_shared);
         $this->assertEquals('Updated Name', $reportTemplate->name);
         $this->assertEquals(0, $reportTemplate->checkmarkValue('category'));
         $this->assertEquals([], $reportTemplate->selectValues('by_category_id'));
@@ -131,19 +131,19 @@ class UpdateReportTemplateTest extends TestCase implements TestsPermissionsRequi
 
         $this->actingAs($user)
             ->post(route('report-templates.update', $reportTemplate), [
-                'name' => 'Updated Name',
+                'name' => 'Original Name',
                 'options' => [
                     'category' => 1,
                     'by_category_id' => 2,
                     'company' => 1,
                 ],
-                'share_report_template' => 1,
+                'is_shared' => 1,
             ])
             ->assertRedirectToRoute('report-templates.show', $reportTemplate->id);
 
         $reportTemplate->refresh();
-        $this->assertEquals(1, $reportTemplate->share_report_template);
-        $this->assertEquals('Updated Name', $reportTemplate->name);
+        $this->assertEquals(1, $reportTemplate->is_shared);
+        $this->assertEquals('Original Name', $reportTemplate->name);
 
     }
 }

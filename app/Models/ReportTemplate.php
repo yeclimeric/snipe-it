@@ -21,13 +21,14 @@ class ReportTemplate extends Model
 
     protected $casts = [
         'options' => 'array',
+        'is_shared' => 'boolean',
     ];
 
     protected $fillable = [
         'created_by',
         'name',
         'options',
-        'share_report_template',
+        'is_shared',
     ];
 
     protected $rules = [
@@ -40,7 +41,7 @@ class ReportTemplate extends Model
             'required',
             'array',
         ],
-        'share_report_template' => [
+        'is_shared' => [
             'boolean',
         ],
     ];
@@ -53,7 +54,7 @@ class ReportTemplate extends Model
 
                 if (auth()->check()) {
                     $builder->where('created_by', auth()->id())
-                        ->orWhere('share_report_template', 1);
+                        ->orWhere('is_shared', 1);
                 }
             }
         );

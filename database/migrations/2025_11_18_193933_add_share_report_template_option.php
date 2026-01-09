@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('report_templates', function (Blueprint $table) {
-            $table->boolean('share_report_template', )->nullable()->default(null);
+            $table->boolean('is_shared', )->nullable()->default(null);
         });
     }
 
@@ -22,8 +22,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('report_templates', function (Blueprint $table) {
-            if (Schema::hasColumn('report_templates', 'share_report_template')) {
-                $table->dropColumn('share_report_template');
+            if (Schema::hasColumn('report_templates', 'is_shared')) {
+                $table->dropColumn('is_shared');
             }
         });
     }
