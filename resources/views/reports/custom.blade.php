@@ -62,7 +62,7 @@
                         >
                             {{ trans('admin/reports/general.template_name') }}
                         </label>
-                        <div class="col-md-4">
+                        <div class="col-md-5">
                             <input
                                 class="form-control"
                                 placeholder=""
@@ -685,9 +685,9 @@
                     <div style="margin-bottom: 5px;">
                         @if($template->name)
                             @if($template->created_by == auth()->id())
-                                <span class="text-center">{!!  ($template->is_shared ? '<i class="fa fa-check text-success"></i>'." ".(trans('admin/reports/general.template_shared_with_others')) : '<i class="fa fa-times text-danger"></i>'." ".(trans('admin/reports/general.template_not_shared')) )!!}</span>
+                                <span class="text-center">{!!  ($template->is_shared ? '<i class="fa fa-users"></i>'." ".(trans('admin/reports/general.template_shared_with_others')) : '<i class="fa fa-user"></i>'." ".(trans('admin/reports/general.template_not_shared')) )!!}</span>
                             @else
-                                <span class="text-center">{!!  ($template->is_shared ? '<i class="fa fa-check text-success"></i>'." ".(trans('admin/reports/general.template_shared')) : '<i class="fa fa-times text-danger"></i>'." ".(trans('admin/reports/general.template_not_shared')) )!!}</span>
+                                <span class="text-center">{!!  ($template->is_shared ? '<i class="fa fa-users"></i>'." ".(trans('admin/reports/general.template_shared')) : '<i class="fa fa-user"></i>'." ".(trans('admin/reports/general.template_not_shared')) )!!}</span>
                             @endif
                         @endif
                     </div>
