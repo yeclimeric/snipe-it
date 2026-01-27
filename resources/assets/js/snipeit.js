@@ -620,7 +620,6 @@ document.addEventListener('livewire:init', () => {
         // Access status via response.status
         // Access json via responseJson
         queueMicrotask(() => {
-          console.log("hi");
           $(".livewire-select2").select2();
         });
       });
