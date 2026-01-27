@@ -604,34 +604,12 @@ document.addEventListener('livewire:init', () => {
         Livewire.find(target.data('livewire-component')).set(event.target.name, this.options[this.selectedIndex].value)
     });
 
-  Livewire.interceptRequest(
-    ({ request, onResponse, onSuccess, onError, onFailure }) => {
-      // Access url via request.uri
-      // Access options via request.options
-      // Access payload via request.payload
-
-      onResponse(({ response }) => {
-        // Equivalent to respond()
-        // Access status via response.status
-      });
-
-      onSuccess(({ response, responseJson }) => {
-        // Equivalent to succeed()
-        // Access status via response.status
-        // Access json via responseJson
+  Livewire.interceptMessage(({ onFinish }) => {
+    onFinish(() => {
+      // Runs after DOM morph completes (or on error/cancel)
         queueMicrotask(() => {
           $(".livewire-select2").select2();
         });
-      });
-
-      onError(({ response, responseBody, preventDefault }) => {
-        // Equivalent to fail() for server errors
-        // Access status via response.status
-        // Access content via responseBody
-      });
-
-      onFailure(({ error }) => {
-        // Equivalent to fail() for network errors
       });
     }
   );
