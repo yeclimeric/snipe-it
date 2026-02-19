@@ -313,7 +313,8 @@
                         $("#assignto_selector").hide();
                         $("#selected_status_status").removeClass('text-success');
                         $("#selected_status_status").addClass('text-danger');
-                        $("#selected_status_status").html('<x-icon type="warning" /> {{ trans_choice('admin/hardware/form.asset_not_deployable_checkin', 2) }} ');
+                        $("#selected_status_status").html("<x-icon type=\"warning\" /> {{ trans_choice('admin/hardware/form.asset_not_deployable_checkin', 2) }} ");
+
                     }
                 }
             });
