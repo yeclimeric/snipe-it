@@ -251,6 +251,7 @@ class SetupController extends Controller
         if ((! file_exists(storage_path().'/oauth-private.key')) || (! file_exists(storage_path().'/oauth-public.key'))) {
             Artisan::call('migrate', ['--path' => 'vendor/laravel/passport/database/migrations', '--force' => true]);
             Artisan::call('passport:install', ['--no-interaction' => true]);
+            $this->normalizePassportKeyPermissions();
         }
 
         return view('setup/migrate')
@@ -259,6 +260,27 @@ class SetupController extends Controller
             ->with('step', 2)
             ->with('section', trans('general.setup_create_database'))
             ->with('icon', 'fa-solid fa-database');
+    }
+
+    /**
+     * Normalize Passport key permissions to satisfy Passport 13 validation.
+     */
+    protected function normalizePassportKeyPermissions(): void
+    {
+        if (windows_os()) {
+            return;
+        }
+
+        $privateKey = storage_path('oauth-private.key');
+        $publicKey = storage_path('oauth-public.key');
+
+        if (is_file($privateKey) && is_writable($privateKey)) {
+            chmod($privateKey, 0600);
+        }
+
+        if (is_file($publicKey) && is_writable($publicKey)) {
+            chmod($publicKey, 0660);
+        }
     }
 
 
