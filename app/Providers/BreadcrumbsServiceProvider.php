@@ -214,6 +214,12 @@ class BreadcrumbsServiceProvider extends ServiceProvider
             ->push(trans('general.breadcrumb_button_actions.edit_item', ['name' => $component->name]), route('components.edit', $component))
         );
 
+        Breadcrumbs::for('components.clone.create', fn (Trail $trail, Component $component) =>
+        $trail->parent('components.index', route('components.index'))
+            ->push($component->display_name, route('components.show', $component))
+            ->push(trans('general.clone'), route('components.create'))
+        );
+
 
         /**
          * Consumables Breadcrumbs
@@ -262,8 +268,9 @@ class BreadcrumbsServiceProvider extends ServiceProvider
 
         Breadcrumbs::for('fieldsets.create', fn (Trail $trail) =>
         $trail->parent('fields.index', route('fields.index'))
-            ->push(trans('general.create'), route('fieldsets.create'))
+            ->push(trans('admin/custom_fields/general.create_fieldset'), route('fieldsets.create'))
         );
+
 
         Breadcrumbs::for('fieldsets.show', fn (Trail $trail, CustomFieldset $fieldset) =>
         $trail->parent('fields.index', route('fields.index'))
@@ -434,7 +441,8 @@ class BreadcrumbsServiceProvider extends ServiceProvider
 
         Breadcrumbs::for('maintenances.edit', fn (Trail $trail, Maintenance $maintenance) =>
         $trail->parent('maintenances.index', route('maintenances.index'))
-            ->push(trans('general.breadcrumb_button_actions.edit_item', ['name' => $maintenance->name]), route('maintenances.edit', $maintenance))
+            ->push($maintenance->name, route('maintenances.show', $maintenance))
+            ->push(trans('general.update', ['name' => $maintenance->name]), route('maintenances.edit', $maintenance))
         );
 
 

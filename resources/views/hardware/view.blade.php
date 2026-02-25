@@ -1105,16 +1105,16 @@
                                             </div>
                                         @endif
 
-                                        <div class="row">
-                                            <div class="col-md-3">
-                                                <strong>
-                                                    {!! trans('general.first_checkout') !!}
-                                                </strong>
-                                            </div>
-                                            <div class="col-md-9">
-                                                {{ Helper::getFormattedDateObject($asset->first_checkout_at, 'datetime')['formatted'] ?? '' }}
-                                            </div>
-                                        </div>
+{{--                                        <div class="row">--}}
+{{--                                            <div class="col-md-3">--}}
+{{--                                                <strong>--}}
+{{--                                                    {!! trans('general.first_checkout') !!}--}}
+{{--                                                </strong>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="col-md-9">--}}
+{{--                                                {{ Helper::getFormattedDateObject($asset->first_checkout_at, 'datetime')['formatted'] ?? '' }}--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
 
 
                                         @if ($asset->last_checkin!='')
@@ -1393,8 +1393,8 @@
                                     <table
                                             data-columns="{{ \App\Presenters\HistoryPresenter::dataTableLayout() }}"
                                             class="table table-striped snipe-table"
-                                            id="assetHistory"
-                                            data-id-table="assetHistory"
+                                            id="assetHistory_{{  $asset->id }}"
+                                            data-id-table="assetHistory_{{  $asset->id }}"
                                             data-side-pagination="server"
                                             data-sort-order="desc"
                                             data-sort-name="created_at"
@@ -1403,7 +1403,7 @@
                                                  "ignoreColumn": ["actions","image","change","checkbox","checkincheckout","icon"]
                                                }'
                                             data-url="{{ route('api.activity.index', ['item_id' => $asset->id, 'item_type' => 'asset']) }}"
-                                            data-cookie-id-table="assetHistory"
+                                            data-cookie-id-table="assetHistory_{{  $asset->id }}"
                                             data-cookie="true">
                                     </table>
                                 </div>

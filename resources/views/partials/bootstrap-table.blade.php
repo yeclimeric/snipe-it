@@ -102,6 +102,7 @@
                 paginationNextText: "{{ trans('general.next') }}",
                 paginationPreText: "{{ trans('general.previous') }}",
                 search: data_with_default('search', true),
+                searchText: "{{ request()->get('assetTag') ?? session()->get('search') }}", // this is needed so that people who incorrectly use the topsearch as an omnibar will not have an additional filter from BS tables
                 searchHighlight: data_with_default('search-highlight', true),
                 showColumns: data_with_default('show-columns', true),
                 showColumnsToggleAll: data_with_default('show-columns-toggle-all', true),
@@ -396,14 +397,14 @@
         },
 
         btnShowDeleted: {
-            text: '{{ (request()->input('status') == "deleted") ? trans('admin/users/table.show_current') : trans('admin/users/table.show_deleted') }}',
+            text: '{{ (request()->input('status') == "deleted") ? trans('general.show_current') : trans('general.show_deleted') }}',
             icon: 'fa-solid fa-trash',
             event () {
                 window.location.href = '{{ (request()->input('status') == "deleted") ? route('locations.index') : route('locations.index', ['status' => 'deleted']) }}';
             },
             attributes: {
                 class: '{{ (request()->input('status') == "deleted") ? 'btn-selected' : '' }}',
-                title: '{{ (request()->input('status') == "deleted") ? trans('admin/users/table.show_current') : trans('admin/users/table.show_deleted') }}',
+                title: '{{ (request()->input('status') == "deleted") ? trans('general.show_current') : trans('general.show_deleted') }}',
 
             }
         },

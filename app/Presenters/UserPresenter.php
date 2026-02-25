@@ -526,7 +526,12 @@ class UserPresenter extends Presenter
      */
     public function nameUrl()
     {
-        return (string) link_to_route('users.show', $this->display_name, $this->id);
+        if (auth()->user()->can('view', ['\App\Models\User', $this])) {
+            return (string)link_to_route('users.show', $this->display_name, $this->id);
+        } else {
+            return e($this->display_name);
+        }
+
     }
 
     /**
@@ -541,5 +546,14 @@ class UserPresenter extends Presenter
     public function glyph()
     {
         return '<x-icon type="user"/>';
+    }
+
+    public function formattedNameLink() {
+
+        if (auth()->user()->can('view', ['\App\Models\User', $this])) {
+            return '<a href="'.route('users.show', e($this->id)).'" class="'. (($this->deleted_at!='') ? 'deleted' : '').'">'.e($this->display_name).'</a>';
+        }
+
+        return '<span class="'. (($this->deleted_at!='') ? 'deleted' : '').'">'.e($this->display_name).'</span>';
     }
 }
