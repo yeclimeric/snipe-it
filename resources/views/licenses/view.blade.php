@@ -208,6 +208,16 @@
         </x-page-column>
     </x-container>
 
+@can('checkin', \App\Models\License::class)
+    @include ('modals.confirm-action',
+          [
+              'modal_name' => 'checkinFromAllModal',
+              'route' => route('licenses.bulkcheckin', $license->id),
+              'title' => trans('general.modal_confirm_generic'),
+              'body' => trans_choice('admin/licenses/general.bulk.checkin_all.modal', 2, ['checkedout_seats_count' => $checkedout_seats_count])
+          ])
+@endcan
+
 @can('checkout', \App\Models\License::class)
     @include ('modals.confirm-action',
           [
