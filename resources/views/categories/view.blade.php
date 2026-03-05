@@ -222,7 +222,7 @@
         </x-page-column>
     <x-page-column class="col-md-3">
 
-        <x-box>
+        <x-box class="side-box expanded">
             <x-box.info-panel :infoPanelObj="$category" img_path="{{ app('categories_upload_url') }}">
 
                 <x-slot:before_list>

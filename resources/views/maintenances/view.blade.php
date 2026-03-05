@@ -190,7 +190,7 @@ use Carbon\Carbon;
         </x-page-column>
 
         <x-page-column class="col-md-3">
-            <x-box>
+            <x-box class="side-box expanded">
                 <x-box.info-panel :infoPanelObj="$maintenance" img_path="{{ app('maintenances_upload_url') }}">
 
                     <x-slot:before_list>
