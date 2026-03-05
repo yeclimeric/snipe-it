@@ -11,7 +11,7 @@ class EditConsumableTest extends TestCase
     public function testPageRenders()
     {
         $this->actingAs(User::factory()->superuser()->create())
-            ->get(route('consumables.show', Consumable::factory()->create()))
+            ->get(route('consumables.edit', Consumable::factory()->create()))
             ->assertOk();
     }
 }
