@@ -951,6 +951,14 @@
             background-color: light-dark(hsl(from var(--main-theme-color) h s calc(l + 40)),hsl(from var(--main-theme-color) h s calc(l - 40))) !important;
         }
 
+        tr.success > td {
+            background-color: var(--text-success) !important;
+        }
+
+        tr.danger > td {
+            background-color: var(--text-danger) !important;
+        }
+
         @media print {
 
             body,
