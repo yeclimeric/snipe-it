@@ -75,7 +75,7 @@ class AppServiceProvider extends ServiceProvider
         Component::observe(ComponentObserver::class);
         Consumable::observe(ConsumableObserver::class);
         License::observe(LicenseObserver::class);
-        // Location::observe(LocationObserver::class);
+        Location::observe(LocationObserver::class);
         Maintenance::observe(MaintenanceObserver::class);
         Setting::observe(SettingObserver::class);
         User::observe(UserObserver::class);
