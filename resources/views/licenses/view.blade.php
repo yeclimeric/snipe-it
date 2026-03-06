@@ -204,16 +204,7 @@
               'body' => trans_choice('admin/licenses/general.bulk.checkout_all.modal', 2, ['available_seats_count' => $available_seats_count])
           ])
 @endcan
-
-@can('checkin', \App\Models\License::class)
-    @include ('modals.confirm-action',
-          [
-              'modal_name' => 'checkinFromAllModal',
-              'route' => route('licenses.bulkcheckin', $license->id),
-              'title' => trans('general.modal_confirm_generic'),
-              'body' => trans_choice('admin/licenses/general.bulk.checkin_all.modal', 2, ['checkedout_seats_count' => $checkedout_seats_count])
-          ])
-@endcan
+    
 
   @can('update', \App\Models\License::class)
     @include ('modals.upload-file', ['item_type' => 'license', 'item_id' => $license->id])
