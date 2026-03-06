@@ -232,8 +232,8 @@
 
                     <x-slot:before_list>
 
-                        <x-button.wide-edit :item="$company" :route="route('companies.edit', $company->id)" />
-                        <x-button.wide-delete :item="$company" />
+                        <x-button.edit :item="$company" :route="route('companies.edit', $company->id)" />
+                        <x-button.delete :item="$company" />
 
                     </x-slot:before_list>
 

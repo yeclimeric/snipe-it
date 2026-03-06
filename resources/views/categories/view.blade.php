@@ -225,12 +225,11 @@
         <x-box class="side-box expanded">
             <x-box.info-panel :infoPanelObj="$category" img_path="{{ app('categories_upload_url') }}">
 
-                <x-slot:before_list>
+                <x-slot:buttons>
+                    <x-button.edit :item="$category" :route="route('categories.edit', $category->id)" />
+                    <x-button.delete :item="$category" />
+                </x-slot:buttons>
 
-                    <x-button.wide-edit :item="$category" :route="route('categories.edit', $category->id)" />
-                    <x-button.wide-delete :item="$category" />
-
-                </x-slot:before_list>
             </x-box.info-panel>
         </x-box>
     </x-page-column>
