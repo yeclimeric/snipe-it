@@ -952,11 +952,13 @@
         }
 
         tr.success > td {
-            background-color: var(--text-success) !important;
+            background-color: #00a65a !important;
+            color: white !important;
         }
 
         tr.danger > td {
             background-color: var(--text-danger) !important;
+            color: white !important;
         }
 
         @media print {
