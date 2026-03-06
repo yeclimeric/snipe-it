@@ -599,7 +599,21 @@
                           {!! $errors->first('last_updated_end', '<span class="alert-msg" aria-hidden="true"><i class="fas fa-times" aria-hidden="true"></i> :message</span>') !!}
                       </div>
                   @endif
+              </div>
 
+              <!-- Last Updated before -->
+              <div class="form-group">
+                  <label for="last_updated_before" class="col-md-3 control-label">{{ trans('general.updated_before') }}</label>
+                        <div class="input-group col-md-2">
+                             <input class="form-control input-group" type="number" min="0" name="last_updated_before" value="{{ $template->textValue('last_updated_before', old('last_updated_before')) }}" aria-label="last_updated_before">
+                            {{ trans('general.days_ago') }}
+                        </div>
+
+                  @if ($errors->has('last_updated_before'))
+                      <div class="col-md-9 col-lg-offset-3">
+                          {!! $errors->first('last_updated_before', '<span class="alert-msg" aria-hidden="true"><i class="fas fa-times" aria-hidden="true"></i> :message</span>') !!}
+                      </div>
+                  @endif
               </div>
 
             <div class="col-md-9 col-md-offset-3">
