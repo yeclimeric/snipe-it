@@ -41,10 +41,13 @@ Route::group([ 'prefix' => 'fields','middleware' => ['auth'] ], function () {
         'except' => ['show', 'view']
     ]);
 
+
+    // This is a shim to handle bootstrap tables
+    // @todo: normalize this in the JS
     Route::get(
         'fieldsets/{fieldset}/edit',
         [CustomFieldsetsController::class, 'show']
-    )->name('fieldsets.show');
+    )->name('fieldsets.edit.show');
 
     Route::get(
         'fieldsets/{fieldset}',
