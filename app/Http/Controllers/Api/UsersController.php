@@ -569,9 +569,6 @@ class UsersController extends Controller
 
         }
 
-        // We need to use has()  instead of filled()
-        // here because we need to overwrite permissions
-        // if someone needs to null them out
 
         if ($request->filled('display_name')) {
             $user->display_name = $request->input('display_name');
@@ -586,13 +583,21 @@ class UsersController extends Controller
         }
 
 
-        
+        // We need to use has()  instead of filled()
+        // here because we need to overwrite permissions
+        // if someone needs to null them out
+
         if ($request->has('permissions')) {
             $permissions_array = $request->input('permissions');
 
             // Strip out the individual superuser permission if the API user isn't a superadmin
             if (!auth()->user()->isSuperUser()) {
                 unset($permissions_array['superuser']);
+            }
+
+            // Strip out the individual admin permission if the API user isn't an admin
+            if (!auth()->user()->isAdmin()) {
+                unset($permissions_array['admin']);
             }
 
             $user->permissions = $permissions_array;
