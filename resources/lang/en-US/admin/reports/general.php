@@ -10,6 +10,7 @@ return [
     'acceptance_request' => 'Acceptance request',
     'custom_export' => [
         'user_address' => 'User Address',
+        'user_company' => 'User Company',
         'user_city' => 'User City',
         'user_state' => 'User State',
         'user_country' => 'User Country',

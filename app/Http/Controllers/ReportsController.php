@@ -550,6 +550,10 @@ class ReportsController extends Controller
                 $header[] = 'Username';
             }
 
+            if ($request->filled('user_company')) {
+                $header[] = trans('admin/reports/general.custom_export.user_company');
+            }
+
             if ($request->filled('email')) {
                 $header[] = 'Email';
             }
@@ -768,7 +772,6 @@ class ReportsController extends Controller
                 $assets->onlyTrashed();
             }
 
-            Log::debug($assets->toSql());
             $assets->orderBy('assets.id', 'ASC')->chunk(500, function ($assets) use ($handle, $customfields, $request) {
             
                 $executionTime = microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'];
@@ -882,6 +885,14 @@ class ReportsController extends Controller
                         // Only works if we're checked out to a user, not anything else.
                         if ($asset->checkedOutToUser()) {
                             $row[] = ($asset->assignedto) ? $asset->assignedto->username : '';
+                        } else {
+                            $row[] = ''; // Empty string if unassigned
+                        }
+                    }
+
+                    if ($request->filled('user_company')) {
+                        if ($asset->checkedOutToUser()) {
+                            $row[] = ($asset->assignedto->company) ? $asset->assignedto->company->display_name : '';
                         } else {
                             $row[] = ''; // Empty string if unassigned
                         }
