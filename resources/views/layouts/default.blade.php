@@ -1077,6 +1077,16 @@
                     <!-- Navbar Right Menu -->
                     <div class="navbar-custom-menu">
                         <ul class="nav navbar-nav">
+                            <li aria-hidden="true">
+
+                                    <a href="#" class="sidebar-toggle-mobile visible-xs hidden-lg hidden-md" data-toggle="push-menu"
+                                   role="button">
+                                    <span class="sr-only">{{ trans('general.toggle_navigation') }}</span>
+                                    <x-icon type="nav-toggle" />
+                                </a>
+
+                            </li>
+
                             @can('index', \App\Models\Asset::class)
                                 <li aria-hidden="true"{!! (request()->is('hardware*') ? ' class="active"' : '') !!}>
                                     <a href="{{ url('hardware') }}" {{$snipeSettings->shortcuts_enabled == 1 ? "accesskey=1" : ''}} tabindex="-1" data-tooltip="true" data-placement="bottom" data-title="{{ trans('general.assets') }}">
@@ -1120,23 +1130,20 @@
 
                             @can('index', \App\Models\Asset::class)
                                 <li>
-                                    <form class="navbar-form navbar-left form-horizontal" role="search"
-                                          action="{{ route('findbytag/hardware') }}" method="get">
-                                        <div class="col-xs-12 col-md-12">
-                                            <div class="col-xs-12 form-group">
-                                                <label class="sr-only" for="tagSearch">
-                                                    {{ trans('general.lookup_by_tag') }}
-                                                </label>
-                                                <input type="text" class="form-control" id="tagSearch" name="assetTag" placeholder="{{ trans('general.lookup_by_tag') }}">
-                                                <input type="hidden" name="topsearch" value="true" id="search">
-                                            </div>
-                                            <div class="col-xs-1">
-                                                <button type="submit" id="topSearchButton" class="btn btn-theme pull-right">
-                                                    <x-icon type="search" />
-                                                    <span class="sr-only">{{ trans('general.search') }}</span>
-                                                </button>
-                                            </div>
-                                        </div>
+                                    <form class="navbar-form navbar-left form-inline" role="search" action="{{ route('findbytag/hardware') }}" method="get">
+
+                                                <div class="input-group col-xs-12" style="border: 0 !important;">
+                                                    <label class="sr-only" for="tagSearch">
+                                                        {{ trans('general.lookup_by_tag') }}
+                                                    </label>
+                                                    <input type="text" class="form-control" id="tagSearch" name="assetTag" placeholder="{{ trans('general.lookup_by_tag') }}">
+                                                    <span class="input-group-btn">
+                                                        <button type="submit" id="topSearchButton" class="btn btn-sm btn-theme" style="padding: 7px 10px 7px 10px; "><x-icon type="search" class="fa-fw" /><div class="sr-only">{{ trans('general.search') }}</div></button>
+                                                    </span>
+                                                </div>
+
+                                        <input type="hidden" name="topsearch" value="true" id="search">
+
                                     </form>
                                 </li>
                             @endcan
@@ -1196,6 +1203,8 @@
                                                 </a>
                                             </li>
                                         @endcan
+
+
                                     </ul>
                                 </li>
                             @endcan
@@ -1311,11 +1320,7 @@
                         </ul>
                     </div>
                 </nav>
-                <a href="#" style="float:left" class="sidebar-toggle-mobile visible-xs btn" data-toggle="push-menu"
-                   role="button">
-                    <span class="sr-only">{{ trans('general.toggle_navigation') }}</span>
-                    <x-icon type="nav-toggle" />
-                </a>
+
                 <!-- Sidebar toggle button-->
             </header>
 
