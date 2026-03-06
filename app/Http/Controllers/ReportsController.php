@@ -453,6 +453,10 @@ class ReportsController extends Controller
 
             $header = [];
 
+            if($request->filled('is_shared')) {
+                $header[] = trans('admin/reports/general.share_template');
+            }
+
             if ($request->filled('id')) {
                 $header[] = trans('general.id');
             }
@@ -659,7 +663,14 @@ class ReportsController extends Controller
             $executionTime = microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'];
             Log::debug('Added headers: '.$executionTime);
 
-            $assets = Asset::select('assets.*')->with(
+            if($request->filled('is_shared')) {
+                //to fill with logic for the report template and NOT the assets retrieved by the query
+                //do we scope here or??
+            }
+
+
+
+                $assets = Asset::select('assets.*')->with(
                 'location', 'assetstatus', 'company', 'defaultLoc', 'assignedTo',
                 'model.category', 'model.manufacturer', 'supplier');
             

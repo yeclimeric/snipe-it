@@ -273,6 +273,7 @@ return [
     'request_item'          => 'Request this item',
     'external_link_tooltip' => 'External link to',
     'save'  				=> 'Save',
+    'save_copy'             => 'Save Copy',
     'select_var'            => 'Select :thing... ', // this will eventually replace all of our other selects
     'select'				=> 'Select',
     'select_all'            => 'Select All',
@@ -711,6 +712,7 @@ return [
 
     'select_all_none' => 'Select/Unselect All',
     'generic_model_not_found' => 'That :model was not found or you do not have permission to access it',
+    'report_not_editable' => 'You do not have permission to edit this report template',
     'deleted_models' => 'Deleted Asset Models',
     'deleted_users' => 'Deleted Users',
     'cost_each' => ':amount each',
