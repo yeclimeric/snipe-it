@@ -598,6 +598,10 @@ class ReportsController extends Controller
                 $header[] = trans('admin/reports/general.custom_export.user_zip');
             }
 
+            if ($request->filled('target_notes')) {
+                $header[] = trans('admin/reports/general.custom_export.target_notes');
+            }
+            
             if ($request->filled('status')) {
                 $header[] = trans('general.status');
             }
@@ -987,6 +991,15 @@ class ReportsController extends Controller
                             $row[] = ''; // Empty string if unassigned
                         }
                     }
+
+                    if ($request->filled('target_notes')) {
+                        if ($asset->checkedOutToUser()) {
+                            $row[] = ($asset->assignedto) ? $asset->assignedto->notes : '';
+                        } else {
+                            $row[] = ''; // Empty string if unassigned
+                        }
+                    }
+
 
                     if ($request->filled('status')) {
                         $row[] = ($asset->assetstatus) ? $asset->assetstatus->name.' ('.$asset->present()->statusMeta.')' : '';
