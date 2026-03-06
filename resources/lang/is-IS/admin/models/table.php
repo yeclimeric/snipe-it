@@ -3,7 +3,7 @@
 return array(
 
     'create'				=> 'Búa til eignategund',
-    'created_at' 			=> 'Created at',
+    'created_at' 			=> 'Stofnað',
     'eol'	 				=> 'Lok línu',
     'modelnumber'   		=> 'Tegundar Nr.',
     'name'      			=> 'Nafn eignategundar',
@@ -11,7 +11,6 @@ return array(
     'title'					=> 'Tegundir',
     'update'				=> 'Uppfæra eignategund',
     'view'					=> 'Skoða eignategund',
-    'update'				=> 'Uppfæra eignategund',
-    'clone'				=> 'Klóna tegund',
-    'edit'				=> 'Breyta tegund',
+    'clone'				    => 'Klóna tegund',
+    'edit'				    => 'Breyta tegund',
 );

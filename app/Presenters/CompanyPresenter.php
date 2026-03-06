@@ -106,6 +106,15 @@ class CompanyPresenter extends Presenter
                 'visible' => true,
                 'class' => 'css-component',
             ], [
+                'field' => 'tag_color',
+                'searchable' => true,
+                'sortable' => true,
+                'switchable' => true,
+                'title' => trans('general.tag_color'),
+                'visible' => false,
+                'formatter' => 'colorTagFormatter',
+            ],
+            [
                 'field' => 'notes',
                 'searchable' => true,
                 'sortable' => true,
@@ -143,6 +152,7 @@ class CompanyPresenter extends Presenter
                 'visible' => true,
                 'formatter' => 'companiesActionsFormatter',
                 'printIgnore' => true,
+                'class' => 'hidden-print',
             ],
         ];
 
@@ -155,7 +165,11 @@ class CompanyPresenter extends Presenter
      */
     public function nameUrl()
     {
-        return (string) link_to_route('companies.show', $this->name, $this->id);
+        if (auth()->user()->can('view', ['\App\Models\Company', $this])) {
+            return (string)link_to_route('companies.show', e($this->display_name), $this->id);
+        } else {
+            return e($this->display_name);
+        }
     }
 
     /**
@@ -165,5 +179,14 @@ class CompanyPresenter extends Presenter
     public function viewUrl()
     {
         return route('companies.show', $this->id);
+    }
+
+    public function formattedNameLink() {
+
+        if (auth()->user()->can('view', ['\App\Models\Company', $this])) {
+            return ($this->tag_color ? "<i class='fa-solid fa-fw fa-square' style='color: ".e($this->tag_color)."' aria-hidden='true'></i>" : '').'<a href="'.route('companies.show', e($this->id)).'">'.e($this->display_name).'</a>';
+        }
+
+        return ($this->tag_color ? "<i class='fa-solid fa-fw fa-square' style='color: ".e($this->tag_color)."' aria-hidden='true'></i>" : '').e($this->display_name);
     }
 }

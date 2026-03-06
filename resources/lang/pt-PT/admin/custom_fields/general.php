@@ -34,7 +34,7 @@ return [
     'create_fieldset_title' => 'Criar um novo conjunto de campos',
     'create_field'            => 'Novo conjunto de campos personalizado',
     'create_field_title' => 'Criar um novo campo personalizado',
-    'value_encrypted'      	        => 'O valor deste campo está encriptado na base de dados. apenas administradores poderão ver o valor desencriptado',
+    'value_encrypted'      	        => 'The value of this field is encrypted in the database. Only users with permission to view encrypted custom fields will be able to view the decrypted value',
     'show_in_email'     => 'Incluir o valor deste campo nos e-mails de checktout enviados ao utilizador? Os campos encriptados não serão incluídos',
     'show_in_email_short' => 'Incluir nos e-mails',
     'help_text' => 'Texto de Ajuda',
@@ -68,4 +68,5 @@ return [
         'checkbox' => 'Checkbox',
         'radio' => 'Radio Buttons',
     ],
+    'general_help_text' => 'Custom fields store additional information not covered by the default asset fields. <a href="https://snipe-it.readme.io/docs/custom-fields#/"><i class="fa fa-external-link"></i></a>.',
 ];

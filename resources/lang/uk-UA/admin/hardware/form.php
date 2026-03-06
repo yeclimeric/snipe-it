@@ -44,6 +44,8 @@ return [
     'redirect_to_checked_out_to'   => 'Перейти до виданих',
     'select_statustype'	=> 'Виберіть тип статусу',
     'serial'			=> 'Серійник',
+    'serial_required'	=> 'Для активу :number необхідно вказати серійний номер',
+    'serial_required_post_model_update'	=> 'Параметри моделі :asset_model оновлено: тепер серійний номер є обов’язковим. Будь ласка, вкажіть його для цього активу.',
     'status'			=> 'Статус',
     'tag'				=> 'Тег активу',
     'update'			=> 'Оновити актив',

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helper;
 use App\Helpers\StorageHelper;
 use App\Http\Requests\UploadFileRequest;
 use App\Models\Actionlog;
+use App\Models\Import;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -36,7 +38,7 @@ class UploadedFilesController extends Controller
     {
 
         // Check the permissions to make sure the user can view the object
-        $object = self::$map_object_type[$object_type]::find($id);
+        $object = self::$map_object_type[$object_type]::withTrashed()->find($id);
         $this->authorize('update', $object);
 
         if (!$object) {
@@ -54,7 +56,7 @@ class UploadedFilesController extends Controller
             foreach ($request->file('file') as $file) {
                 $file_name = $request->handleFile(self::$map_storage_path[$object_type], self::$map_file_prefix[$object_type].'-'.$object->id, $file);
                 $files[] = $file_name;
-                $object->logUpload($file_name, $request->get('notes'));
+                $object->logUpload($file_name, $request->input('notes'));
             }
 
             $files = Actionlog::select('action_logs.*')->where('action_type', '=', 'uploaded')
@@ -85,7 +87,7 @@ class UploadedFilesController extends Controller
     public function show($object_type, $id, $file_id) : RedirectResponse | StreamedResponse | Storage | StorageHelper | BinaryFileResponse
     {
         // Check the permissions to make sure the user can view the object
-        $object = self::$map_object_type[$object_type]::find($id);
+        $object = self::$map_object_type[$object_type]::withTrashed()->find($id);
         $this->authorize('view', $object);
 
         if (!$object) {
@@ -130,8 +132,8 @@ class UploadedFilesController extends Controller
     {
 
         // Check the permissions to make sure the user can view the object
-        $object = self::$map_object_type[$object_type]::find($id);
-        $this->authorize('update', self::$map_object_type[$object_type]);
+        $object = self::$map_object_type[$object_type]::withTrashed()->find($id);
+        $this->authorize('update', $object);
 
         if (!$object) {
             return redirect()->back()->withFragment('files')->with('error',trans('general.file_upload_status.invalid_object'));
@@ -139,7 +141,7 @@ class UploadedFilesController extends Controller
 
 
         // Check for the file
-        $log = Actionlog::find($file_id)->where('item_type', self::$map_object_type[$object_type])
+        $log = Actionlog::where('id',$file_id)->where('item_type', self::$map_object_type[$object_type])
             ->where('item_id', $object->id)->first();
 
         if ($log) {
@@ -148,14 +150,38 @@ class UploadedFilesController extends Controller
                 Storage::delete(self::$map_storage_path[$object_type].'/'.$log->filename);
             }
             // Delete the record of the file
-            if ($log->delete()) {
+            if ($log->logUploadDelete($object, $log->filename)) {
                 return redirect()->back()->withFragment('files')->with('success', trans_choice('general.file_upload_status.delete.success', 1));
             }
 
         }
 
         // The file doesn't seem to really exist, so report an error
-        return redirect()->back()->withFragment('files')->with('success', trans_choice('general.file_upload_status.delete.error', 1));
+        return redirect()->back()->withFragment('files')->with('error', trans_choice('general.file_upload_status.delete.error', 1));
+
+    }
+
+    public function downloadImport(Import $import) {
+
+        $this->authorize('import');
+
+        if ($import = Import::find($import->id)) {
+
+            if ((auth()->user()->id != $import->created_by) && (!auth()->user()->isSuperUser())) {
+                return redirect()->back()->with('error', trans('general.file_upload_status.file_not_found'));
+            }
+
+            if (config('filesystems.default') == 's3_private') {
+                return redirect()->away(Storage::disk('s3_private')->temporaryUrl('private_uploads/imports/' . $import->file_path, now()->addMinutes(5)));
+            }
+
+            if (Storage::exists('private_uploads/imports/' . $import->file_path)) {
+                return response()->download(config('app.private_uploads') . '/imports/' . $import->file_path);
+            }
+
+        }
+
+        return redirect()->back()->with('error', trans('general.file_upload_status.file_not_found'));
 
     }
 

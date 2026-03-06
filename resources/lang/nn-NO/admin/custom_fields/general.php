@@ -33,7 +33,7 @@ return [
     'create_fieldset_title' => 'Opprett et nytt feltsett',
     'create_field'            => 'Nytt Egendefinert Felt',
     'create_field_title' => 'Opprett nytt egendefinert felt',
-    'value_encrypted'      	        => 'Verdien i dette feltet er kryptert i databasen. Bare administratorer kan se hva som står i dette feltet',
+    'value_encrypted'      	        => 'The value of this field is encrypted in the database. Only users with permission to view encrypted custom fields will be able to view the decrypted value',
     'show_in_email'     => 'Inkluder verdien i dette feltet i utsjekkseposter sendt til brukeren? Krypterte felter kan ikke inkluderes i eposter',
     'show_in_email_short' => 'Inkludere i epost',
     'help_text' => 'Hjelpetekst',
@@ -67,4 +67,5 @@ return [
         'checkbox' => 'Checkbox',
         'radio' => 'Radio Buttons',
     ],
+    'general_help_text' => 'Custom fields store additional information not covered by the default asset fields. <a href="https://snipe-it.readme.io/docs/custom-fields#/"><i class="fa fa-external-link"></i></a>.',
 ];

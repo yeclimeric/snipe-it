@@ -22,9 +22,11 @@ return array(
     ),
 
     'delete' => array(
-        'confirm'   => 'Oletko varma että haluat poistaa tämän valmistajan?',
+        'confirm' => 'Oletko varma että haluat poistaa tämän valmistajan?',
         'error'   => 'Valmistajan poistamisessa tapahtui virhe. Ole hyvä ja yritä uudelleen.',
-        'success' => 'Valmistaja poistettiin onnistuneesti.'
+        'success'                => 'Valmistaja poistettiin onnistuneesti.',
+        'bulk_success'           => 'Valmistajat poistettiin onnistuneesti.',
+        'partial_success'        => 'Valmistaja poistettiin onnistuneesti. Katso lisätietoja alapuolelta. | :count valmistajaa poistettiin onnistuneesti. Katso lisätietoja alapuolelta.',
     )
 
 );

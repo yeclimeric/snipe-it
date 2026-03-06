@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Traits\CompanyableTrait;
 use App\Models\Traits\Searchable;
 use App\Presenters\Presentable;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Watson\Validating\ValidatingTrait;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
+use Watson\Validating\ValidatingTrait;
+
 /**
  * Model for Companies.
  *
@@ -25,10 +27,10 @@ final class Company extends SnipeModel
 
     // Declare the rules for the model validation
     protected $rules = [
-        'name' => 'required|min:1|max:255|unique:companies,name',
+        'name' => 'required|max:255|unique:companies,name',
         'fax' => 'min:7|max:35|nullable',
         'phone' => 'min:7|max:35|nullable',
-    'email' => 'email|max:150|nullable',
+        'email' => 'email|max:150|nullable',
     ];
 
     protected $presenter = \App\Presenters\CompanyPresenter::class;
@@ -70,6 +72,7 @@ final class Company extends SnipeModel
         'fax',
         'email',
         'created_by',
+        'tag_color',
         'notes',
     ];
 
@@ -317,7 +320,7 @@ final class Company extends SnipeModel
 
     public function adminuser()
     {
-        return $this->belongsTo(\App\Models\User::class, 'created_by');
+        return $this->belongsTo(\App\Models\User::class, 'created_by')->withTrashed();
     }
 
 

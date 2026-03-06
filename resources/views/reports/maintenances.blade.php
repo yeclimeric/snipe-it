@@ -8,10 +8,8 @@
 
 {{-- Page content --}}
 @section('content')
-<div class="row">
-  <div class="col-md-12">
-    <div class="box box-default">
-      <div class="box-body">
+    <x-container>
+        <x-box>
             <table
                     data-cookie-id-table="maintenancesReport"
                     data-show-footer="true"
@@ -19,6 +17,7 @@
                     data-side-pagination="server"
                     data-sort-order="asc"
                     id="maintenancesReport"
+                    data-advanced-search="false"
                     data-url="{{route('api.maintenances.index') }}"
                     class="table table-striped snipe-table"
                     data-export-options='{
@@ -46,10 +45,8 @@
                 </tr>
                 </thead>
             </table>
-      </div>
-    </div>
-  </div>
-</div>
+        </x-box>
+    </x-container>
 @stop
 
 @section('moar_scripts')

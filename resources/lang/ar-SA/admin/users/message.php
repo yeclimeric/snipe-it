@@ -2,11 +2,12 @@
 
 return array(
 
-    'accepted'                  => 'لقد قبلت هذا الأصل بنجاح.',
-    'declined'                  => 'لقد رفضت هذا الأصل بنجاح.',
+    'accepted'                  => 'You have successfully accepted this item.',
+    'declined'                  => 'You have successfully declined this item.',
     'bulk_manager_warn'	        => 'تم تحديث المستخدمين بنجاح، ولكن لم يتم حفظ إدخال مديرك لأن المدير الذي حددته كان أيضا في قائمة المستخدمين التي سيتم تعديلها، وقد لا يكون المستخدمون مديرهم الخاص. يرجى تحديد المستخدمين مرة أخرى، باستثناء المدير.',
     'user_exists'               => 'المستخدم موجود مسبقاً!',
-    'user_not_found'            => 'User does not exist or you do not have permission view them.',
+    'cannot_delete'             => 'User does not exist or you do not have permission to delete them.',
+    'user_not_found'            => 'المستخدم غير موجود أو ليس لديك الصلاحية لعرضها.',
     'user_login_required'       => 'حقل تسجيل الدخول اجباري',
     'user_has_no_assets_assigned' => 'لا توجد أصول مخصصة حاليا للمستخدم.',
     'user_password_required'    => 'كلمة المرور اجبارية.',

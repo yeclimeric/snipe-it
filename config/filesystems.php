@@ -63,6 +63,8 @@ $config = [
             'region' => env('PUBLIC_AWS_DEFAULT_REGION'),
             'bucket' => env('PUBLIC_AWS_BUCKET'),
             'url' => env('PUBLIC_AWS_URL'),
+            'endpoint' => env('PUBLIC_AWS_ENDPOINT'),
+            'use_path_style_endpoint' => env('PUBLIC_AWS_PATH_STYLE'),
             'root'   => env('PUBLIC_AWS_BUCKET_ROOT'),
             'visibility' => 'public'
         ],
@@ -78,6 +80,8 @@ $config = [
             'region' => env('PRIVATE_AWS_DEFAULT_REGION'),
             'bucket' => env('PRIVATE_AWS_BUCKET'),
             'url' => env('PRIVATE_AWS_URL'),
+            'endpoint' => env('PRIVATE_AWS_ENDPOINT'),
+            'use_path_style_endpoint' => env('PRIVATE_AWS_PATH_STYLE'),
             'root'   => env('PRIVATE_AWS_BUCKET_ROOT'),
             'visibility' => 'private'
         ],
@@ -123,6 +127,9 @@ $config['allowed_upload_extensions_array']  = [
     'mov',
     'mp3',
     'mp4',
+    'odp',
+    'ods',
+    'odt',
     'ogg',
     'pdf',
     'png',
@@ -140,12 +147,15 @@ $config['allowed_upload_extensions_array']  = [
 ];
 
 
-
+// https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types
 $config['allowed_upload_mimetypes_array'] = [
     'application/json',
     'application/msword',
     'application/pdf',
     'application/vnd.ms-excel',
+    'application/vnd.oasis.opendocument.presentation',
+    'application/vnd.oasis.opendocument.spreadsheet',
+    'application/vnd.oasis.opendocument.text',
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     'application/x-rar-compressed',

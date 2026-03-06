@@ -2,11 +2,12 @@
 
 return array(
 
-    'accepted'                  => 'Uwamukele ngempumelelo le mali.',
-    'declined'                  => 'Uye wenqaba ngempumelelo le mali.',
+    'accepted'                  => 'You have successfully accepted this item.',
+    'declined'                  => 'You have successfully declined this item.',
     'bulk_manager_warn'	        => 'Abasebenzisi bakho babuyekezwe ngempumelelo, kodwa ukungena kwakho kwemenenja akulondoloziwe ngoba umphathi oyikhethile naye ohlwini lomsebenzisi oluzohlelwa, futhi abasebenzisi bangase bangabi umphathi wabo. Sicela ukhethe abasebenzisi bakho futhi, ngaphandle kwamenenja.',
     'user_exists'               => 'Umsebenzisi usuvele ukhona!',
-    'user_not_found'            => 'User does not exist or you do not have permission view them.',
+    'cannot_delete'             => 'User does not exist or you do not have permission to delete them.',
+    'user_not_found'            => 'User does not exist or you do not have permission to view them.',
     'user_login_required'       => 'Insimu yokungena ngemvume iyadingeka',
     'user_has_no_assets_assigned' => 'No assets currently assigned to user.',
     'user_password_required'    => 'Iphasiwedi iyadingeka.',

@@ -10,6 +10,7 @@ use App\Notifications\WelcomeNotification;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * This is ONLY used for the User Import. When we are importing users
@@ -47,6 +48,7 @@ class UserImporter extends ItemImporter
         // Pull the records from the CSV to determine their values
         $this->item['id'] = trim($this->findCsvMatch($row, 'id'));
         $this->item['username'] = trim($this->findCsvMatch($row, 'username'));
+        $this->item['display_name'] = trim($this->findCsvMatch($row, 'display_name'));
         $this->item['first_name'] = trim($this->findCsvMatch($row, 'first_name'));
         $this->item['last_name'] = trim($this->findCsvMatch($row, 'last_name'));
         $this->item['email'] = trim($this->findCsvMatch($row, 'email'));
@@ -101,8 +103,7 @@ class UserImporter extends ItemImporter
 
             $this->log('Updating User');
 
-            // Todo - check that this works
-            if (!Gate::allows('canEditAuthFields', $user)) {
+            if (Auth::check() && (!Gate::allows('canEditAuthFields', $user))) {
                 unset($user->username);
                 unset($user->email);
                 unset($user->password);

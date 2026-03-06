@@ -4,19 +4,17 @@ namespace App\Mail;
 
 use App\Helpers\Helper;
 use App\Models\Asset;
+use App\Models\Location;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Queue\SerializesModels;
 
-class CheckoutAssetMail extends Mailable
+class CheckoutAssetMail extends BaseMailable
 {
     use Queueable, SerializesModels;
 
@@ -26,7 +24,7 @@ class CheckoutAssetMail extends Mailable
      * Create a new message instance.
      * @throws \Exception
      */
-    public function __construct(Asset $asset, $checkedOutTo, User $checkedOutBy, $acceptance, $note, bool $firstTimeSending = true)
+    public function __construct(Asset $asset, $checkedOutTo, ?User $checkedOutBy, $acceptance, $note, bool $firstTimeSending = true)
     {
         $this->item = $asset;
         $this->admin = $checkedOutBy;
@@ -35,14 +33,6 @@ class CheckoutAssetMail extends Mailable
 
         $this->settings = Setting::getSettings();
         $this->target = $checkedOutTo;
-
-        // Location is a target option, but there are no emails currently associated with locations.
-        if($this->target instanceof User){
-            $this->target = $this->target->present()?->fullName();
-        }
-        else if($this->target instanceof Asset){
-            $this->target = $this->target->assignedto?->present()?->fullName();
-        }
 
         $this->last_checkout = '';
         $this->expected_checkin = '';
@@ -85,6 +75,17 @@ class CheckoutAssetMail extends Mailable
         $eula = method_exists($this->item, 'getEula') ? $this->item->getEula() : '';
         $req_accept = $this->requiresAcceptance();
         $fields = [];
+        $name = null;
+
+        if($this->target instanceof User){
+            $name = $this->target->display_name;
+        }
+        else if($this->target instanceof Asset){
+            $name  = $this->target->assignedto?->display_name;
+        }
+        else if($this->target instanceof Location){
+            $name  = $this->target->manager?->name;
+        }
 
         // Check if the item has custom fields associated with it
         if (($this->item->model) && ($this->item->model->fieldset)) {
@@ -100,7 +101,7 @@ class CheckoutAssetMail extends Mailable
                 'admin'         => $this->admin,
                 'status'        => $this->item->assetstatus?->name,
                 'note'          => $this->note,
-                'target'        => $this->target,
+                'target'        => $name,
                 'fields'        => $fields,
                 'eula'          => $eula,
                 'req_accept'    => $req_accept,
@@ -125,7 +126,7 @@ class CheckoutAssetMail extends Mailable
     private function getSubject(): string
     {
         if ($this->firstTimeSending) {
-            return trans('mail.Asset_Checkout_Notification');
+            return trans('mail.Asset_Checkout_Notification', ['tag' => $this->item->asset_tag]);
         }
 
         return trans('mail.unaccepted_asset_reminder');
@@ -133,12 +134,16 @@ class CheckoutAssetMail extends Mailable
 
     private function introductionLine(): string
     {
+        if ($this->firstTimeSending && $this->target instanceof Location) {
+            return trans_choice('mail.new_item_checked_location', 1, ['location' => $this->target->name]);
+        }
+
         if ($this->firstTimeSending && $this->requiresAcceptance()) {
-            return trans('mail.new_item_checked_with_acceptance');
+            return trans_choice('mail.new_item_checked_with_acceptance', 1);
         }
 
         if ($this->firstTimeSending && !$this->requiresAcceptance()) {
-            return trans('mail.new_item_checked');
+            return trans_choice('mail.new_item_checked', 1);
         }
 
         if (!$this->firstTimeSending && $this->requiresAcceptance()) {

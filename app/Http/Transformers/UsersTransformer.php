@@ -22,7 +22,7 @@ class UsersTransformer
     public function transformUser(User $user)
     {
 
-        $role = '';
+        $role = null;
         if ($user->isSuperUser()) {
             $role = 'superadmin';
         } elseif ($user->isAdmin()) {
@@ -31,16 +31,17 @@ class UsersTransformer
         $array = [
                 'id' => (int) $user->id,
                 'avatar' => e($user->present()->gravatar) ?? null,
-                'name' => e($user->getFullNameAttribute()),
-                'first_name' => e($user->first_name),
-                'last_name' => e($user->last_name),
-                'username' => e($user->username),
+                'name' => e($user->getFullNameAttribute()) ?? null,
+                'first_name' => e($user->first_name) ?? null,
+                'last_name' => e($user->last_name) ?? null,
+                'display_name' => ($user->getRawOriginal('display_name')) ? e($user->getRawOriginal('display_name')) : null,
+                'username' => e($user->username) ?? null,
                 'remote' => ($user->remote == '1') ? true : false,
                 'locale' => ($user->locale) ? e($user->locale) : null,
                 'employee_num' => ($user->employee_num) ? e($user->employee_num) : null,
                 'manager' => ($user->manager) ? [
                     'id' => (int) $user->manager->id,
-                    'name'=> e($user->manager->first_name).' '.e($user->manager->last_name),
+                    'name'=> e($user->manager->display_name),
                 ] : null,
                 'jobtitle' => ($user->jobtitle) ? e($user->jobtitle) : null,
                 'vip' => ($user->vip == '1') ? true : false,
@@ -56,14 +57,16 @@ class UsersTransformer
                 'department' => ($user->department) ? [
                     'id' => (int) $user->department->id,
                     'name'=> e($user->department->name),
+                    'tag_color' => ($user->department->tag_color) ? e($user->department->tag_color) : null,
                 ] : null,
                 'department_manager' => ($user->department?->manager) ? [
                     'id' => (int) $user->department->manager->id,
-                    'name'=> e($user->department->manager->full_name),
+                    'name'=> e($user->department->manager->display_name),
                 ] : null,
                 'location' => ($user->userloc) ? [
                     'id' => (int) $user->userloc->id,
                     'name'=> e($user->userloc->name),
+                    'tag_color'=> ($user->userloc->tag_color) ? e($user->userloc->tag_color) : null,
                 ] : null,
                 'notes'=> Helper::parseEscapedMarkedownInline($user->notes),
                 'role' => $role,
@@ -79,10 +82,14 @@ class UsersTransformer
                 'consumables_count' => (int) $user->consumables_count,
                 'manages_users_count' => (int) $user->manages_users_count,
                 'manages_locations_count' => (int) $user->manages_locations_count,
-                'company' => ($user->company) ? ['id' => (int) $user->company->id, 'name'=> e($user->company->name)] : null,
+                'company' => ($user->company) ? [
+                    'id' => (int) $user->company->id,
+                    'name'=> e($user->company->name),
+                    'tag_color'=> ($user->company->tag_color) ? e($user->company->tag_color) : null,
+                ] : null,
                 'created_by' => ($user->createdBy) ? [
                     'id' => (int) $user->createdBy->id,
-                    'name'=> e($user->createdBy->present()->fullName),
+                    'name'=> e($user->createdBy->display_name),
                 ] : null,
                 'created_at' => Helper::getFormattedDateObject($user->created_at, 'datetime'),
                 'updated_at' => Helper::getFormattedDateObject($user->updated_at, 'datetime'),
@@ -94,7 +101,7 @@ class UsersTransformer
 
         $permissions_array['available_actions'] = [
             'update' => (Gate::allows('update', User::class) && ($user->deleted_at == '')),
-            'delete' => $user->isDeletable(),
+            'delete' => ($user->isDeletable() && (auth()->user()->can('canEditAuthFields', $user) && auth()->user()->can('editableOnDemo'))),
             'clone' => (Gate::allows('create', User::class) && ($user->deleted_at == '')),
             'restore' => (Gate::allows('create', User::class) && ($user->deleted_at != '')),
         ];
@@ -134,10 +141,11 @@ class UsersTransformer
             'id' => (int) $user->id,
             'image' => e($user->present()->gravatar) ?? null,
             'type' => 'user',
-            'name' => e($user->getFullNameAttribute()),
+            'name' => e($user->display_name),
             'first_name' => e($user->first_name),
             'last_name' => e($user->last_name),
             'username' => e($user->username),
+            'display_name' => e($user->display_name),
             'created_by' => $user->adminuser ? [
                 'id' => (int) $user->adminuser->id,
                 'name'=> e($user->adminuser->present()->fullName),

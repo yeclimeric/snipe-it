@@ -9,6 +9,7 @@ return array(
     'assigned_assets' => 'Ativos atribuídos',
     'current_location' => 'Localização Atual',
     'open_map' => 'Abrir :map_provider_icon Maps',
+    'deleted_warning' => 'Esta localização foi deletado. Por favor, restaure-o antes de tentar fazer quaisquer alterações.',
 
 
     'create' => array(

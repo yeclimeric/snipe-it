@@ -174,7 +174,7 @@ return [
     'ulid' => 'The :attribute field must be a valid ULID.',
     'uuid' => 'The :attribute field must be a valid UUID.',
     'fmcs_location' => 'Full multiple company support and location scoping is enabled in the Admin Settings, and the selected location and selected company are not compatible.',
-
+    'is_unique_across_company_and_location' => 'The :attribute must be unique within the selected company and location.',
 
     /*
     |--------------------------------------------------------------------------
@@ -230,7 +230,10 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'serials.*' => 'Sarjanumero',
+        'asset_tags.*' => 'Laitetunniste',
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -241,8 +244,8 @@ return [
 
     'generic' => [
         'invalid_value_in_field' => 'Virheellinen arvo sisältyy tähän kenttään',
-        'required' => 'This field is required',
-        'email' => 'Please enter a valid email address',
+        'required' => 'Tämä kenttä on pakollinen',
+        'email' => 'Kirjoita kelvollinen sähköpostiosoite',
     ],
 
 

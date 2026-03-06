@@ -23,7 +23,7 @@ return [
     'alert_email_help'          => 'آدرس‌های ایمیل یا لیست‌های توزیعی که می‌خواهید هشدارها به آنها ارسال شود، با کاما از هم جدا شده‌اند.
 ',
     'alerts_enabled'			=> 'هشدارها فعال شد',
-    'alert_interval'			=> 'آستانه ی انقضای هشدارها( به روز)',
+    'alert_interval'			=> 'Expiring Alerts Threshold',
     'alert_inv_threshold'		=> 'فهرست آستانه ی هشدار',
     'allow_user_skin'           => 'اجازه کاربر پوسته',
     'allow_user_skin_help_text' => 'علامت زدن این کادر به کاربر این امکان را می دهد که پوسته رابط کاربری را با پوسته دیگری لغو کند.
@@ -48,12 +48,15 @@ return [
     'backups_upload'            => 'نسخه پشتیبان را دانلود کنید',
     'backups_path'              => 'نسخه‌های پشتیبان روی سرور در <code>:path</code> ذخیره می‌شوند
 ',
-    'backups_restore_warning'   => 'Use the restore button <small><span class="btn btn-xs btn-warning"><i class="text-white fas fa-retweet" aria-hidden="true"></i></span></small> to restore from a previous backup. (This does not currently work with S3 file storage or Docker.)<br><br>Your <strong>entire :app_name database and any uploaded files will be completely replaced</strong> by what\'s in the backup file  ',
+    'backups_restore_warning'   => 'Use the restore button <small><span class="btn btn-xs btn-warning"><i class="text-white fas fa-retweet" aria-hidden="true"></i></span></small> to restore from a previous backup. (This does not currently work with S3 file storage.)<br><br>Your <strong>entire :app_name database and any uploaded files will be completely replaced</strong> by what\'s in the backup file  ',
     'backups_logged_out'         => 'همه کاربران موجود، از جمله شما، پس از تکمیل بازیابی شما از سیستم خارج می شوند.
 ',
     'backups_large'             => 'پشتیبان‌گیری‌های بسیار بزرگ ممکن است در تلاش بازیابی به پایان برسد و ممکن است همچنان نیاز باشد از طریق خط فرمان اجرا شوند.
 ',
     'barcode_settings'			=> 'تنظیمات بارکد',
+    'color_preferences'         => 'Color & Theme Settings',
+    'color_settings_help'       => 'These settings will be used throughout Snipe-IT.  Users are able to override the link colors by editing their account preferences to meet their individual readability requirements.',
+    'color_reset'              => 'Reset to Default',
     'confirm_purge'			    => 'تایید پاکسازی',
     'confirm_purge_help'		=> 'متن "DELETE" را در کادر زیر وارد کنید تا رکوردهای حذف شده خود را پاک کنید. این عمل قابل واگرد نیست و همه موارد و کاربران حذف شده را برای همیشه حذف می کند. (برای حفظ امنیت، ابتدا باید یک نسخه پشتیبان تهیه کنید.)
 ',
@@ -98,11 +101,20 @@ return [
 ',
     'footer_text_placeholder'   => 'Optional footer text',
     'general_settings'			=> 'تنظیمات عمومی',
+    'api_url'			        => 'API Base URL',
+    'scim_url'			        => 'SCIM Base URL',
     'general_settings_help'     => 'EULA پیش فرض و موارد دیگر
 ',
     'generate_backup'			=> 'تولید پشتیبان گیری',
     'google_workspaces'         => 'Google Workspaces',
-    'header_color'              => 'رنگ هدر',
+    'header_color'              => 'Primary Theme Color',
+    'header_color_help'         => 'Selecting a new color here will let you preview the color with your logo selection (if you have a site logo uploaded) in the header, however it will not be saved until you click the Save button.',
+    'link_dark_color'           => 'Link Color for Dark Mode',
+    'nav_link_color'            => 'Header Nav Link Color',
+    'nav_link_color_help'       => 'Select a color for the links in your top level navigation. This color should be high enough contrast against your header color to be easily readable.',
+    'link_dark_color_help'      => 'Select a color that will provide enough contrast for people that use Snipe-IT in dark mode.',
+    'link_light_color'          => 'Link Color for Light Mode',
+    'link_light_color_help'     => 'Select a color that will provide enough contrast for people that use Snipe-IT in light mode.',
     'info'                      => 'این تنظیمات به شما اجازه سفارشی کردن جنبه های خاصی از نصب و راه اندازی خود را می دهد.',
     'label_logo_size'           => 'آرم های مربعی بهترین ظاهر را دارند - در سمت راست بالای هر برچسب دارایی نمایش داده می شوند.
 ',
@@ -121,14 +133,14 @@ return [
     'ldap_settings'             => 'تنظیمات LDAP',
     'ldap_client_tls_cert_help' => 'گواهی TLS سمت کلاینت و کلید برای اتصالات LDAP معمولاً فقط در پیکربندی‌های Google Workspace با « LDAP ایمن» مفید هستند. هر دو مورد نیاز است.
 ',
-    'ldap_location'             => 'LDAP Location',
-'ldap_location_help'             => 'The Ldap Location field should be used if <strong>an OU is not being used in the Base Bind DN.</strong> Leave this blank if an OU search is being used.',
+    'ldap_location'             => 'LDAP Location Field',
+    'ldap_location_help'             => 'The LDAP Location field should be used if <strong>an OU is not being used in the Base Bind DN.</strong> Leave this blank if an OU search is being used.',
     'ldap_login_test_help'      => 'یک نام کاربری و رمز عبور LDAP معتبر از DN پایه ای که در بالا مشخص کرده اید وارد کنید تا بررسی کنید که آیا ورود به سیستم LDAP شما به درستی پیکربندی شده است یا خیر. ابتدا باید تنظیمات LDAP به روز شده خود را ذخیره کنید.
 ',
-    'ldap_login_sync_help'      => 'این فقط آزمایش می کند که LDAP می تواند به درستی همگام شود. اگر درخواست احراز هویت LDAP شما صحیح نباشد، کاربران ممکن است هنوز نتوانند وارد سیستم شوند. ابتدا باید تنظیمات LDAP به روز شده خود را ذخیره کنید.
-',
-    'ldap_manager'              => 'مدیر LDAP
-',
+    'ldap_login_sync_help'      => 'This only tests that LDAP can sync and that your fields are mapped correctly. If your LDAP Authentication query is not correct, users may still not be able to login. YOU MUST SAVE YOUR UPDATED LDAP SETTINGS FIRST.',
+    'ldap_manager'              => 'LDAP Manager Field',
+    'ldap_mapping_help'         => 'If your fields are not syncing correctly, try using the <strong>lower-case version</strong> of the field names. Display Name (<code>displayName</code>) in your LDAP/AD should be mapped here as <code>displayname</code>, <code>givenName</code> should be <code>givenname</code>, <code>sAMAccountName</code> as <code>samaccountname</code>, etc. <a href="https://snipe-it.readme.io/docs/ldap-sync-login#field-mapping-for-syncing"><i class="fa fa-external-link"></i></a>',
+    'save_ldap_first'           => 'You must save your LDAP settings before testing. Save your settings on this page and then reload to test LDAP login and/or sync.',
     'ldap_server'               => 'سرویس دهنده LDAP',
     'ldap_server_help'          => 'This should start with ldap:// (for unencrypted) or ldaps:// (for TLS or SSL)',
     'ldap_server_cert'			=> 'اعتبار گواهی نامه LDAP SSL',
@@ -137,30 +149,33 @@ return [
     'ldap_tls'                  => 'از TLS استفاده کنید',
     'ldap_tls_help'             => 'این باید فقط در صورتی که STARTTLS را در سرور LDAP خود اجرا می کنید، بررسی شود.',
     'ldap_uname'                => 'حالت نام کاربری نامرئی LDAP',
-    'ldap_dept'                 => 'بخش LDAP
-',
-    'ldap_phone'                => 'شماره تلفن LDAP
-',
-    'ldap_jobtitle'             => 'عنوان شغلی LDAP
-',
-    'ldap_country'              => 'کشور LDAP
-',
+    'ldap_dept'                 => 'LDAP Department Field',
+    'ldap_phone'                => 'LDAP Phone Number Field',
+    'ldap_jobtitle'             => 'LDAP Job Title Field',
+    'ldap_country'              => 'LDAP Country Field',
     'ldap_pword'                => 'LDAP اتصال رمز عبور',
     'ldap_basedn'               => 'اتصال پایگاه DN',
     'ldap_filter'               => 'LDAP فیلتر',
     'ldap_pw_sync'              => 'Cache LDAP Passwords',
     'ldap_pw_sync_help'         => 'Uncheck this box if you do not wish to keep LDAP passwords cached as local hashed passwords. Disabling this means that your users may not be able to login if your LDAP server is unreachable for some reason.',
-    'ldap_username_field'       => 'فیلد نام کاربری',
-    'ldap_lname_field'          => 'نام خانوادگی',
-    'ldap_fname_field'          => 'LDAP نام',
+    'ldap_username_field'       => 'LDAP Username Field',
+    'ldap_display_name'          => 'LDAP Display Name Field',
+    'ldap_display_name_help'    => 'If you have a separate displayName field in your LDAP/AD, map it here and it will be used for displaying users within Snipe-IT.',
+    'ldap_lname_field'          => 'LDAP Last Name Field',
+    'ldap_fname_field'          => 'LDAP First Name Field',
     'ldap_auth_filter_query'    => 'تأیید اعتبار  پرس و جوLDAP',
     'ldap_version'              => 'نسخهٔ LDAP',
     'ldap_active_flag'          => ' پرچم فعالLDAP',
     'ldap_activated_flag_help'  => 'This value is used to determine whether a synced user can login to Snipe-IT. <strong>It does not affect the ability to check items in or out to them</strong>, and should be the <strong>attribute name</strong> within your AD/LDAP, <strong>not the value</strong>. <br><br>If this field is set to a field name that does not exist in your AD/LDAP, or the value in the AD/LDAP field is set to <code>0</code> or <code>false</code>, <strong>user login will be disabled</strong>. If the value in the AD/LDAP field is set to <code>1</code> or <code>true</code> or <em>any other text</em> means the user can log in. When the field is blank in your AD, we respect the <code>userAccountControl</code> attribute, which usually allows non-suspended users to log in.',
     'ldap_invert_active_flag'   => 'LDAP Invert Active Flag',
     'ldap_invert_active_flag_help'     => 'If enabled: when the value returned by LDAP Active Flag is <code>0</code> or <code>false</code> the user account will be active.',
-    'ldap_emp_num'              => 'LDAP تعداد کارکنان',
-    'ldap_email'                => 'ایمیل LDAP',
+    'ldap_emp_num'              => 'LDAP Employee Number Field',
+    'ldap_email'                => 'LDAP Email Field',
+    'ldap_mobile'               => 'LDAP Mobile Field',
+    'ldap_address'              => 'LDAP Address Field',
+    'ldap_city'                 => 'LDAP City Field',
+    'ldap_state'                => 'LDAP State/Province Field',
+    'ldap_zip'                  => 'LDAP Postal Code Field',
     'ldap_test'                 => 'تست LDAP
 ',
     'ldap_test_sync'            => 'تست همگام سازی LDAP
@@ -460,9 +475,9 @@ return [
     'labels' => 'برچسب ها',
     'labels_title' => 'تنظیمات برچسب را به روز کنید
 ',
+    'labels_title_help' => 'Changes made here must be saved before they will be reflected in the labels or the preview below.',
     'labels_help' => 'Barcodes &amp; label settings',
-    'purge_help' => 'پاک کردن رکوردهای حذف شده
-',
+    'purge_help' => 'Permanently delete soft-deleted records',
     'ldap_extension_warning' => 'به نظر نمی رسد که برنامه افزودنی LDAP روی این سرور نصب یا فعال باشد. همچنان می‌توانید تنظیمات خود را ذخیره کنید، اما قبل از اینکه همگام‌سازی یا ورود به سیستم LDAP کار کند، باید افزونه LDAP را برای PHP فعال کنید.
 ',
     'ldap_ad' => 'LDAP/AD
@@ -476,8 +491,7 @@ return [
     'create_admin_user' => 'ایجاد کاربر جدید ::',
     'create_admin_success' => 'موفقیت! کاربر ادمین شما اضافه شد!
 ',
-    'create_admin_redirect' => 'برای رفتن به ورود به برنامه خود اینجا را کلیک کنید!
-',
+    'create_admin_redirect' => 'Go To Dashboard',
     'setup_migrations' => 'مهاجرت های پایگاه داده ::
 ',
     'setup_no_migrations' => 'چیزی برای مهاجرت وجود نداشت. جداول پایگاه داده شما قبلاً تنظیم شده بود!
@@ -486,10 +500,10 @@ return [
 ',
     'setup_migration_output' => 'خروجی مهاجرت:
 ',
-    'setup_migration_create_user' => 'بعدی: ایجاد کاربر
-',
+    'setup_migration_create_user' => 'Save User and Finish',
     'ldap_settings_link' => 'صفحه تنظیمات LDAP
 ',
+    'setup_create_user_page_explanation' => 'Here you will create your first superadmin user and set some basic application setting defaults. (These can always be changed later in the Admin Settings section.) ',
     'slack_test' => 'تست <i class="fab fa-slack"></i> یکپارچه سازی
 ',
     'status_label_name' => 'Status Label Name',
@@ -499,7 +513,7 @@ return [
     'label2_template'         => 'Template',
     'label2_template_help'    => 'Select which template to use for label generation',
     'label2_title'            => 'عنوان',
-    'label2_title_help'       => 'The title to show on labels that support it',
+    'label2_title_help'       => 'The title to show on labels that support it. <br>This will occupy the first Label Field row.',
     'label2_title_help_phold' => 'The placeholder <code>{COMPANY}</code> will be replaced with the asset&apos;s company name',
     'label2_asset_logo'       => 'Use Asset Logo',
     'label2_asset_logo_help'  => 'Use the logo of the asset&apos;s assigned company, rather than the value at <code>:setting_name</code>',
@@ -507,14 +521,18 @@ return [
     'label2_1d_type_help'     => 'Format for 1D barcodes',
     'label2_2d_type'          => 'نوع بارکد 2D',
     'label2_2d_type_help'     => 'Format for 2D barcodes',
-    'label2_2d_target'        => '2D Barcode Target',
-    'label2_2d_target_help'   => 'The data that will be contained in the 2D barcode',
+    'label2_2d_prefix'        => '2D Barcode Prefix',
+    'label2_2d_prefix_help'   => 'This text will be prepended to the 2D Barcode Target value selected below when the 2D code is scanned. This can be used to prepend an external URL or any other value that you might need.',
+    'label2_2d_target'        => '2D Barcode Content',
+    'label2_2d_target_help'   => 'The data that will be contained in the 2D barcode. This can link to the asset directly in Snipe-IT or can be one of the non-linked field values. If you use the prefix above, it will be prepended to this value.',
+    'select_template'         => 'انتخاب قالب',
     'label2_fields'           => 'Field Definitions',
-    'label2_fields_help'      => 'Fields can be added, removed, and reordered in the left column. For each field, multiple options for Label and DataSource can be added, removed, and reordered in the right column.',
+    'label2_fields_help'      => 'Fields can be added, removed, and reordered in the left column. For each field, multiple options for Label and DataSource can be added, removed, and reordered in the right column. Field changes made here will be reflected immediately in the preview below but must be saved for them to apply to new labels.',
+    "label2_label_preview"    => 'Label Preview',
     'purge_barcodes' => 'Purge Barcodes',
     'help_asterisk_bold'    => 'Text entered as <code>**text**</code> will be displayed as bold',
     'help_blank_to_use'     => 'Leave blank to use the value from <code>:setting_name</code>',
-    'help_default_will_use' => '<code>:default</code> will use the value from <code>:setting_name</code>. <br>Note that the value of the barcodes must comply with the respective barcode spec in order to be successfully generated. Please see <a href="https://snipe-it.readme.io/docs/barcodes">the documentation <i class="fa fa-external-link"></i></a> for more details. ',
+    'help_default_will_use' => 'Note that the value of the barcodes must comply with the respective barcode spec in order to be successfully generated. Please see <a href="https://snipe-it.readme.io/docs/barcodes">the documentation <i class="fa fa-external-link"></i></a> for more details. ',
     'asset_id'              => 'Asset ID',
     'data'               => 'Data',
     'default'               => 'Default',
@@ -542,6 +560,10 @@ return [
     'manager_view' => 'Manager View',
     'manager_view_enabled_text' => 'Enable Manager View',
     'manager_view_enabled_help' => 'Allow managers to view assigned items to their direct and indirect reports in their account view.',
+    'redirect_url' => 'Redirect URL',
+    'client_secret' => 'Client Secret',
+    'client_id' => 'Client ID',
+    'too_many_users_to_show' => 'The number of users (:count) is larger than the unpaginated record limit (:max). Use the bulk user edit tool to manage group memberships.',
 
     'username_formats' => [
         'username_format'		=> 'فرمت نام کاربری',
@@ -600,21 +622,27 @@ return [
 
 
     'legends' => [
-        'scoping' => 'Scoping',
-        'formats' => 'Default Formats',
-        'profiles' => 'User Profiles',
-        'eula' => 'EULA & Acceptance Preferences',
-        'misc_display' => 'Miscellaneous Display Options',
-        'email' => 'Email Preferences',
         'checkin' => 'Checkin Preferences',
-        'dashboard' => 'Login & Dashboard Preferences',
-        'misc' => 'Miscellaneous',
-        'logos' => 'Logos & Display',
         'colors' => 'Colors & Skins',
+        'dashboard' => 'Login & Dashboard Preferences',
+        'email' => 'Email Preferences',
+        'eula' => 'EULA & Acceptance Preferences',
         'footer' => 'Footer Preferences',
-        'security' => 'Security Preferences',
+        'formats' => 'Default Formats',
         'general' => 'General',
         'intervals' => 'Intervals & Thresholds',
+        'logos' => 'Logos & Display',
+        'display' => 'Display Preferences',
+        'mapping' => 'LDAP Field Mapping',
+        'test' => 'Test LDAP Connection',
+        'misc' => 'Miscellaneous',
+        'misc_display' => 'Miscellaneous Display Options',
+        'profiles' => 'User Profiles',
+        'your_details' => 'Your Details',
+        'server' => 'Server Settings',
+        'scoping' => 'Scoping',
+        'security' => 'Security Preferences',
+        'passwords' => 'Password Security Preferences',
     ],
 
 

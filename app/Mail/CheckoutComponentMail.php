@@ -6,13 +6,12 @@ use App\Models\Component;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class CheckoutComponentMail extends Mailable
+class CheckoutComponentMail extends BaseMailable
 {
     use Queueable, SerializesModels;
 
@@ -26,7 +25,7 @@ class CheckoutComponentMail extends Mailable
         $this->note = $note;
         $this->target = $checkedOutTo;
         $this->acceptance = $acceptance;
-        $this->qty = $component->assets->first()?->pivot?->assigned_qty;
+        $this->qty = $component->checkout_qty;
 
         $this->settings = Setting::getSettings();
     }

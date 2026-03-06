@@ -52,6 +52,10 @@ class MaintenancesController extends Controller
             $maintenances->where('maintenances.created_by', '=', $request->input('created_by'));
         }
 
+        if ($request->filled('url')) {
+            $maintenances->where('maintenances.url', '=', $request->input('url'));
+        }
+
         if ($request->filled('asset_maintenance_type')) {
             $maintenances->where('asset_maintenance_type', '=', $request->input('asset_maintenance_type'));
         }
@@ -78,6 +82,8 @@ class MaintenancesController extends Controller
                                 'location',
                                 'is_warranty',
                                 'status_label',
+                                'model',
+                                'model_number',
                             ];
 
         $order = $request->input('order') === 'asc' ? 'asc' : 'desc';
@@ -95,6 +101,12 @@ class MaintenancesController extends Controller
                 break;
             case 'asset_name':
                 $maintenances = $maintenances->OrderByAssetName($order);
+                break;
+            case 'model':
+                $maintenances = $maintenances->OrderByAssetModelName($order);
+                break;
+            case 'model_number':
+                $maintenances = $maintenances->OrderByAssetModelNumber($order);
                 break;
             case 'serial':
                 $maintenances = $maintenances->OrderByAssetSerial($order);

@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 use App\Models\Accessory;
+use App\Models\Actionlog;
 use App\Models\Asset;
 use App\Models\AssetModel;
 use App\Models\Component;
@@ -13,6 +14,7 @@ use App\Models\Setting;
 use App\Models\Statuslabel;
 use App\Models\License;
 use App\Models\Location;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
@@ -95,7 +97,7 @@ class Helper
         $Parsedown->setSafeMode(true);
 
         if ($str) {
-            return $Parsedown->text($str);
+            return $Parsedown->text(strip_tags($str));
         }
     }
 
@@ -105,7 +107,7 @@ class Helper
         $Parsedown->setSafeMode(true);
 
         if ($str) {
-            return $Parsedown->line($str);
+            return $Parsedown->line(strip_tags($str));
         }
     }
 
@@ -123,9 +125,9 @@ class Helper
         if (is_numeric($cost)) {
 
             if (Setting::getSettings()->digit_separator=='1.234,56') {
-                return (float) number_format($cost, 2, ',', '.');
+                return number_format($cost, 2, ',', '.');
             }
-            return (float) number_format($cost, 2, '.', ',');
+            return number_format($cost, 2, '.', ',');
         }
         // It's already been parsed.
         return $cost;
@@ -434,6 +436,34 @@ class Helper
 
         return $colors[$index];
     }
+
+    /**
+     * Check if a string has any RTL characters
+     * @param $value
+     * @return bool
+     */
+    public static function hasRtl($string) {
+        $rtlChar = '/[\x{0590}-\x{083F}]|[\x{08A0}-\x{08FF}]|[\x{FB1D}-\x{FDFF}]|[\x{FE70}-\x{FEFF}]/u';
+        return preg_match($rtlChar, $string) != 0;
+    }
+
+    // is chinese, japanese or korean language
+    public static function isCjk($string) {
+        return Helper::isChinese($string) || Helper::isJapanese($string) || Helper::isKorean($string);
+    }
+
+    public static function isChinese($string) {
+        return preg_match("/\p{Han}+/u", $string);
+    }
+
+    public static function isJapanese($string) {
+        return preg_match('/[\x{4E00}-\x{9FBF}\x{3040}-\x{309F}\x{30A0}-\x{30FF}]/u', $string);
+    }
+
+    public static function isKorean($string) {
+        return preg_match('/[\x{3130}-\x{318F}\x{AC00}-\x{D7AF}]/u', $string);
+    }
+
 
     /**
      * Increases or decreases the brightness of a color by a percentage of the current brightness.
@@ -745,18 +775,18 @@ class Helper
     public static function checkLowInventory()
     {
         $alert_threshold = \App\Models\Setting::getSettings()->alert_threshold;
-        $consumables = Consumable::withCount('consumableAssignments as consumable_assignments_count')->whereNotNull('min_amt')->get();
+        $consumables = Consumable::withCount('consumableAssignments as consumables_users_count')->whereNotNull('min_amt')->get();
         $accessories = Accessory::withCount('checkouts as checkouts_count')->whereNotNull('min_amt')->get();
-        $components = Component::whereNotNull('min_amt')->get();
-        $asset_models = AssetModel::where('min_amt', '>', 0)->get();
-        $licenses = License::where('min_amt', '>', 0)->get();
+        $components = Component::withCount('assets as sum_unconstrained_assets')->whereNotNull('min_amt')->get();
+        $asset_models = AssetModel::where('min_amt', '>', 0)->withCount(['availableAssets', 'assets'])->get();
+        $licenses = License::withCount('availCount as licenses_available')->where('min_amt', '>', 0)->get();
 
         $items_array = [];
         $all_count = 0;
 
         foreach ($consumables as $consumable) {
             $avail = $consumable->numRemaining();
-            if ($avail < ($consumable->min_amt) + $alert_threshold) {
+            if ($avail <= ($consumable->min_amt) + $alert_threshold) {
                 if ($consumable->qty > 0) {
                     $percent = number_format((($avail / $consumable->qty) * 100), 0);
                 } else {
@@ -775,7 +805,7 @@ class Helper
 
         foreach ($accessories as $accessory) {
             $avail = $accessory->qty - $accessory->checkouts_count;
-            if ($avail < ($accessory->min_amt) + $alert_threshold) {
+            if ($avail <= ($accessory->min_amt) + $alert_threshold) {
                 if ($accessory->qty > 0) {
                     $percent = number_format((($avail / $accessory->qty) * 100), 0);
                 } else {
@@ -794,7 +824,7 @@ class Helper
 
         foreach ($components as $component) {
             $avail = $component->numRemaining();
-            if ($avail < ($component->min_amt) + $alert_threshold) {
+            if ($avail <= ($component->min_amt) + $alert_threshold) {
                 if ($component->qty > 0) {
                     $percent = number_format((($avail / $component->qty) * 100), 0);
                 } else {
@@ -814,10 +844,10 @@ class Helper
         foreach ($asset_models as $asset_model){
 
             $asset = new Asset();
-            $total_owned = $asset->where('model_id', '=', $asset_model->id)->count();
-            $avail = $asset->where('model_id', '=', $asset_model->id)->whereNull('assigned_to')->count();
+            $total_owned = $asset_model->assets_count; //requires the withCount() clause in the initial query!
+            $avail = $asset_model->available_assets_count; //requires the withCount() clause in the initial query!
 
-            if ($avail < ($asset_model->min_amt) + $alert_threshold) {
+            if ($avail <= ($asset_model->min_amt) + $alert_threshold) {
                 if ($avail > 0) {
                     $percent = number_format((($avail / $total_owned) * 100), 0);
                 } else {
@@ -835,7 +865,7 @@ class Helper
 
         foreach ($licenses as $license){
             $avail = $license->remaincount();
-            if ($avail < ($license->min_amt) + $alert_threshold) {
+            if ($avail <= ($license->min_amt) + $alert_threshold) {
                 if ($avail > 0) {
                     $percent = number_format((($avail / $license->min_amt) * 100), 0);
                 } else {
@@ -1197,19 +1227,30 @@ class Helper
             'webp'   => 'far fa-image',
             'avif'   => 'far fa-image',
             'svg' => 'fas fa-vector-square',
+
             // word
             'doc'   => 'far fa-file-word',
             'docx'   => 'far fa-file-word',
+
             // Excel
             'xls'   => 'far fa-file-excel',
             'xlsx'   => 'far fa-file-excel',
+            'ods'   => 'far fa-file-excel',
+
+            // Presentation
+            'ppt'   => 'far fa-file-powerpoint',
+            'odp'   => 'far fa-file-powerpoint',
+
             // archive
             'zip'   => 'fas fa-file-archive',
             'rar'   => 'fas fa-file-archive',
+
             //Text
+            'odt'   => 'far fa-file-alt',
             'txt'   => 'far fa-file-alt',
             'rtf'   => 'far fa-file-alt',
             'xml'   => 'fas fa-code',
+
             // Misc
             'pdf'   => 'far fa-file-pdf',
             'lic'   => 'far fa-save',
@@ -1345,47 +1386,22 @@ class Helper
      * @return string[]
      */
     public static function SettingUrls(){
-        $settings=['#','fields.index', 'statuslabels.index', 'models.index', 'categories.index', 'manufacturers.index', 'suppliers.index', 'departments.index', 'locations.index', 'companies.index', 'depreciations.index'];
+        $settings=[
+            '#',
+            'fields*',
+            'statuslabels*',
+            'models*',
+            'categories*',
+            'manufacturers*',
+            'suppliers*',
+            'departments*',
+            'locations*',
+            'companies*',
+            'depreciations*'
+        ];
 
         return $settings;
         }
-
-
-    /**
-     * Generic helper (largely used by livewire right now) that returns the font-awesome icon
-     * for the object type.
-     *
-     * @author A. Gianotto <snipe@snipe.net>
-     * @since 6.1.0
-     *
-     * @return string
-     */
-    public static function iconTypeByItem($item) {
-
-        switch ($item) {
-            case 'asset':
-                return 'fas fa-barcode';
-            case 'accessory':
-                return 'fas fa-keyboard';
-            case 'component':
-                return 'fas fa-hdd';
-            case 'consumable':
-                return 'fas fa-tint';
-            case 'license':
-                return 'far fa-save';
-            case 'location':
-                return 'fas fa-map-marker-alt';
-            case 'user':
-                return 'fas fa-user';
-            case 'supplier':
-                return 'fa-solid fa-store';
-            case 'manufacturer':
-                return 'fa-solid fa-building';
-            case 'category':
-                return 'fa-solid fa-table-columns';
-        }
-
-    }
 
 
      /*
@@ -1530,7 +1546,6 @@ class Helper
                 'he-IL'
             ]) ? 'rtl' : 'ltr';
     }
-
 
     static public function getRedirectOption($request, $id, $table, $item_id = null) : RedirectResponse
     {
@@ -1695,5 +1710,84 @@ class Helper
             }
         }
         return $mismatched;
-    }        
+    }
+    static public function labelFieldLayoutScaling(
+        $pdf,
+        iterable|\Closure $fields,
+        float $currentX,
+        float $usableWidth,
+        float $usableHeight,
+        float $baseLabelSize,
+        float $baseFieldSize,
+        float $baseFieldMargin,
+        ?string $title            = null,
+        float $baseTitleSize      = 0.0,
+        float $baseTitleMargin    = 0.0,
+        float $baseLabelPadding = 1.5,
+        float $baseGap          = 1.5,
+        float $maxScale         = 1.8,
+        string $labelFont       = 'freesans',
+
+    )  : array
+    {
+        $fieldCount = count($fields);
+        $perFieldHeight = max($baseLabelSize, $baseFieldSize) + $baseFieldMargin;
+        $baseFieldsHeight = $fieldCount * $perFieldHeight;
+
+        $hasTitle = is_string($title) && trim($title) !== '';
+        $baseTitleHeight = $hasTitle ? ($baseTitleSize + $baseTitleMargin) : 0.0;
+        $baseTotalHeight = $baseTitleHeight + $baseFieldsHeight;
+        $scale = 1.0;
+        if ($baseTotalHeight > 0 && $usableHeight > 0) {
+            $scale = $usableHeight / $baseTotalHeight;
+        }
+
+        $scale = min($scale, $maxScale);
+
+        $labelSize = $baseLabelSize;
+        $fieldSize = $baseFieldSize * $scale;
+        $fieldMargin = $baseFieldMargin * $scale;
+
+        $rowAdvance = max($labelSize, $fieldSize) + $fieldMargin;
+        $titleSize   = $hasTitle ? ($baseTitleSize   * $scale) : 0.0;
+        $titleMargin = $hasTitle ? ($baseTitleMargin * $scale) : 0.0;
+        $titleAdvance = $hasTitle ? ($titleSize + $titleMargin) : 0.0;
+
+        $pdf->SetFont($labelFont, '', $baseLabelSize);
+
+        $maxLabelWidthPerUnit = 0;
+        foreach ($fields as $field) {
+            $rawLabel = $field['label'] ?? null;
+
+            // If no label, do not include it in label-column sizing
+            if (!is_string($rawLabel) || trim($rawLabel) === '') {
+                continue;
+            }
+            $label = rtrim($field['label'], ':') . ':';
+            $width = $pdf->GetStringWidth($label);
+            $maxLabelWidthPerUnit = max($maxLabelWidthPerUnit, $width / $baseLabelSize);
+        }
+
+        $labelPadding = $baseLabelPadding * $scale;
+        $gap = $baseGap * $scale;
+
+        $labelWidth = ($maxLabelWidthPerUnit * $labelSize) + $labelPadding;
+        $valueX = $currentX + $labelWidth + $gap;
+        $valueWidth = $usableWidth - $labelWidth - $gap;
+
+        return compact(
+            'scale',
+            'hasTitle',
+            'titleSize',
+            'titleMargin',
+            'titleAdvance',
+            'labelSize',
+            'fieldSize',
+            'fieldMargin',
+            'rowAdvance',
+            'labelWidth',
+            'valueX',
+            'valueWidth'
+        );
+    }
 }

@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Traits\CompanyableTrait;
 use App\Models\Traits\Searchable;
 use App\Presenters\Presentable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use App\Enums\ActionType;
 
 /**
  * Model for the Actionlog (the table that keeps a historical log of
@@ -245,19 +247,6 @@ class Actionlog extends SnipeModel
     }
 
 
-    /**
-     * Establishes the actionlog -> uploads relationship
-     *
-     * @author [A. Gianotto] [<snipe@snipe.net>]
-     * @since  [v3.0]
-     * @return \Illuminate\Database\Eloquent\Relations\Relation
-     */
-    public function uploads()
-    {
-        return $this->morphTo('item')
-            ->where('action_type', '=', 'uploaded')
-            ->withTrashed();
-    }
 
     /**
      * Establishes the actionlog -> userlog relationship
@@ -347,9 +336,12 @@ class Actionlog extends SnipeModel
      * @since  [v3.0]
      * @return bool
      */
-    public function logaction($actiontype)
+    public function logaction(string|ActionType $actiontype)
     {
-        $this->action_type = $actiontype;
+        if (is_string($actiontype)) {
+            $actiontype = ActionType::from($actiontype);
+        }
+        $this->action_type = $actiontype->value;
         $this->remote_ip =  request()->ip();
         $this->user_agent = request()->header('User-Agent');
         $this->action_source = $this->determineActionSource();
@@ -372,7 +364,7 @@ class Actionlog extends SnipeModel
     {
         $now = Carbon::now();
         $last_audit_date = $this->created_at; // this is the action log's created at, not the asset itself
-        $next_audit = $last_audit_date->addMonth($monthInterval); // this actually *modifies* the $last_audit_date
+        $next_audit = $last_audit_date->addMonth((int) $monthInterval); // this actually *modifies* the $last_audit_date
         $next_audit_days = (int) round($now->diffInDays($next_audit, true));
         $override_default_next = $next_audit;
 
@@ -383,7 +375,7 @@ class Actionlog extends SnipeModel
         }
 
         // Show as negative number if the next audit date is before the audit date we're looking at
-        if ($this->created_at > $override_default_next) {
+        if ($this->created_at->toDateString() > $override_default_next->toDateString()) {
             $next_audit_days = '-'.$next_audit_days;
         }
 
@@ -455,6 +447,26 @@ class Actionlog extends SnipeModel
 
     }
 
+
+    /**
+     * @author  Godfrey Martinez
+     * @since [v8.0.4]
+     * @return \App\Models\Actionlog
+     */
+    public function logUploadDelete($object, $filename)
+    {
+        $log = new Actionlog;
+        $log->item_type = $object instanceof SnipeModel ? get_class($object) : $object;
+        $log->item_id = $object->id;
+        $log->created_by = auth()->id();
+        $log->target_id = null;
+        $log->filename = $filename;
+        $log->created_at = date('Y-m-d H:i:s');
+        $log->logaction('upload deleted');
+
+        return $log;
+    }
+
     public function uploads_file_url()
     {
 
@@ -470,6 +482,10 @@ class Actionlog extends SnipeModel
             $object = 'models';
         }
 
+        if ($this->action_type == 'audit') {
+            $object = 'audits';
+        }
+
         return route('ui.files.show', [
             'object_type' => $object,
             'id' => $this->item_id,
@@ -483,6 +499,10 @@ class Actionlog extends SnipeModel
 
         if (($this->action_type == 'accepted') || ($this->action_type == 'declined')) {
             return 'private_uploads/eula-pdfs/'.$this->filename;
+        }
+
+        if ($this->action_type == 'audit')  {
+            return 'private_uploads/audits/'.$this->filename;
         }
 
         switch ($this->item_type) {
@@ -502,6 +522,8 @@ class Actionlog extends SnipeModel
             return 'private_uploads/locations/'.$this->filename;
         case Maintenance::class:
              return 'private_uploads/maintenances/'.$this->filename;
+        case Supplier::class:
+            return 'private_uploads/suppliers/'.$this->filename;
         case User::class:
             return 'private_uploads/users/'.$this->filename;
         default:

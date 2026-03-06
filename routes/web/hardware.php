@@ -143,12 +143,15 @@ Route::group(
         Route::post(
             'bulkedit',
             [BulkAssetsController::class, 'edit']
-        )->name('hardware/bulkedit');
+        )->name('hardware.bulkedit.show')
+        ->breadcrumbs(fn (Trail $trail) =>
+        $trail->parent('hardware.index')
+            ->push(trans('general.bulk_delete'), route('hardware.index')));
 
         Route::post(
             'bulkdelete',
             [BulkAssetsController::class, 'destroy']
-        )->name('hardware/bulkdelete');
+        )->name('hardware.bulkdelete.store');
 
         Route::post(
             'bulkrestore',
@@ -182,10 +185,11 @@ Route::resource('hardware',
 
 // Asset Maintenances
 Route::resource('maintenances',
-    MaintenancesController::class, [
-        'parameters' => ['maintenance' => 'maintenance', 'asset' => 'asset_id'],
-    ]);
+    MaintenancesController::class,
+    ['middleware' => ['auth']
+    ])->parameters(['maintenance' => 'maintenance', 'asset' => 'asset_id']);
 
 Route::get('ht/{any?}',
-    [AssetsController::class, 'getAssetByTag']
-)->where('any', '.*')->name('ht/assetTag');
+    [AssetsController::class, 'getAssetByTag'])
+    ->where('any', '.*')
+    ->name('ht/assetTag');

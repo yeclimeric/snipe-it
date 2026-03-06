@@ -33,7 +33,7 @@ return [
     'create_fieldset_title' => 'Luo uusi kenttäkokoelma',
     'create_field'            => 'Uusi mukautettu kenttä',
     'create_field_title' => 'Luo uusi mukautettu kenttä',
-    'value_encrypted'      	        => 'Kentän arvo salataan tietokannassa. Vain järjestelmänvalvojat voivat tarkastella purettua arvoa',
+    'value_encrypted'      	        => 'The value of this field is encrypted in the database. Only users with permission to view encrypted custom fields will be able to view the decrypted value',
     'show_in_email'     => 'Käytetäänkö kentän arvoa käyttäjälle lähetettävissä luovutus-sähköposteissa? Salattuja kenttiä ei voi lisätä sähköposteihin',
     'show_in_email_short' => 'Sisällytä sähköposteihin',
     'help_text' => 'Aputeksti',
@@ -67,4 +67,5 @@ return [
         'checkbox' => 'Checkbox',
         'radio' => 'Radio Buttons',
     ],
+    'general_help_text' => 'Custom fields store additional information not covered by the default asset fields. <a href="https://snipe-it.readme.io/docs/custom-fields#/"><i class="fa fa-external-link"></i></a>.',
 ];

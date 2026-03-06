@@ -3,20 +3,28 @@
 namespace App\Models;
 
 use App\Http\Traits\UniqueUndeletedTrait;
+use App\Models\Traits\HasUploads;
+use App\Models\Traits\Loggable;
 use App\Models\Traits\Searchable;
+use App\Presenters\Presentable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Gate;
 use Watson\Validating\ValidatingTrait;
 use \Illuminate\Database\Eloquent\Relations\Relation;
 class Supplier extends SnipeModel
 {
     use HasFactory;
     use SoftDeletes;
+    use HasUploads;
+    use Presentable;
+
+    protected $presenter = \App\Presenters\SupplierPresenter::class;
 
     protected $table = 'suppliers';
 
     protected $rules = [
-        'name'               => 'required|min:1|max:255|unique_undeleted',
+        'name'               => 'required|max:255|unique_undeleted',
         'fax'               => 'min:7|max:35|nullable',
         'phone'             => 'min:7|max:35|nullable',
         'contact'           => 'max:100|nullable',
@@ -28,7 +36,7 @@ class Supplier extends SnipeModel
         'state'              => 'min:2|max:191|nullable',
         'country'            => 'min:2|max:191|nullable',
         'zip'               => 'max:10|nullable',
-        'url'               => 'sometimes|nullable|string|max:250',
+        'url'               => 'sometimes|url|nullable|string|max:250',
     ];
 
     /**
@@ -42,6 +50,7 @@ class Supplier extends SnipeModel
     use ValidatingTrait;
     use UniqueUndeletedTrait;
     use Searchable;
+    use Loggable;
 
     /**
      * The attributes that should be included when searching the model.
@@ -62,8 +71,20 @@ class Supplier extends SnipeModel
      *
      * @var array
      */
-    protected $fillable = ['name', 'address', 'address2', 'city', 'state', 'country', 'zip', 'phone', 'fax', 'email', 'contact', 'url', 'notes'];
+    protected $fillable = ['name', 'address', 'address2', 'city', 'state', 'country', 'zip', 'phone', 'fax', 'email', 'contact', 'url', 'tag_color', 'notes'];
 
+
+    public function isDeletable()
+    {
+        return Gate::allows('delete', $this)
+            && (($this->assets_count ?? $this->assets()->count()) === 0)
+            && (($this->licenses_count ?? $this->licenses()->count()) === 0)
+            && (($this->consumables_count ?? $this->consumables()->count()) === 0)
+            && (($this->accessories_count ?? $this->accessories()->count()) === 0)
+            && (($this->components_count ?? $this->components()->count()) === 0)
+            && (($this->maintenances_count ?? $this->maintenances()->count()) === 0)
+            && ($this->deleted_at == '');
+    }
     /**
      * Eager load counts
      *
@@ -137,7 +158,7 @@ class Supplier extends SnipeModel
      */
     public function adminuser()
     {
-        return $this->belongsTo(\App\Models\User::class, 'created_by');
+        return $this->belongsTo(\App\Models\User::class, 'created_by')->withTrashed();
     }
 
     /**

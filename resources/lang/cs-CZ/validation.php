@@ -174,7 +174,7 @@ return [
     'ulid' => 'Pole :attribute musí být platný ULID.',
     'uuid' => 'Pole :attribute musí být platný UUID.',
     'fmcs_location' => 'V administračním nastavení je zapnutá podpora více společností a rozsah lokalit, ale vybraná lokalita a společnost nejsou kompatibilní.',
-
+    'is_unique_across_company_and_location' => 'The :attribute must be unique within the selected company and location.',
 
     /*
     |--------------------------------------------------------------------------
@@ -230,7 +230,10 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'serials.*' => 'Pořadové číslo',
+        'asset_tags.*' => 'Označení majetku',
+    ],
 
     /*
     |--------------------------------------------------------------------------

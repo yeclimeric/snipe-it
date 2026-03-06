@@ -33,7 +33,7 @@ return [
     'create_fieldset_title' => 'Créer un nouveau jeu de champs',
     'create_field'            => 'Nouveau champ personnalisé',
     'create_field_title' => 'Créer un champ personnalisé',
-    'value_encrypted'      	        => 'La valeur de ce champ est chiffrée dans la base de donnée. Seuls les administrateurs seront capable de voir les données déchiffrées',
+    'value_encrypted'      	        => 'The value of this field is encrypted in the database. Only users with permission to view encrypted custom fields will be able to view the decrypted value',
     'show_in_email'     => 'Inclure la valeur de ce champ dans les e-mails envoyés à l\'utilisateur·trice ? Les champs chiffrés ne peuvent pas être inclus dans les e-mails',
     'show_in_email_short' => 'Inclure dans les emails',
     'help_text' => 'Texte d\'aide',
@@ -67,4 +67,5 @@ return [
         'checkbox' => 'Checkbox',
         'radio' => 'Radio Buttons',
     ],
+    'general_help_text' => 'Custom fields store additional information not covered by the default asset fields. <a href="https://snipe-it.readme.io/docs/custom-fields#/"><i class="fa fa-external-link"></i></a>.',
 ];

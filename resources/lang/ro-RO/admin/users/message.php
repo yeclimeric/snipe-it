@@ -2,11 +2,12 @@
 
 return array(
 
-    'accepted'                  => 'Ați acceptat cu succes acest activ.',
-    'declined'                  => 'Ați refuzat cu succes acest activ.',
+    'accepted'                  => 'You have successfully accepted this item.',
+    'declined'                  => 'You have successfully declined this item.',
     'bulk_manager_warn'	        => 'Utilizatorii dvs. au fost actualizați cu succes, cu toate acestea, intrarea managerului dvs. nu a fost salvată, deoarece managerul pe care l-ați selectat a fost, de asemenea, în lista de utilizatori care urmează să fie editat și este posibil ca utilizatorii să nu fie propriul manager. Selectați din nou utilizatorii dvs., cu excepția managerului.',
     'user_exists'               => 'Utilizatorul exista deja!',
-    'user_not_found'            => 'User does not exist or you do not have permission view them.',
+    'cannot_delete'             => 'User does not exist or you do not have permission to delete them.',
+    'user_not_found'            => 'Utilizatorul nu există sau nu aveți permisiunea de a le vizualiza.',
     'user_login_required'       => 'Campul de login este necesar',
     'user_has_no_assets_assigned' => 'Nici un activ alocat utilizatorului în prezent.',
     'user_password_required'    => 'Este necesara parola.',

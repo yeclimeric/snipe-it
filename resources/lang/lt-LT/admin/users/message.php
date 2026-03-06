@@ -2,10 +2,11 @@
 
 return array(
 
-    'accepted'                  => 'Jūs sėkmingai priėmėte šį turtą.',
-    'declined'                  => 'Jūs sėkmingai atsisakėte priimti šį turtą.',
+    'accepted'                  => 'Jūs sėkmingai priėmėte šį daiktą.',
+    'declined'                  => 'Jūs sėkmingai atsisakėte priimti šį daiktą.',
     'bulk_manager_warn'	        => 'Jūsų naudotojai buvo sėkmingai atnaujinti, tačiau tiesioginio vadovo informacija nebuvo išsaugota, nes jūsų nurodytas tiesioginis vadovas taip pat buvo redaguojamų naudotojų sąraše. Naudotojas negali būti savo paties tiesioginiu vadovu, todėl dar kartą pasirinkite naudotojus, neįtraukdami tiesioginio vadovo.',
     'user_exists'               => 'Toks naudotojas jau yra!',
+    'cannot_delete'             => 'Tokio naudotojo nėra arba jūs neturite teisės jo panaikinti.',
     'user_not_found'            => 'Tokio naudotojo nėra arba jūs neturite teisės jo peržiūrėti.',
     'user_login_required'       => 'Prisijungimo laukas yra privalomas',
     'user_has_no_assets_assigned' => 'Naudotojui neišduotas joks turtas.',

@@ -44,6 +44,8 @@ return [
     'redirect_to_checked_out_to'   => 'Перейти к заметке',
     'select_statustype'	=> 'Выберите тип статуса',
     'serial'			=> 'Серийный номер',
+    'serial_required'	=> 'Актив: для номера требуется серийный номер',
+    'serial_required_post_model_update'	=> ':asset_model добавлен серийный номер. Пожалуйста, добавьте серийный номер для этого актива.',
     'status'			=> 'Статус',
     'tag'				=> 'Тег актива',
     'update'			=> 'Изменить актив',

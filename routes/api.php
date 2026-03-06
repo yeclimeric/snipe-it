@@ -137,7 +137,7 @@ Route::group(['prefix' => 'v1', 'middleware' => ['api', 'api-throttle:api']], fu
 
      
      /**
-      * Categpries API routes
+      * Categories API routes
       */
       Route::group(['prefix' => 'categories'], function () {
         
@@ -571,6 +571,13 @@ Route::group(['prefix' => 'v1', 'middleware' => ['api', 'api-throttle:api']], fu
                   'assignedAccessories'
               ]
           )->name('api.assets.assigned_accessories');
+
+          Route::get('{asset}/assigned/components',
+              [
+                  Api\AssetsController::class,
+                  'assignedComponents'
+              ]
+          )->name('api.assets.assigned_components');
           /** End assigned routes */
 
       });
@@ -583,9 +590,7 @@ Route::group(['prefix' => 'v1', 'middleware' => ['api', 'api-throttle:api']], fu
     // the model name to be the parameter - and i think it's a good differentiation in the code while we convert the others.
     Route::patch('/hardware/{asset}', [Api\AssetsController::class, 'update'])->name('api.assets.update');
     Route::put('/hardware/{asset}', [Api\AssetsController::class, 'update'])->name('api.assets.put-update');
-
-    Route::put('/hardware/{asset}', [Api\AssetsController::class, 'update'])->name('api.assets.put-update');
-
+    
     Route::resource('hardware',
         Api\AssetsController::class,
         ['names' => [
@@ -841,6 +846,28 @@ Route::group(['prefix' => 'v1', 'middleware' => ['api', 'api-throttle:api']], fu
         ); // end asset models API routes
 
 
+        /**
+         * Asset notes API routes
+         */
+        Route::group(['prefix' => 'notes'], function () {
+
+            Route::post(
+                '{asset}/store',
+                [
+                    Api\NotesController::class,
+                    'store'
+                ]
+            )->name('api.notes.store');
+
+            Route::get(
+                '{asset}/index',
+                [
+                    Api\NotesController::class,
+                    'index'
+                ]
+            )->name('api.notes.index');
+        }
+        ); // end asset notes API routes
 
         /**
         * Settings API routes
@@ -915,11 +942,10 @@ Route::group(['prefix' => 'v1', 'middleware' => ['api', 'api-throttle:api']], fu
         Route::resource('settings', 
         Api\SettingsController::class,
         ['names' => [
-                'show' => 'api.settings.show',
                 'update' => 'api.settings.update',
                 'store' => 'api.settings.store',
             ],
-        'except' => ['create', 'edit', 'index', 'destroy'],
+        'except' => ['create', 'edit', 'index', 'destroy', 'show'],
         'parameters' => ['setting' => 'setting_id'],
         ]
         ); // end settings API
@@ -1321,7 +1347,7 @@ Route::group(['prefix' => 'v1', 'middleware' => ['api', 'api-throttle:api']], fu
             'index'
         ]
     )->name('api.files.index')
-        ->where(['object_type' => 'accessories|assets|components|consumables|hardware|licenses|locations|maintenances|models|users']);
+        ->where(['object_type' => 'accessories|audits|assets|components|consumables|hardware|licenses|locations|maintenances|models|suppliers|users']);
 
     // Get a file
     Route::get('{object_type}/{id}/files/{file_id}',
@@ -1330,7 +1356,7 @@ Route::group(['prefix' => 'v1', 'middleware' => ['api', 'api-throttle:api']], fu
             'show'
         ]
     )->name('api.files.show')
-        ->where(['object_type' => 'accessories|assets|components|consumables|hardware|licenses|locations|maintenances|models|users']);
+        ->where(['object_type' => 'accessories|audits|assets|components|consumables|hardware|licenses|locations|maintenances|models|suppliers|users']);
 
     // Upload files(s)
     Route::post('{object_type}/{id}/files',
@@ -1339,7 +1365,7 @@ Route::group(['prefix' => 'v1', 'middleware' => ['api', 'api-throttle:api']], fu
             'store'
         ]
     )->name('api.files.store')
-        ->where(['object_type' => 'accessories|assets|components|consumables|hardware|licenses|locations|maintenances|models|users']);
+        ->where(['object_type' => 'accessories|audits|assets|components|consumables|hardware|licenses|locations|maintenances|models|suppliers|users']);
 
     // Delete files(s)
     Route::delete('{object_type}/{id}/files/{file_id}/delete',
@@ -1348,6 +1374,6 @@ Route::group(['prefix' => 'v1', 'middleware' => ['api', 'api-throttle:api']], fu
             'destroy'
         ]
     )->name('api.files.destroy')
-        ->where(['object_type' => 'accessories|assets|components|consumables|hardware|licenses|locations|maintenances|models|users']);
+        ->where(['object_type' => 'accessories|assets|components|consumables|hardware|licenses|locations|maintenances|models|suppliers|users']);
 
 }); // end API routes

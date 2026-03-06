@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Transformers;
 
+use App\Enums\ActionType;
 use App\Helpers\Helper;
 use App\Helpers\StorageHelper;
 use App\Models\Actionlog;
@@ -50,7 +51,12 @@ class ActionlogsTransformer
 
     public function transformActionlog (Actionlog $actionlog, $settings = null)
     {
+
         $icon = $actionlog->present()->icon();
+
+        if (($actionlog->filename!='') && ($actionlog->action_type!='upload deleted')) {
+            $icon =  Helper::filetype_icon($actionlog->filename);
+        }
 
         static $custom_fields = false;
 
@@ -58,9 +64,7 @@ class ActionlogsTransformer
             $custom_fields = CustomField::all();
         }
 
-        if ($actionlog->filename!='') {
-            $icon =  Helper::filetype_icon($actionlog->filename);
-        }
+
 
         // This is necessary since we can't escape special characters within a JSON object
         if (($actionlog->log_meta) && ($actionlog->log_meta!='')) {
@@ -77,7 +81,7 @@ class ActionlogsTransformer
 
                     // this is a custom field
                     if (str_starts_with($fieldname, '_snipeit_')) {
-                        
+
                         foreach ($custom_fields as $custom_field) {
 
                             if ($custom_field->db_column == $fieldname) {
@@ -144,19 +148,21 @@ class ActionlogsTransformer
                 [
                     'url' => $actionlog->uploads_file_url(),
                     'filename' => $actionlog->filename,
-                    'inlineable' => StorageHelper::allowSafeInline($actionlog->uploads_file_url()),
+                    'inlineable' => StorageHelper::allowSafeInline($actionlog->uploads_file_path()),
                     'exists_on_disk' => Storage::exists($actionlog->uploads_file_path()) ? true : false,
+                    'mediatype' => StorageHelper::getMediaType($actionlog->uploads_file_path()),
                 ] : null,
 
             'item' => ($actionlog->item) ? [
                 'id' => (int) $actionlog->item->id,
-                'name' => ($actionlog->itemType()=='user') ? e($actionlog->item->getFullNameAttribute()) : e($actionlog->item->getDisplayNameAttribute()),
+                'name' => e($actionlog->item->display_name) ?? null,
                 'type' => e($actionlog->itemType()),
-                'serial' =>e($actionlog->item->serial) ? e($actionlog->item->serial) : null
+                'serial' => e($actionlog->item->serial) ? e($actionlog->item->serial) : null
             ] : null,
             'location' => ($actionlog->location) ? [
                 'id' => (int) $actionlog->location->id,
                 'name' => e($actionlog->location->name),
+                'tag_color'=> ($actionlog->location->tag_color) ? e($actionlog->location->tag_color) : null,
             ] : null,
             'created_at'    => Helper::getFormattedDateObject($actionlog->created_at, 'datetime'),
             'updated_at'    => Helper::getFormattedDateObject($actionlog->updated_at, 'datetime'),
@@ -165,24 +171,24 @@ class ActionlogsTransformer
             'action_type'   => $actionlog->present()->actionType(),
             'admin' => ($actionlog->adminuser) ? [
                 'id' => (int) $actionlog->adminuser->id,
-                'name' => e($actionlog->adminuser->getFullNameAttribute()),
+                'name' => e($actionlog->adminuser->display_name) ?? null,
                 'first_name'=> e($actionlog->adminuser->first_name),
                 'last_name'=> e($actionlog->adminuser->last_name)
             ] : null,
             'created_by' => ($actionlog->adminuser) ? [
                 'id' => (int) $actionlog->adminuser->id,
-                'name' => e($actionlog->adminuser->getFullNameAttribute()),
+                'name' => e($actionlog->adminuser->display_name),
                 'first_name'=> e($actionlog->adminuser->first_name),
                 'last_name'=> e($actionlog->adminuser->last_name)
             ] : null,
             'target' => ($actionlog->target) ? [
                 'id' => (int) $actionlog->target->id,
-                'name' => ($actionlog->targetType()=='user') ? e($actionlog->target->getFullNameAttribute()) : e($actionlog->target->getDisplayNameAttribute()),
+                'name' => e($actionlog->target->display_name) ?? null,
                 'type' => e($actionlog->targetType()),
             ] : null,
-
+            'quantity' => $this->getQuantity($actionlog),
             'note'          => ($actionlog->note) ? Helper::parseEscapedMarkedownInline($actionlog->note): null,
-            'signature_file'   => ($actionlog->accept_signature) ? route('log.signature.view', ['filename' => $actionlog->accept_signature ]) : null,
+            'signature_file'   => (($actionlog->accept_signature) && Storage::exists('private_uploads/signatures/'.$actionlog->accept_signature)) ? route('log.signature.view', ['filename' => $actionlog->accept_signature ]) : null,
             'log_meta'          => ((isset($clean_meta)) && (is_array($clean_meta))) ? $clean_meta: null,
             'remote_ip' => e($actionlog->remote_ip) ?? null,
             'user_agent' => e($actionlog->user_agent) ?? null,
@@ -331,6 +337,26 @@ class ActionlogsTransformer
 
     }
 
+    private function getQuantity(Actionlog $actionlog): ?int
+    {
+        if (!$actionlog->quantity) {
+            return null;
+        }
+
+        // only a few action types will have a quantity we are interested in.
+        if (!in_array($actionlog->action_type, [
+            ActionType::Checkout->value,
+            ActionType::Accepted->value,
+            ActionType::Declined->value,
+            ActionType::CheckinFrom->value,
+            ActionType::AddSeats->value,
+            ActionType::DeleteSeats->value,
+        ])) {
+            return null;
+        }
+
+        return (int) $actionlog->quantity;
+    }
 
 
 }

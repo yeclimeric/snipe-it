@@ -174,7 +174,7 @@ return [
     'ulid' => 'crwdns12552:0crwdne12552:0',
     'uuid' => 'crwdns12554:0crwdne12554:0',
     'fmcs_location' => 'crwdns13232:0crwdne13232:0',
-
+    'is_unique_across_company_and_location' => 'crwdns14272:0crwdne14272:0',
 
     /*
     |--------------------------------------------------------------------------
@@ -230,7 +230,10 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'serials.*' => 'crwdns14386:0crwdne14386:0',
+        'asset_tags.*' => 'crwdns14388:0crwdne14388:0',
+    ],
 
     /*
     |--------------------------------------------------------------------------

@@ -81,6 +81,14 @@ class MaintenancesPresenter extends Presenter
                 'visible' => false,
                 'formatter' => 'modelsLinkObjFormatter',
             ], [
+                'field' => 'model.model_number',
+                'searchable' => true,
+                'sortable' => true,
+                'switchable' => true,
+                'title' => trans('general.model_no'),
+                'visible' => true,
+            ],
+            [
                 'field' => 'supplier',
                 'searchable' => true,
                 'sortable' => true,
@@ -111,6 +119,12 @@ class MaintenancesPresenter extends Presenter
                 'sortable' => true,
                 'title' => trans('admin/maintenances/form.completion_date'),
                 'formatter' => 'dateDisplayFormatter',
+            ], [
+                'field' => 'url',
+                'searchable' => true,
+                'sortable' => true,
+                'title' => trans('general.url'),
+                'formatter' => 'externalLinkFormatter',
             ], [
                 'field' => 'notes',
                 'searchable' => true,

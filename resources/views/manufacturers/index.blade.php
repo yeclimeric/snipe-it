@@ -8,52 +8,53 @@
 
 {{-- Page content --}}
 @section('content')
+    <x-container>
+        <x-box>
 
-  <div class="row">
-    <div class="col-md-12">
+            @if ($manufacturer_count == 0)
 
-      <div class="box box-default">
-        <div class="box-body">
+                    <form action="{{ route('manufacturers.seed') }}" method="POST">
+                      {{ csrf_field() }}
+                    <div class="callout callout-info">
+                      <p>
+                          {{ trans('general.seeding.manufacturers.prompt') }}
+                        <button class="btn btn-sm btn-theme hidden-print" rel="noopener">
+                          {{ trans('general.seeding.manufacturers.button') }}
+                        </button>
+                      </p>
+                    </div>
+                    </form>
 
-    @if ($manufacturer_count == 0)
-
-            <form action="{{ route('manufacturers.seed') }}" method="POST">
-              {{ csrf_field() }}
-            <div class="callout callout-info">
-              <p>
-                  {{ trans('general.seeding.manufacturers.prompt') }}
-                <button class="btn btn-sm btn-primary hidden-print" rel="noopener">
-                  {{ trans('general.seeding.manufacturers.button') }}
-                </button>
-              </p>
-            </div>
-            </form>
-
-      @else
-
-
-            <table
-              data-columns="{{ \App\Presenters\ManufacturerPresenter::dataTableLayout() }}"
-              data-cookie-id-table="manufacturersTable"
-              data-id-table="manufacturersTable"
-              data-side-pagination="server"
-              data-sort-order="asc"
-              id="manufacturersTable"
-              data-buttons="manufacturerButtons"
-              class="table table-striped snipe-table"
-              data-url="{{route('api.manufacturers.index', ['deleted' => (request('deleted')=='true') ? 'true' : 'false' ]) }}"
-              data-export-options='{
-                "fileName": "export-manufacturers-{{ date('Y-m-d') }}",
-                "ignoreColumn": ["actions","image","change","checkbox","checkincheckout","icon"]
-                }'>
-            </table>
+              @else
+                <x-slot:bulkactions>
+                    <x-table.bulk-actions
+                            name='manufacturer'
+                            action_route="{{route('manufacturers.bulk.delete')}}"
+                            model_name="manufacturer"
+                    >
+                        @can('delete', App\Models\Manufacturer::class)
+                            <option>Delete</option>
+                        @endcan
+                    </x-table.bulk-actions>
+                </x-slot:bulkactions>
 
 
-  @endif
-        </div><!-- /.box-body -->
-      </div><!-- /.box -->
-    </div>
-  </div>
+                <x-table
+                        name="manufacturer"
+                        buttons="manufacturerButtons"
+                        fixed_right_number="1"
+                        fixed_number="1"
+                        api_url="{{ route('api.manufacturers.index') }}"
+                        :presenter="\App\Presenters\ManufacturerPresenter::dataTableLayout()"
+                        export_filename="export-manufacturers-{{ date('Y-m-d') }}"
+                />
+
+
+
+
+            @endif
+        </x-box>
+    </x-container>
 @stop
 
 @section('moar_scripts')

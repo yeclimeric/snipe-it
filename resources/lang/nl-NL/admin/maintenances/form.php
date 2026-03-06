@@ -1,7 +1,7 @@
 <?php
 
     return [
-        'select_type'            => 'Select Maintenance Type',
+        'select_type'            => 'Selecteer onderhoudstype',
         'asset_maintenance_type' => 'Object onderhoudstype',
         'title'                  => 'Titel',
         'start_date'             => 'Begindatum',
@@ -9,7 +9,7 @@
         'cost'                   => 'Kostprijs',
         'is_warranty'            => 'Garantieverbetering',
         'asset_maintenance_time' => 'Hersteltermijn (aantal dagen)',
-        'notes'                  => 'Notities',
+        'notes'                  => 'Opmerkingen',
         'update'                 => 'Object onderhoud bijwerken',
         'create'                 => 'Object onderhoud aanmaken'
     ];

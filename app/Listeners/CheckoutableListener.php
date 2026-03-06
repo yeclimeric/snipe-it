@@ -33,6 +33,7 @@ use App\Notifications\CheckoutConsumableNotification;
 use App\Notifications\CheckoutLicenseSeatNotification;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Exception;
@@ -96,8 +97,19 @@ class CheckoutableListener
 
             if (!empty($to)) {
                 try {
-                    Mail::to(array_flatten($to))->cc(array_flatten($cc))->send($mailable);
+                    $toMail = (clone $mailable)->locale($notifiable->locale);
+                    Mail::to(array_flatten($to))->send($toMail);
                     Log::info('Checkout Mail sent to checkout target');
+                } catch (ClientException $e) {
+                    Log::debug("Exception caught during checkout email: " . $e->getMessage());
+                } catch (Exception $e) {
+                    Log::debug("Exception caught during checkout email: " . $e->getMessage());
+                }
+            }
+            if (!empty($cc)) {
+                try {
+                    $ccMail = (clone $mailable)->locale(Setting::getSettings()->locale);
+                    Mail::to(array_flatten($cc))->send($ccMail);
                 } catch (ClientException $e) {
                     Log::debug("Exception caught during checkout email: " . $e->getMessage());
                 } catch (Exception $e) {
@@ -117,11 +129,18 @@ class CheckoutableListener
                         ->notify($this->getCheckoutNotification($event, $acceptance));
                 }
             } catch (ClientException $e) {
+                $status = $e->getResponse()->getStatusCode();
+
                 if (strpos($e->getMessage(), 'channel_not_found') !== false) {
                     Log::warning(Setting::getSettings()->webhook_selected . " notification failed: " . $e->getMessage());
                     return redirect()->back()->with('warning', ucfirst(Setting::getSettings()->webhook_selected) . trans('admin/settings/message.webhook.webhook_channel_not_found'));
                 } else {
-                    Log::error("ClientException caught during checkin notification: " . $e->getMessage());
+                    if ($status >= 500 || $status === null) {
+                        Log::error(Setting::getSettings()->webhook_selected . " notification failed: " . $e->getMessage());
+                    } else {
+                        Log::warning("ClientException caught during checkin notification: " . $e->getMessage());
+                        return redirect()->back()->with('warning', ucfirst(Setting::getSettings()->webhook_selected) . trans('admin/settings/message.webhook.webhook_fail'));
+                    }
                 }
                 return redirect()->back()->with('warning', ucfirst(Setting::getSettings()->webhook_selected) . trans('admin/settings/message.webhook.webhook_fail'));
             } catch (Exception $e) {
@@ -178,15 +197,26 @@ class CheckoutableListener
 
             [$to, $cc] = $this->generateEmailRecipients($shouldSendEmailToUser, $shouldSendEmailToAlertAddress, $notifiable);
 
-            try {
-                if (!empty($to)) {
-                    Mail::to(array_flatten($to))->cc(array_flatten($cc))->send($mailable);
-                    Log::info('Checkin Mail sent to CC addresses');
+            if (!empty($to)) {
+                try {
+                    $toMail = (clone $mailable)->locale($notifiable->locale);
+                    Mail::to(array_flatten($to))->send($toMail);
+                    Log::info('Checkin Mail sent to checkin target');
+                } catch (ClientException $e) {
+                    Log::debug("Exception caught during checkin email: " . $e->getMessage());
+                } catch (Exception $e) {
+                    Log::debug("Exception caught during checkin email: " . $e->getMessage());
                 }
-            } catch (ClientException $e) {
-                Log::debug("Exception caught during checkin email: " . $e->getMessage());
-            } catch (Exception $e) {
-                Log::debug("Exception caught during checkin email: " . $e->getMessage());
+            }
+            if (!empty($cc)) {
+                try {
+                    $ccMail = (clone $mailable)->locale(Setting::getSettings()->locale);
+                    Mail::to(array_flatten($cc))->send($ccMail);
+                } catch (ClientException $e) {
+                    Log::debug("Exception caught during checkin email: " . $e->getMessage());
+                } catch (Exception $e) {
+                    Log::debug("Exception caught during checkin email: " . $e->getMessage());
+                }
             }
         }
 
@@ -202,12 +232,18 @@ class CheckoutableListener
                         ->notify($this->getCheckinNotification($event));
                 }
             } catch (ClientException $e) {
+                $status = $e->getResponse()->getStatusCode();
+
                 if (strpos($e->getMessage(), 'channel_not_found') !== false) {
                     Log::warning(Setting::getSettings()->webhook_selected . " notification failed: " . $e->getMessage());
                     return redirect()->back()->with('warning', ucfirst(Setting::getSettings()->webhook_selected) . trans('admin/settings/message.webhook.webhook_channel_not_found'));
                 } else {
-                    Log::error("ClientException caught during checkin notification: " . $e->getMessage());
-                    return redirect()->back()->with('warning', ucfirst(Setting::getSettings()->webhook_selected) . trans('admin/settings/message.webhook.webhook_fail'));
+                    if ($status >= 500 || $status === null) {
+                        Log::error(Setting::getSettings()->webhook_selected . " notification failed: " . $e->getMessage());
+                    } else {
+                        Log::warning("ClientException caught during checkin notification: " . $e->getMessage());
+                        return redirect()->back()->with('warning', ucfirst(Setting::getSettings()->webhook_selected) . trans('admin/settings/message.webhook.webhook_fail'));
+                    }
                 }
             } catch (Exception $e) {
                 Log::warning(ucfirst(Setting::getSettings()->webhook_selected) . ' webhook notification failed:', [
@@ -239,6 +275,12 @@ class CheckoutableListener
         $acceptance = new CheckoutAcceptance;
         $acceptance->checkoutable()->associate($event->checkoutable);
         $acceptance->assignedTo()->associate($event->checkedOutTo);
+
+        $acceptance->qty = 1;
+
+        if (isset($event->checkoutable->checkout_qty)) {
+            $acceptance->qty = $event->checkoutable->checkout_qty;
+        }
 
         $category = $this->getCategoryFromCheckoutable($event->checkoutable);
 
@@ -400,11 +442,16 @@ class CheckoutableListener
     private function shouldSendCheckoutEmailToUser(Model $checkoutable): bool
     {
         /**
-         * Send an email if any of the following conditions are met:
+         * Send an email if we didn't get here from a bulk checkout
+         * and any of the following conditions are met:
          * 1. The asset requires acceptance
          * 2. The item has a EULA
          * 3. The item should send an email at check-in/check-out
          */
+
+        if (Context::get('action') === 'bulk_asset_checkout') {
+            return false;
+        }
 
         if ($checkoutable->requireAcceptance()) {
             return true;
@@ -423,6 +470,10 @@ class CheckoutableListener
 
     private function shouldSendEmailToAlertAddress($acceptance = null): bool
     {
+        if (Context::get('action') === 'bulk_asset_checkout') {
+            return false;
+        }
+
         $setting = Setting::getSettings();
 
         if (!$setting) {

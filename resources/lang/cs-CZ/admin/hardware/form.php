@@ -44,6 +44,8 @@ return [
     'redirect_to_checked_out_to'   => 'Přejít na přiřazeného uživatele',
     'select_statustype'	=> 'Zvolte typ stavu',
     'serial'			=> 'Sériové číslo',
+    'serial_required'	=> 'Nutno doplnit sériové číslo majetku :number',
+    'serial_required_post_model_update'	=> 'Model :asset_model byl upraven a vyžaduje sériové číslo, doplňte jej prosím.',
     'status'			=> 'Stav',
     'tag'				=> 'Označení majetku',
     'update'			=> 'Úprava majetku',

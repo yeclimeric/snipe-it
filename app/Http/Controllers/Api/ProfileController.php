@@ -6,6 +6,7 @@ use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Transformers\ProfileTransformer;
 use App\Models\CheckoutRequest;
+use App\Models\Setting;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
@@ -14,6 +15,7 @@ use Laravel\Passport\TokenRepository;
 use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Illuminate\Support\Facades\Gate;
 use App\Models\CustomField;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -69,7 +71,7 @@ class ProfileController extends Controller
             if ($checkoutRequest && $checkoutRequest->itemRequested()) {
                 $assets = [
                     'image' => e($checkoutRequest->itemRequested()->present()->getImageUrl()),
-                    'name' => e($checkoutRequest->itemRequested()->present()->name()),
+                    'name' => e($checkoutRequest->itemRequested()->display_name),
                     'type' => e($checkoutRequest->itemType()),
                     'qty' => (int) $checkoutRequest->quantity,
                     'location' => ($checkoutRequest->location()) ? e($checkoutRequest->location()->name) : null,
@@ -179,14 +181,24 @@ class ProfileController extends Controller
      *@since [v8.1.16]
      * @author [Godfrey Martinez] [<gmartinez@grokability.com>]
      */
-    public function eulas(ProfileTransformer $transformer)
+    public function eulas(ProfileTransformer $transformer, Request $request)
     {
-        // Only return this user's EULAs
-        $eulas = auth()->user()->eulas;
-        return response()->json(
-            $transformer->transformFiles($eulas, $eulas->count())
-        );
-    }
 
+        if (($request->filled('user_id')) && ($request->input( 'user_id') != 0)) {
+
+            $eula_user = User::find($request->input('user_id'));
+
+            if (($eula_user) && (Setting::getSettings()->manager_view_enabled) && (auth()->user()->isManagerOf($eula_user))) {
+                $eulas = $eula_user->eulas;
+            } else {
+                return response()->json(Helper:: formatStandardApiResponse('error', null, trans('admin/users/message.user_not_found')));
+            }
+        } else {
+            $eulas = auth()->user()->eulas;
+        }
+
+       return response()->json($transformer->transformFiles($eulas, $eulas->count()));
+
+    }
 
 }

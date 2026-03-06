@@ -22,9 +22,11 @@ return array(
     ),
 
     'delete' => array(
-        'confirm'   => 'Opravdu chcete smazat tohoto výrobce?',
+        'confirm' => 'Opravdu chcete smazat tohoto výrobce?',
         'error'   => 'Vyskytl se problém se smazáním výrobce. Zkuste to znovu.',
-        'success' => 'Výrobce byl úspěšně smazán.'
+        'success'                => 'Výrobce úspěšně vymazán.',
+        'bulk_success'           => 'Výrobci úspěšně vymazáni.',
+        'partial_success'        => 'Výrobce byl úspěšně odstraněn. Viz další informace níže. | :count výrobci byly úspěšně odstraněny. Viz další informace níže.',
     )
 
 );

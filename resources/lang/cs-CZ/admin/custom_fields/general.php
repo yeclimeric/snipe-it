@@ -33,7 +33,7 @@ return [
     'create_fieldset_title' => 'Vytvořit nový fieldset',
     'create_field'            => 'Nové vlastní pole',
     'create_field_title' => 'Vytvořít vlastní fieldset',
-    'value_encrypted'      	        => 'Hodnota tohoto pole je zašifrována v databázi. Pouze administrátoři budou moci zobrazit dešifrovanou hodnotu',
+    'value_encrypted'      	        => 'Hodnota tohoto pole je šifrována v databázi. Pouze uživatelé s oprávněním k zobrazení šifrovaných vlastních polí budou moci zobrazit dešifrovanou hodnotu',
     'show_in_email'     => 'Zahrnout hodnotu této kolonky do e-mailu o vyskladnění pro uživatele? Šifrované kolonky nemohou být součástí e-mailů',
     'show_in_email_short' => 'Zahrnout do e-mailů',
     'help_text' => 'Text nápovědy',
@@ -67,4 +67,5 @@ return [
         'checkbox' => 'Zaškrtávací políčko',
         'radio' => 'Přepínače',
     ],
+    'general_help_text' => 'Vlastní pole ukládají další informace nad rámec výchozích polí majetku. <a href="https://snipe-it.readme.io/docs/custom-fields#/"><i class="fa fa-external-link"></i></a>.',
 ];

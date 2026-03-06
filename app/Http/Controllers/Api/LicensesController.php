@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Transformers\LicensesTransformer;
 use App\Http\Transformers\SelectlistTransformer;
 use App\Models\License;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
@@ -25,6 +26,15 @@ class LicensesController extends Controller
         $this->authorize('view', License::class);
 
         $licenses = License::with('company', 'manufacturer', 'supplier','category', 'adminuser')->withCount('freeSeats as free_seats_count');
+        $settings = Setting::getSettings();
+
+        if ($request->input('status')=='inactive') {
+            $licenses->ExpiredLicenses();
+        } elseif ($request->input('status')=='expiring') {
+            $licenses->ExpiringLicenses($settings->alert_interval);
+        } elseif ($request->input('status')=='active') {
+            $licenses->ActiveLicenses();
+        }
 
         if ($request->filled('company_id')) {
             $licenses->where('licenses.company_id', '=', $request->input('company_id'));
@@ -93,6 +103,8 @@ class LicensesController extends Controller
         if ($request->input('deleted')=='true') {
             $licenses->onlyTrashed();
         }
+
+
 
         // Make sure the offset and limit are actually integers and do not exceed system limits
         $offset = ($request->input('offset') > $licenses->count()) ? $licenses->count() : app('api_offset_value');
@@ -253,7 +265,7 @@ class LicensesController extends Controller
         ]);
 
         if ($request->filled('search')) {
-            $licenses = $licenses->where('licenses.name', 'LIKE', '%'.$request->get('search').'%');
+            $licenses = $licenses->where('licenses.name', 'LIKE', '%'.$request->input('search').'%');
         }
 
         $licenses = $licenses->orderBy('name', 'ASC')->paginate(50);

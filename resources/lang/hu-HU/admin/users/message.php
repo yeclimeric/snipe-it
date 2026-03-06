@@ -3,10 +3,11 @@
 return array(
 
     'accepted'                  => 'Ön sikeresen elfogadta ezt az eszközt.',
-    'declined'                  => 'Az eszközt sikeresen csökkentetted.',
+    'declined'                  => 'Ön sikeresen elutasította ezt az eszközt.',
     'bulk_manager_warn'	        => 'A felhasználók sikeresen frissültek, azonban a kezelői bejegyzést nem mentette el, mert a kiválasztott kezelő a szerkesztőben is szerepel a felhasználók listájában, és a felhasználók nem lehetnek saját kezelőik. Kérjük, ismét válassza ki a felhasználókat, kivéve a kezelőt.',
     'user_exists'               => 'Felhasználó már létezik!',
-    'user_not_found'            => 'A felhasználó nem található, vagy nincs jogosultsága a megtekintéséhez.',
+    'cannot_delete'             => 'A felhasználó nem létezik, vagy nincs engedélye a megtekintéséhez.',
+    'user_not_found'            => 'A felhasználó nem létezik, vagy nincs engedélye a megtekintéséhez.',
     'user_login_required'       => 'A bejelentkezési mező kötelező',
     'user_has_no_assets_assigned' => 'A felhasználóhoz jelenleg nincs hozzárendelve eszköz.',
     'user_password_required'    => 'A jelszó szükséges.',

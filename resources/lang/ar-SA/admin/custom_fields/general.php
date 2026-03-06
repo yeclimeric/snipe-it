@@ -33,7 +33,7 @@ return [
     'create_fieldset_title' => 'إنشاء مجموعة حقول جديدة',
     'create_field'            => 'حقل جديد مخصص',
     'create_field_title' => 'إنشاء حقل مخصص جديد',
-    'value_encrypted'      	        => 'هذا الحقل مشفر في قاعدة البيانات. يمكن قرائته من قبل مدراء النظام فقط',
+    'value_encrypted'      	        => 'The value of this field is encrypted in the database. Only users with permission to view encrypted custom fields will be able to view the decrypted value',
     'show_in_email'     => 'هل تريد تضمين قيمة هذا الحقل في رسائل البريد الإلكتروني المرسلة إلى المستخدم؟ لا يمكن تضمين الحقول المشفرة في رسائل البريد الإلكتروني',
     'show_in_email_short' => 'تضمين في رسائل البريد الإلكتروني',
     'help_text' => 'نص المساعدة',
@@ -67,4 +67,5 @@ return [
         'checkbox' => 'Checkbox',
         'radio' => 'Radio Buttons',
     ],
+    'general_help_text' => 'Custom fields store additional information not covered by the default asset fields. <a href="https://snipe-it.readme.io/docs/custom-fields#/"><i class="fa fa-external-link"></i></a>.',
 ];

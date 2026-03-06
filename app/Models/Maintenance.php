@@ -3,12 +3,16 @@
 namespace App\Models;
 
 use App\Helpers\Helper;
+use App\Models\Traits\CompanyableChildTrait;
+use App\Models\Traits\HasUploads;
+use App\Models\Traits\Loggable;
 use App\Models\Traits\Searchable;
 use App\Presenters\Presentable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Gate;
 use Watson\Validating\ValidatingTrait;
-use App\Models\Traits\HasUploads;
+use App\Presenters\MaintenancesPresenter;
 
 /**
  * Model for Asset Maintenances.
@@ -25,18 +29,19 @@ class Maintenance extends SnipeModel implements ICompanyableChild
     use Loggable, Presentable;
 
 
-
+    protected $presenter = MaintenancesPresenter::class;
     protected $table = 'maintenances';
     protected $rules = [
         'asset_id'               => 'required|integer',
         'supplier_id'            => 'nullable|integer',
         'asset_maintenance_type' => 'required',
-        'name'                  => 'required|max:100',
+        'name'                   => 'required|max:100',
         'is_warranty'            => 'boolean',
         'start_date'             => 'required|date_format:Y-m-d',
         'completion_date'        => 'date_format:Y-m-d|nullable|after_or_equal:start_date',
         'notes'                  => 'string|nullable',
-        'cost'                   => 'numeric|nullable',
+        'cost'                   =>  'numeric|nullable|gte:0|max:99999999999999999.99',
+        'url'                    =>  'nullable|url|max:255',
     ];
 
 
@@ -56,6 +61,7 @@ class Maintenance extends SnipeModel implements ICompanyableChild
         'asset_maintenance_time',
         'notes',
         'cost',
+        'url',
     ];
 
     use Searchable;
@@ -112,6 +118,12 @@ class Maintenance extends SnipeModel implements ICompanyableChild
             trans('admin/maintenances/general.hardware_support')      => trans('admin/maintenances/general.hardware_support'),
             trans('admin/maintenances/general.configuration_change')     => trans('admin/maintenances/general.configuration_change'),
         ];
+    }
+
+
+    public function isDeletable()
+    {
+        return Gate::allows('delete', $this);
     }
 
     public function setIsWarrantyAttribute($value)
@@ -310,5 +322,19 @@ class Maintenance extends SnipeModel implements ICompanyableChild
     public function scopeOrderByCreatedBy($query, $order)
     {
         return $query->leftJoin('users as admin_sort', 'maintenances.created_by', '=', 'admin_sort.id')->select('maintenances.*')->orderBy('admin_sort.first_name', $order)->orderBy('admin_sort.last_name', $order);
+    }
+
+    public function scopeOrderByAssetModelName($query, $order)
+    {
+        return $query->join('assets as maintained_asset', 'maintenances.asset_id', '=', 'maintained_asset.id')
+            ->leftjoin('models as maintained_asset_model', 'maintained_asset_model.id', '=', 'maintained_asset.model_id')
+            ->orderBy('maintained_asset_model.name', $order);
+    }
+
+    public function scopeOrderByAssetModelNumber($query, $order)
+    {
+        return $query->join('assets as maintained_asset', 'maintenances.asset_id', '=', 'maintained_asset.id')
+            ->leftjoin('models as maintained_asset_model', 'maintained_asset_model.id', '=', 'maintained_asset.model_id')
+            ->orderBy('maintained_asset_model.model_number', $order);
     }
 }
