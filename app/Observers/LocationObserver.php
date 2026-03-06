@@ -40,7 +40,7 @@ class LocationObserver
 
     /**
      * Listen to the Location created event when
-     * a new license is created.
+     * a new location is created.
      *
      * @param  Location  $location
      * @return void
