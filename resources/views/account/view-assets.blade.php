@@ -132,73 +132,75 @@
 
 
               <!-- Start button column -->
-              <div class="col-md-3 col-xs-12 col-sm-push-9">
+                <div class="info-stack-container">
+                    <!-- Start button column -->
+                    <div class="col-md-3 col-xs-12 col-sm-push-9 info-stack">
 
-                <div class="col-md-12 text-center">
-                  <img src="{{ $user->present()->gravatar() }}"  class=" img-thumbnail hidden-print" style="margin-bottom: 20px;" alt="{{ $user->display_name }}" alt="User avatar">
-                </div>
+                            <div class="col-md-12 text-center">
+                              <img src="{{ $user->present()->gravatar() }}"  class=" img-thumbnail hidden-print" style="margin-bottom: 20px;" alt="{{ $user->display_name }}" alt="User avatar">
+                            </div>
 
-                  @if (!request()->filled('user_id') || auth()->user()->id == $user->id)
-                      <div class="col-md-12">
-                        <a href="{{ route('profile') }}" style="width: 100%;" class="btn btn-sm btn-warning btn-social btn-block hidden-print">
-                          <x-icon type="edit" />
-                          {{ trans('general.editprofile') }}
-                        </a>
-                      </div>
+                              @if (!request()->filled('user_id') || auth()->user()->id == $user->id)
+                                  <div class="col-md-12">
+                                    <a href="{{ route('profile') }}" style="width: 100%;" class="btn btn-sm btn-warning btn-social btn-block hidden-print">
+                                      <x-icon type="edit" />
+                                      {{ trans('general.editprofile') }}
+                                    </a>
+                                  </div>
 
 
-                      @can('self.profile')
-                      @if (Auth::user()->ldap_import!='1')
-                    <div class="col-md-12" style="padding-top: 5px;">
-                      <a href="{{ route('account.password.index') }}" style="width: 100%;" class="btn btn-sm btn-theme btn-social btn-block hidden-print" rel="noopener">
-                        <x-icon type="password" class="fa-fw" />
-                        {{ trans('general.changepassword') }}
-                      </a>
+                                  @can('self.profile')
+                                  @if (Auth::user()->ldap_import!='1')
+                                <div class="col-md-12" style="padding-top: 5px;">
+                                  <a href="{{ route('account.password.index') }}" style="width: 100%;" class="btn btn-sm btn-theme btn-social btn-block hidden-print" rel="noopener">
+                                    <x-icon type="password" class="fa-fw" />
+                                    {{ trans('general.changepassword') }}
+                                  </a>
+                                </div>
+                                @endif
+                              @endcan
+
+                            @can('self.api')
+                            <div class="col-md-12" style="padding-top: 5px;">
+                              <a href="{{ route('user.api') }}" style="width: 100%;" class="btn btn-sm btn-theme btn-social btn-block hidden-print" rel="noopener">
+                                <x-icon type="api-key" class="fa-fw" />
+                                {{ trans('general.manage_api_keys') }}
+                              </a>
+                            </div>
+                            @endcan
+                            @endif
+
+                              <div class="col-md-12" style="padding-top: 5px;">
+                                <a href="{{ route('profile.print') }}" style="width: 100%;" class="btn btn-sm btn-theme btn-social btn-block hidden-print" target="_blank" rel="noopener">
+                                  <x-icon type="print" class="fa-fw" />
+                                  {{ trans('admin/users/general.print_assigned') }}
+                                </a>
+                              </div>
+
+
+                              <div class="col-md-12" style="padding-top: 5px;">
+                                @if (!empty($user->email))
+                                  <form action="{{ route('profile.email_assets') }}" method="POST">
+                                    {{ csrf_field() }}
+                                    <button style="width: 100%;" class="btn btn-sm btn-theme btn-social btn-block hidden-print" rel="noopener">
+                                      <x-icon type="email" class="fa-fw" />
+                                      {{ trans('admin/users/general.email_assigned') }}
+                                    </button>
+                                  </form>
+                                @else
+                                  <button style="width: 100%;" class="btn btn-sm btn-theme btn-social btn-block hidden-print disabled" rel="noopener" disabled title="{{ trans('admin/users/message.user_has_no_email') }}">
+                                    <x-icon type="email" class="fa-fw" />
+                                    {{ trans('admin/users/general.email_assigned') }}
+                                  </button>
+                                @endif
+                              </div>
+                    <br><br>
                     </div>
-                    @endif
-                  @endcan
-
-                @can('self.api')
-                <div class="col-md-12" style="padding-top: 5px;">
-                  <a href="{{ route('user.api') }}" style="width: 100%;" class="btn btn-sm btn-theme btn-social btn-block hidden-print" rel="noopener">
-                    <x-icon type="api-key" class="fa-fw" />
-                    {{ trans('general.manage_api_keys') }}
-                  </a>
-                </div>
-                @endcan
-                @endif
-
-                  <div class="col-md-12" style="padding-top: 5px;">
-                    <a href="{{ route('profile.print') }}" style="width: 100%;" class="btn btn-sm btn-theme btn-social btn-block hidden-print" target="_blank" rel="noopener">
-                      <x-icon type="print" class="fa-fw" />
-                      {{ trans('admin/users/general.print_assigned') }}
-                    </a>
-                  </div>
-
-
-                  <div class="col-md-12" style="padding-top: 5px;">
-                    @if (!empty($user->email))
-                      <form action="{{ route('profile.email_assets') }}" method="POST">
-                        {{ csrf_field() }}
-                        <button style="width: 100%;" class="btn btn-sm btn-theme btn-social btn-block hidden-print" rel="noopener">
-                          <x-icon type="email" class="fa-fw" />
-                          {{ trans('admin/users/general.email_assigned') }}
-                        </button>
-                      </form>
-                    @else
-                      <button style="width: 100%;" class="btn btn-sm btn-theme btn-social btn-block hidden-print disabled" rel="noopener" disabled title="{{ trans('admin/users/message.user_has_no_email') }}">
-                        <x-icon type="email" class="fa-fw" />
-                        {{ trans('admin/users/general.email_assigned') }}
-                      </button>
-                    @endif
-                  </div>
-
-                <br><br>
               </div>
 
               <!-- End button column -->
 
-              <div class="col-md-9 col-xs-12 col-sm-pull-3">
+                <div class="col-md-9 col-xs-12 col-sm-pull-3 info-stack">
 
                 <div class="row-new-striped">
 
