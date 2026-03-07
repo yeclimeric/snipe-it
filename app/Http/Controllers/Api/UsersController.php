@@ -450,10 +450,18 @@ class UsersController extends Controller
         if ($request->has('permissions')) {
             $permissions_array = $request->input('permissions');
 
-            // Strip out the superuser permission if the API user isn't a superadmin
             if (! auth()->user()->isSuperUser()) {
-                unset($permissions_array['superuser']);
+                if ((is_array($permissions_array)) && (array_key_exists('superuser', $permissions_array))) {
+                    unset($permissions_array['superuser']);
+                }
             }
+
+            if (!auth()->user()->isAdmin()) {
+                if ((is_array($permissions_array)) && (array_key_exists('admin', $permissions_array))) {
+                    unset($permissions_array['admin']);
+                }
+            }
+
             $user->permissions = $permissions_array;
         }
 
@@ -589,22 +597,23 @@ class UsersController extends Controller
 
 
             $permissions_array = $request->input('permissions');
-            \Log::error(print_r($permissions_array, true));
 
             // Strip out the individual superuser permission if the API user isn't a superadmin
             if (!auth()->user()->isSuperUser()) {
-                if (array_key_exists('superuser', $permissions_array)) {
+
+                if ((is_array($permissions_array)) && (array_key_exists('superuser', $permissions_array))) {
                     unset($permissions_array['superuser']);
                 }
             }
 
             // Strip out the individual admin permission if the API user isn't an admin
             if (!auth()->user()->isAdmin()) {
+
                 if ((is_array($permissions_array)) && (array_key_exists('admin', $permissions_array))) {
                     unset($permissions_array['admin']);
                 }
-
             }
+
 
             $user->permissions = $permissions_array;
         }
