@@ -1403,7 +1403,7 @@
 
     function changeLogFormatter(value) {
 
-        var result = '';
+        var result = '<div style="word-break: break-word;">';
         var pretty_index = '';
 
             for (var index in value) {
@@ -1421,7 +1421,7 @@
                 result += extra_pretty_index + ': <del>' + value[index].old + '</del>  <x-icon type="long-arrow-right" /> ' + value[index].new + '<br>'
             }
 
-        return result;
+        return result+'</div>';
 
     }
 
