@@ -573,6 +573,41 @@ class UsersController extends Controller
                 $user->activated = $request->input('activated');
             }
 
+            // We need to use has()  instead of filled()
+            // here because we need to overwrite permissions
+            // if someone needs to null them out
+
+            if ($request->has('permissions')) {
+
+                $permissions_array = $request->input('permissions');
+                $orig_permissions_array = $user->decodePermissions();
+
+
+                // Strip out the individual superuser permission if the API user isn't a superadmin
+                if (!auth()->user()->isSuperUser()) {
+
+                    if (is_array($orig_permissions_array)) {
+                        if (array_key_exists('superuser', $orig_permissions_array)) {
+                            $permissions_array['superuser'] = $orig_permissions_array['superuser'];
+                        }
+                    }
+
+                }
+
+                // Strip out the individual admin permission if the API user isn't an admin
+                if ((!auth()->user()->isAdmin()) && (!auth()->user()->isSuperUser())) {
+
+                    if (is_array($orig_permissions_array)) {
+                        if (array_key_exists('admin', $orig_permissions_array)) {
+                            $permissions_array['admin'] = $orig_permissions_array['admin'];
+                        }
+                    }
+                }
+
+                // This is going to update the whole thing, not just what was passed
+                $user->permissions = $permissions_array;
+            }
+
         }
 
 
@@ -589,34 +624,7 @@ class UsersController extends Controller
         }
 
 
-        // We need to use has()  instead of filled()
-        // here because we need to overwrite permissions
-        // if someone needs to null them out
 
-        if ($request->has('permissions')) {
-
-
-            $permissions_array = $request->input('permissions');
-
-            // Strip out the individual superuser permission if the API user isn't a superadmin
-            if (!auth()->user()->isSuperUser()) {
-
-                if ((is_array($permissions_array)) && (array_key_exists('superuser', $permissions_array))) {
-                    unset($permissions_array['superuser']);
-                }
-            }
-
-            // Strip out the individual admin permission if the API user isn't an admin
-            if (!auth()->user()->isAdmin()) {
-
-                if ((is_array($permissions_array)) && (array_key_exists('admin', $permissions_array))) {
-                    unset($permissions_array['admin']);
-                }
-            }
-
-
-            $user->permissions = $permissions_array;
-        }
 
         if ($request->has('location_id')) {
             // Update the location of any assets checked out to this user

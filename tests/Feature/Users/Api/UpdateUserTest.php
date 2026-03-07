@@ -253,7 +253,8 @@ class UpdateUserTest extends TestCase
 
     }
 
-    public function testAdminsCannotEditEscalationFieldsForSuperadmins()
+
+    public function testAdminsCannotDeescalateSuperadmins()
     {
         $hashed_original = Hash::make('my-awesome-password!!!!!12345');
         $hashed_new = Hash::make('!ABCDEFGIJKL123!!!');
@@ -277,7 +278,7 @@ class UpdateUserTest extends TestCase
                 'username' => 'testnewusername',
                 'email' => 'testnewemail@example.org',
                 'activated' => 0,
-                'permissions' => "{'superadmin':1}",
+                'permissions' => '{"admin":"1"}',
                 'password' => $hashed_new,
             ]);
 
