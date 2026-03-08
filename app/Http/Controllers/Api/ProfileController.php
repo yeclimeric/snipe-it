@@ -166,17 +166,7 @@ class ProfileController extends Controller
         
         $tokens = $this->tokenRepository->forUser(auth()->user()->getAuthIdentifier());
         $token_values = $tokens->load('client')->filter(function ($token) {
-            if ($token->revoked || ! $token->client) {
-                return false;
-            }
-
-            $client = $token->client;
-
-            if (method_exists($client, 'hasGrantType')) {
-                return $client->hasGrantType('personal_access');
-            }
-
-            return in_array('personal_access', (array) ($client->grant_types ?? []), true);
+            return $token->client->personal_access_client && ! $token->revoked;
         })->values();
 
         return response()->json(Helper::formatStandardApiResponse('success', $token_values, null));
