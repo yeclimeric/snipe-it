@@ -612,6 +612,13 @@ if ((!file_exists('storage/oauth-public.key')) || (!file_exists('storage/oauth-p
     echo $success_icon." OAuth keys detected. Skipping passport install.\n\n";
 }
 
+// Normalize key permissions for Passport 13 (covers both fresh installs and upgrades)
+if (PHP_OS !== 'WINNT') {
+    if (file_exists('storage/oauth-private.key')) chmod('storage/oauth-private.key', 0600);
+    if (file_exists('storage/oauth-public.key'))  chmod('storage/oauth-public.key', 0660);
+    echo $success_icon." OAuth key permissions normalized.\n\n";
+}
+
 
 echo "\e[95m--------------------------------------------------------\n";
 echo "STEP 11: Taking application out of maintenance mode:\n";
