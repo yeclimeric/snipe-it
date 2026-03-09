@@ -39,27 +39,6 @@ Form::macro('countries', function ($name = 'country', $selected = null, $class =
     return $select;
 });
 
-/**
- * Barcode macro
- * Generates the dropdown menu of available 2D barcodes
- */
-Form::macro('barcode_types', function ($name = 'barcode_type', $selected = null, $class = null) {
-    $barcode_types = [
-        'QRCODE',
-        'DATAMATRIX',
-
-    ];
-
-    $select = '<select name="'.$name.'" class="'.$class.'" aria-label="'.$name.'">';
-    foreach ($barcode_types as $barcode_type) {
-        $select .= '<option value="'.$barcode_type.'"'.($selected == $barcode_type ? ' selected="selected" role="option" aria-selected="true"' : ' aria-selected="false"').'>'.$barcode_type.'</option> ';
-    }
-
-    $select .= '</select>';
-
-    return $select;
-});
-
 Form::macro('username_format', function ($name = 'username_format', $selected = null, $class = null) {
     $formats = [
         'firstname.lastname' => trans('admin/settings/general.username_formats.firstname_lastname_format'),
