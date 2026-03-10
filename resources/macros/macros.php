@@ -4,42 +4,6 @@
 */
 
 /**
- * Country macro
- * Generates the dropdown menu of countries for the profile form
- */
-Form::macro('countries', function ($name = 'country', $selected = null, $class = null, $id = null) {
-
-    $idclause = (!is_null($id)) ? $id : '';
-
-    // Pull the autoglossonym array from the localizations translation file
-    $countries_array = trans('localizations.countries');
-
-    $select = '<select name="'.$name.'" class="'.$class.'" style="width:100%" '.$idclause.' aria-label="'.$name.'" data-placeholder="'.trans('localizations.select_country').'" data-allow-clear="true" data-tags="true">';
-    $select .= '<option value=""  role="option">'.trans('localizations.select_country').'</option>';
-
-    foreach ($countries_array as $abbr => $country) {
-
-        // We have to handle it this way to handle deprecation warnings since you can't strtoupper on null
-        if ($abbr!='') {
-            $abbr = strtoupper($abbr);
-        }
-
-        // Loop through the countries configured in the localization file
-        $select .= '<option value="' . $abbr . '" role="option" ' . (($selected == $abbr) ? ' selected="selected" aria-selected="true"' : ' aria-selected="false"') . '>' . $country . '</option> ';
-
-    }
-
-    // If the country value doesn't exist in the array, add it as a new option and select it so we don't drop that data
-    if (!array_key_exists($selected, $countries_array)) {
-        $select .= '<option value="' . e($selected) . '" selected="selected" role="option" aria-selected="true">' . e($selected) .' *</option> ';
-    }
-
-    $select .= '</select>';
-
-    return $select;
-});
-
-/**
  * Barcode macro
  * Generates the dropdown menu of available 1D barcodes
  */
