@@ -30,7 +30,7 @@ class LocationsTransformer
                 foreach ($location->children as $child) {
                     $children_arr[] = [
                         'id' => (int) $child->id,
-                        'name' => $child->name,
+                        'name' => e($child->display_name),
                     ];
                 }
             }
