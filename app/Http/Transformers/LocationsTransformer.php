@@ -157,7 +157,7 @@ class LocationsTransformer
                 'name' => e($location->name),
                 'created_by' => $location->adminuser ? [
                     'id' => (int) $location->adminuser->id,
-                    'name'=> e($location->adminuser->present()->fullName),
+                    'name'=> e($location->adminuser->display_name),
                 ]: null,
                 'created_at' => Helper::getFormattedDateObject($location->created_at, 'datetime'),
             ];
@@ -171,7 +171,7 @@ class LocationsTransformer
         if ($accessory) {
             return [
                 'id' => $accessory->id,
-                'name' => $accessory->name,
+                'name' => e($accessory->display_name),
             ];
         }
 
