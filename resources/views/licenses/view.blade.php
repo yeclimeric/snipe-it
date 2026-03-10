@@ -79,6 +79,7 @@
                         <x-slot:content>
 
                             <x-table
+                                    show_search="false"
                                     api_url="{{ route('api.licenses.seats.index', [$license->id, 'status' => 'available']) }}"
                                     :presenter="\App\Presenters\LicensePresenter::dataTableLayoutSeats()"
                                     export_filename="export-{{ str_slug($license->name) }}-available-{{ date('Y-m-d') }}"
