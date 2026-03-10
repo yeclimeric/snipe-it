@@ -129,7 +129,7 @@
 
 
                     <x-slot:buttons>
-                        <x-button.checkout permission="checkout" :item="$license" :route="route('licenses.freecheckout', $license->id)" />
+                        <x-button.checkout permission="checkout" :item="$license" :route="route('licenses.checkout', $license->id)" />
                         <x-button.edit :item="$license" :route="route('licenses.edit', $license->id)" />
                         <x-button.clone :item="$license" :route="route('clone/license', $license->id)" />
                         <x-button.delete :item="$license" />
