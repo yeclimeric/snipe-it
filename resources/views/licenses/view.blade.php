@@ -79,6 +79,7 @@
                         <x-slot:content>
 
                             <x-table
+                                    show_search="false"
                                     api_url="{{ route('api.licenses.seats.index', [$license->id, 'status' => 'available']) }}"
                                     :presenter="\App\Presenters\LicensePresenter::dataTableLayoutSeats()"
                                     export_filename="export-{{ str_slug($license->name) }}-available-{{ date('Y-m-d') }}"
@@ -128,7 +129,7 @@
 
 
                     <x-slot:buttons>
-                        <x-button.checkout permission="checkout" :item="$license" :route="route('licenses.freecheckout', $license->id)" />
+                        <x-button.checkout permission="checkout" :item="$license" :route="route('licenses.checkout', $license->id)" />
                         <x-button.edit :item="$license" :route="route('licenses.edit', $license->id)" />
                         <x-button.clone :item="$license" :route="route('clone/license', $license->id)" />
                         <x-button.delete :item="$license" />

@@ -80,19 +80,7 @@
                     <!-- start components tab pane -->
                     @can('view', \App\Models\Component::class)
                         <x-tabs.pane name="components" class="{{ $supplier->components->count() == 0 ? 'hidden-print' : '' }}">
-                            <x-slot:header>
-                                {{ trans('general.components') }}
-                            </x-slot:header>
-
-
-                                <x-table
-                                        show_advanced_search="true"
-                                        buttons="componentButtons"
-                                        api_url="{{ route('api.components.index', ['supplier_id' => $supplier->id]) }}"
-                                        :presenter="\App\Presenters\ComponentPresenter::dataTableLayout()"
-                                        export_filename="export-{{ str_slug($supplier->name) }}-components-{{ date('Y-m-d') }}"
-                                />
-
+                            <x-table.components name="components" :route="route('api.components.index', ['supplier_id' => $supplier->id])" />
                         </x-tabs.pane>
                     @endcan
                     <!-- end components tab pane -->

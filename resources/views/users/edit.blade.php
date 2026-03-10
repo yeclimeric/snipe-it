@@ -502,7 +502,11 @@
                               <div class="form-group{{ $errors->has('country') ? ' has-error' : '' }}">
                                   <label class="col-md-3 control-label" for="country">{{ trans('general.country') }}</label>
                                   <div class="col-md-6">
-                                      {!! Form::countries('country', old('country', $user->country), 'col-md-12 select2') !!}
+                                      <x-input.country-select
+                                        name="country"
+                                        :selected="old('country', $user->country)"
+                                        class="col-md-12"
+                                      />
 
                                       <p class="help-block">{{ trans('general.countries_manually_entered_help') }}</p>
                                       {!! $errors->first('country', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
