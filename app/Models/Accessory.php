@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Helpers\Helper;
 use App\Models\Traits\Acceptable;
 use App\Models\Traits\CompanyableTrait;
 use App\Models\Traits\HasUploads;
@@ -21,21 +20,23 @@ use Watson\Validating\ValidatingTrait;
  */
 class Accessory extends SnipeModel
 {
-    use HasFactory;
-
-    protected $presenter = \App\Presenters\AccessoryPresenter::class;
+    use Acceptable;
     use CompanyableTrait;
+    use HasFactory;
     use HasUploads;
-    use Loggable, Presentable;
+    use Loggable;
+    use Presentable;
+    use Searchable;
     use SoftDeletes;
+    use ValidatingTrait;
 
     protected $table = 'accessories';
     protected $casts = [
         'purchase_date' => 'datetime',
         'requestable' => 'boolean',    ];
 
-    use Searchable;
-    use Acceptable;
+    protected $presenter = \App\Presenters\AccessoryPresenter::class;
+
     
     /**
      * The attributes that should be included when searching the model.
@@ -61,7 +62,7 @@ class Accessory extends SnipeModel
      * Accessory validation rules
      */
     public $rules = [
-        'name'              => 'required|min:3|max:255',
+        'name'              => 'required|max:255',
         'qty'               => 'required|integer|min:1',
         'category_id'       => 'required|integer|exists:categories,id',
         'company_id'        => 'integer|nullable',
@@ -80,7 +81,7 @@ class Accessory extends SnipeModel
      * @var bool
      */
     protected $injectUniqueIdentifier = true;
-    use ValidatingTrait;
+
 
     /**
      * The attributes that are mass assignable.
@@ -119,6 +120,9 @@ class Accessory extends SnipeModel
     }
 
 
+    public function isDeletable() {
+        return $this->checkouts_count === 0;
+    }
     /**
      * Sets the requestable attribute on the accessory
      *
@@ -268,7 +272,7 @@ class Accessory extends SnipeModel
      */
     public function adminuser()
     {
-        return $this->belongsTo(\App\Models\User::class, 'created_by');
+        return $this->belongsTo(\App\Models\User::class, 'created_by')->withTrashed();
     }
 
     /**

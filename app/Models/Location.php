@@ -15,18 +15,22 @@ use Watson\Validating\ValidatingTrait;
 
 class Location extends SnipeModel
 {
-    use HasFactory;
     use CompanyableTrait;
+    use HasFactory;
+    use HasUploads;
     use Loggable;
+    use Presentable;
+    use Searchable;
+    use SoftDeletes;
+    use UniqueUndeletedTrait;
+    use ValidatingTrait;
+
 
     protected $presenter = \App\Presenters\LocationPresenter::class;
-    use Presentable;
-    use SoftDeletes;
-    use HasUploads;
 
     protected $table = 'locations';
     protected $rules = [
-        'name'          => 'required|min:2|max:255|unique_undeleted',
+        'name'          => 'required|max:255|unique_undeleted',
         'address'       => 'max:191|nullable',
         'address2'      => 'max:191|nullable',
         'city'          => 'max:191|nullable',
@@ -53,8 +57,7 @@ class Location extends SnipeModel
      * @var bool
      */
     protected $injectUniqueIdentifier = true;
-    use ValidatingTrait;
-    use UniqueUndeletedTrait;
+
 
     /**
      * The attributes that are mass assignable.
@@ -80,16 +83,28 @@ class Location extends SnipeModel
         'tag_color',
         'notes',
     ];
+
     protected $hidden = ['user_id'];
 
-    use Searchable;
 
     /**
      * The attributes that should be included when searching the model.
      *
      * @var array
      */
-    protected $searchableAttributes = ['name', 'address', 'city', 'state', 'zip', 'created_at', 'ldap_ou', 'phone', 'fax', 'notes'];
+    protected $searchableAttributes =
+        [
+            'name',
+            'address',
+            'city',
+            'state',
+            'zip',
+            'created_at',
+            'ldap_ou',
+            'phone',
+            'fax',
+            'notes'
+        ];
 
     /**
      * The relations and their attributes that should be included when searching the model.
@@ -114,7 +129,6 @@ class Location extends SnipeModel
      */
     public function isDeletable()
     {
-
         return Gate::allows('delete', $this)
             && ($this->deleted_at == '')
             && (($this->assets_count ?? $this->assets()->count()) === 0)
@@ -149,7 +163,7 @@ class Location extends SnipeModel
      */
     public function adminuser()
     {
-        return $this->belongsTo(\App\Models\User::class, 'created_by');
+        return $this->belongsTo(\App\Models\User::class, 'created_by')->withTrashed();
     }
 
     /**

@@ -26,6 +26,7 @@ class UserPresenter extends Presenter
                 'checkbox' => true,
                 'titleTooltip' => trans('general.select_all_none'),
                 'printIgnore' => true,
+                'class' => 'hidden-print',
             ],
             [
                 'field' => 'id',
@@ -36,6 +37,15 @@ class UserPresenter extends Presenter
                 'visible' => false,
             ],
             [
+                'field' => 'username',
+                'searchable' => true,
+                'sortable' => true,
+                'switchable' => false,
+                'title' => trans('admin/users/table.username'),
+                'visible' => true,
+                'formatter' => 'usernameRoleLinkFormatter',
+            ],
+            [
                 'field' => 'avatar',
                 'searchable' => false,
                 'sortable' => false,
@@ -43,15 +53,6 @@ class UserPresenter extends Presenter
                 'title' => trans('general.importer.avatar'),
                 'visible' => false,
                 'formatter' => 'imageFormatter',
-            ],
-            [
-                'field' => 'company',
-                'searchable' => true,
-                'sortable' => true,
-                'switchable' => true,
-                'title' => trans('admin/companies/table.title'),
-                'visible' => false,
-                'formatter' => 'companiesLinkObjFormatter',
             ],
             [
                 'field' => 'name',
@@ -79,17 +80,19 @@ class UserPresenter extends Presenter
                 'field' => 'display_name',
                 'searchable' => true,
                 'sortable' => true,
-                'switchable' => false,
+                'switchable' => true,
                 'title' => trans('admin/users/table.display_name'),
                 'visible' => false,
-            ], [
-                'field' => 'username',
+                'formatter' => 'usersLinkFormatter',
+            ],
+            [
+                'field' => 'company',
                 'searchable' => true,
                 'sortable' => true,
-                'switchable' => false,
-                'title' => trans('admin/users/table.username'),
-                'visible' => true,
-                'formatter' => 'usernameRoleLinkFormatter',
+                'switchable' => true,
+                'title' => trans('admin/companies/table.title'),
+                'visible' => false,
+                'formatter' => 'companiesLinkObjFormatter',
             ],
             [
                 'field' => 'employee_num',
@@ -430,6 +433,7 @@ class UserPresenter extends Presenter
                 'visible' => true,
                 'formatter' => 'usersActionsFormatter',
                 'printIgnore' => true,
+                'class' => 'hidden-print',
             ],
         ];
 
@@ -524,7 +528,12 @@ class UserPresenter extends Presenter
      */
     public function nameUrl()
     {
-        return (string) link_to_route('users.show', $this->getFullNameAttribute(), $this->id);
+        if (auth()->user()->can('view', ['\App\Models\User', $this])) {
+            return (string)link_to_route('users.show', $this->display_name, $this->id);
+        } else {
+            return e($this->display_name);
+        }
+
     }
 
     /**
@@ -539,5 +548,14 @@ class UserPresenter extends Presenter
     public function glyph()
     {
         return '<x-icon type="user"/>';
+    }
+
+    public function formattedNameLink() {
+
+        if (auth()->user()->can('view', ['\App\Models\User', $this])) {
+            return '<a href="'.route('users.show', e($this->id)).'" class="'. (($this->deleted_at!='') ? 'deleted' : '').'">'.e($this->display_name).'</a>';
+        }
+
+        return '<span class="'. (($this->deleted_at!='') ? 'deleted' : '').'">'.e($this->display_name).'</span>';
     }
 }

@@ -81,7 +81,7 @@ class L7162_A extends L7162
             static::writeText(
                 $pdf, $record->get('tag'),
                 $pa->x1, $pa->y2 - self::TAG_SIZE,
-                'freemono', 'b', self::TAG_SIZE, 'C',
+                'stsongstdlight', 'b', self::TAG_SIZE, 'C',
                 $barcodeSize, self::TAG_SIZE, true, 0
             );
             static::write2DBarcode(
@@ -95,7 +95,7 @@ class L7162_A extends L7162
             static::writeText(
                 $pdf, $record->get('tag'),
                 $pa->x1, $pa->y1,
-                'freemono', 'b', self::TITLE_SIZE, 'L',
+                'stsongstdlight', 'b', self::TITLE_SIZE, 'L',
                 $barcodeSize, self::TITLE_SIZE, true, 0
             );
             $titleShiftX = $barcodeSize;
@@ -123,7 +123,7 @@ class L7162_A extends L7162
             static::writeText(
                 $pdf, $field['value'],
                 $currentX, $currentY,
-                'freemono', 'B', self::FIELD_SIZE, 'L',
+                'stsongstdlight', 'B', self::FIELD_SIZE, 'L',
                 $usableWidth, self::FIELD_SIZE, true, 0, 0.3
             );
             $currentY += self::FIELD_SIZE + self::FIELD_MARGIN;

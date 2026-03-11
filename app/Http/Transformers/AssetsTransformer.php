@@ -104,6 +104,7 @@ class AssetsTransformer
             'next_audit_date' => Helper::getFormattedDateObject($asset->next_audit_date, 'date'),
             'deleted_at' => Helper::getFormattedDateObject($asset->deleted_at, 'datetime'),
             'purchase_date' => Helper::getFormattedDateObject($asset->purchase_date, 'date'),
+//            'first_checkout' => Helper::getFormattedDateObject($asset->first_checkout_at, 'datetime'),
             'age' => $asset->purchase_date ? $asset->purchase_date->locale(app()->getLocale())->diffForHumans() : '',
             'last_checkout' => Helper::getFormattedDateObject($asset->last_checkout, 'datetime'),
             'last_checkin' => Helper::getFormattedDateObject($asset->last_checkin, 'datetime'),
@@ -210,7 +211,7 @@ class AssetsTransformer
             return $asset->assigned ? [
                     'id' => (int) $asset->assigned->id,
                     'username' => e($asset->assigned->username),
-                    'name' => e($asset->assigned->getFullNameAttribute()),
+                    'name' => e($asset->assigned->display_name),
                     'first_name'=> e($asset->assigned->first_name),
                     'last_name'=> ($asset->assigned->last_name) ? e($asset->assigned->last_name) : null,
                     'email'=> ($asset->assigned->email) ? e($asset->assigned->email) : null,
@@ -321,14 +322,14 @@ class AssetsTransformer
                 'id' => $accessory_checkout->id,
                 'accessory' => [
                     'id' => $accessory_checkout->accessory->id,
-                    'name' => $accessory_checkout->accessory->name,
+                    'name' => e($accessory_checkout->accessory->display_name),
                 ],
                 'assigned_to' => $accessory_checkout->assigned_to,
                 'image' => ($accessory_checkout->accessory->image) ? Storage::disk('public')->url('accessories/' . e($accessory_checkout->accessory->image)) : null,
                 'note' => $accessory_checkout->note ? e($accessory_checkout->note) : null,
                 'created_by' => $accessory_checkout->adminuser ? [
                     'id' => (int)$accessory_checkout->adminuser->id,
-                    'name' => e($accessory_checkout->adminuser->present()->fullName),
+                    'name' => e($accessory_checkout->display_name),
                 ] : null,
                 'created_at' => Helper::getFormattedDateObject($accessory_checkout->created_at, 'datetime'),
                 'deleted_at' => Helper::getFormattedDateObject($accessory_checkout->deleted_at, 'datetime'),

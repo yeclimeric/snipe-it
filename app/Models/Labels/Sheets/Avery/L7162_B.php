@@ -119,7 +119,7 @@ class L7162_B extends L7162
             static::writeText(
                 $pdf, $field['value'],
                 $currentX, $currentY,
-                'freemono', 'B', self::FIELD_SIZE, 'L',
+                'stsongstdlight', 'B', self::FIELD_SIZE, 'L',
                 $usableWidth, self::FIELD_SIZE, true, 0, 0.3
             );
             $currentY += self::FIELD_SIZE + self::FIELD_MARGIN;
@@ -128,7 +128,7 @@ class L7162_B extends L7162
         static::writeText(
             $pdf, $record->get('tag'),
             $currentX, $pa->y2 - self::BARCODE_SIZE - self::BARCODE_MARGIN - self::TAG_SIZE,
-            'freemono', 'b', self::TAG_SIZE, 'R',
+            'stsongstdlight', 'b', self::TAG_SIZE, 'R',
             $usableWidth, self::TAG_SIZE, true, 0, 0.3
         );
 

@@ -102,6 +102,7 @@
                 paginationNextText: "{{ trans('general.next') }}",
                 paginationPreText: "{{ trans('general.previous') }}",
                 search: data_with_default('search', true),
+                searchText: "{{ request()->get('assetTag') ?? session()->get('search') }}", // this is needed so that people who incorrectly use the topsearch as an omnibar will not have an additional filter from BS tables
                 searchHighlight: data_with_default('search-highlight', true),
                 showColumns: data_with_default('show-columns', true),
                 showColumnsToggleAll: data_with_default('show-columns-toggle-all', true),
@@ -112,6 +113,8 @@
                 showSearchClearButton: data_with_default('show-search-clear-button', true),
                 sortName: data_with_default('sort-name', 'created_at'),
                 sortOrder: data_with_default('sort-order', 'desc'),
+                fixedColumns: data_with_default('fixed-columns', 'true'),
+                fixedRightNumber: data_with_default('fixed-right-number', '1'),
                 stickyHeader: true,
                 stickyHeaderOffsetLeft: parseInt($('body').css('padding-left'), 10),
                 stickyHeaderOffsetRight: parseInt($('body').css('padding-right'), 10),
@@ -264,7 +267,7 @@
                 window.location.href = '{{ (request()->input('status') == "deleted") ? route('users.index') : route('users.index', ['status' => 'deleted']) }}';
             },
             attributes: {
-                class: '{{ (request()->input('status') == "deleted") ? ' btn-selected text-danger ' : '' }}',
+                class: '{{ (request()->input('status') == "deleted") ? ' btn-selected' : '' }}',
                 title: '{{ (request()->input('status') == "deleted") ? trans('admin/users/table.show_current') : trans('admin/users/table.show_deleted') }}',
 
             }
@@ -368,7 +371,7 @@
                 window.location.href = '{{ (request()->input('status') == "Deleted") ? route('hardware.index') : route('hardware.index', ['status' => 'Deleted']) }}';
             },
             attributes: {
-                class: '{{ (request()->input('status') == "Deleted") ? 'btn-selected text-danger' : '' }}',
+                class: '{{ (request()->input('status') == "Deleted") ? 'btn-selected' : '' }}',
                 title: '{{ (request()->input('status') == "Deleted") ? trans('general.list_all') : trans('general.deleted') }}',
 
             }
@@ -394,14 +397,14 @@
         },
 
         btnShowDeleted: {
-            text: '{{ (request()->input('status') == "deleted") ? trans('admin/users/table.show_current') : trans('admin/users/table.show_deleted') }}',
+            text: '{{ (request()->input('status') == "deleted") ? trans('general.show_current') : trans('general.show_deleted') }}',
             icon: 'fa-solid fa-trash',
             event () {
                 window.location.href = '{{ (request()->input('status') == "deleted") ? route('locations.index') : route('locations.index', ['status' => 'deleted']) }}';
             },
             attributes: {
-                class: '{{ (request()->input('status') == "deleted") ? 'btn-selected text-danger' : '' }}',
-                title: '{{ (request()->input('status') == "deleted") ? trans('admin/users/table.show_current') : trans('admin/users/table.show_deleted') }}',
+                class: '{{ (request()->input('status') == "deleted") ? 'btn-selected' : '' }}',
+                title: '{{ (request()->input('status') == "deleted") ? trans('general.show_current') : trans('general.show_deleted') }}',
 
             }
         },
@@ -554,7 +557,7 @@
                 window.location.href = '{{ (request()->input('status') == "deleted") ? route('manufacturers.index') : route('manufacturers.index', ['status' => 'deleted']) }}';
             },
             attributes: {
-                class: '{{ (request()->input('status') == "deleted") ? 'btn-selected text-danger' : '' }}',
+                class: '{{ (request()->input('status') == "deleted") ? 'btn-selected' : '' }}',
                 title: '{{ (request()->input('status') == "deleted") ? trans('general.list_all') : trans('general.deleted') }}',
 
             }
@@ -706,7 +709,7 @@
                 window.location.href = '{{ (request()->input('status') == "deleted") ? route('models.index') : route('models.index', ['status' => 'deleted']) }}';
             },
             attributes: {
-                class: '{{ (request()->input('status') == "deleted") ? ' btn-selected text-danger' : '' }}',
+                class: '{{ (request()->input('status') == "deleted") ? ' btn-selected' : '' }}',
                 title: '{{ (request()->input('status') == "deleted") ? trans('general.list_all') : trans('general.deleted') }}',
 
             }
@@ -1040,7 +1043,7 @@
 
 
     function hardwareAuditFormatter(value, row) {
-        return '<a href="{{ config('app.url') }}/hardware/' + row.id + '/audit" class="actions btn btn-sm btn-primary" data-tooltip="true" title="{{ trans('general.audit') }}"><x-icon type="audit" /><span class="sr-only">{{ trans('general.audit') }}</span></a>&nbsp;';
+        return '<a href="{{ config('app.url') }}/hardware/' + row.id + '/audit" class="actions btn btn-sm btn-primary hidden-print" data-tooltip="true" title="{{ trans('general.audit') }}"><x-icon type="audit" /><span class="sr-only">{{ trans('general.audit') }}</span></a>&nbsp;';
     }
 
 
@@ -1069,15 +1072,15 @@
             }
 
             if ((row.available_actions) && (row.available_actions.clone === true)) {
-                actions += '<a href="{{ config('app.url') }}/' + dest + '/' + row.id + '/clone" class="actions btn btn-sm btn-info" data-tooltip="true" title="{{ trans('general.clone_item') }}"><x-icon type="clone" class="fa-fw" /><span class="sr-only">{{ trans('general.clone_item') }}</span></a>&nbsp;';
+                actions += '<a href="{{ config('app.url') }}/' + dest + '/' + row.id + '/clone" class="actions btn btn-sm btn-info hidden-print" data-tooltip="true" title="{{ trans('general.clone_item') }}"><x-icon type="clone" class="fa-fw" /><span class="sr-only">{{ trans('general.clone_item') }}</span></a>&nbsp;';
             }
 
             if ((row.available_actions) && (row.available_actions.audit === true)) {
-                actions += '<a href="{{ config('app.url') }}/' + dest + '/' + row.id + '/audit" class="actions btn btn-sm btn-primary" data-tooltip="true" title="{{ trans('general.audit') }}"><x-icon type="audit" class="fa-fw" /><span class="sr-only">{{ trans('general.audit') }}</span></a>&nbsp;';
+                actions += '<a href="{{ config('app.url') }}/' + dest + '/' + row.id + '/audit" class="actions btn btn-sm btn-primary hidden-print" data-tooltip="true" title="{{ trans('general.audit') }}"><x-icon type="audit" class="fa-fw" /><span class="sr-only">{{ trans('general.audit') }}</span></a>&nbsp;';
             }
 
             if ((row.available_actions) && (row.available_actions.update === true)) {
-                actions += '<a href="{{ config('app.url') }}/' + dest + '/' + row.id + '/edit" class="actions btn btn-sm btn-warning" data-tooltip="true" title="{{ trans('general.update') }}"><x-icon type="edit" class="fa-fw" /><span class="sr-only">{{ trans('general.update') }}</span></a>&nbsp;';
+                actions += '<a href="{{ config('app.url') }}/' + dest + '/' + row.id + '/edit" class="actions btn btn-sm btn-warning hidden-print" data-tooltip="true" title="{{ trans('general.update') }}"><x-icon type="edit" class="fa-fw" /><span class="sr-only">{{ trans('general.update') }}</span></a>&nbsp;';
             } else {
                 if ((row.available_actions) && (row.available_actions.update != true)) {
                     actions += '<span data-tooltip="true" title="{{ trans('general.cannot_be_edited') }}"><a class="btn btn-warning btn-sm disabled" onClick="return false;"><x-icon type="edit" class="fa-fw" /></a></span>&nbsp;';
@@ -1097,7 +1100,7 @@
 
                 
                 actions += '<a href="{{ config('app.url') }}/' + dest + '/' + row.id + '" '
-                    + ' class="actions btn btn-danger btn-sm delete-asset" data-tooltip="true"  '
+                    + ' class="actions btn btn-danger btn-sm delete-asset hidden-print" data-tooltip="true"  '
                     + ' data-toggle="modal" data-icon="fa-trash"'
                     + ' data-content="{{ trans('general.sure_to_delete') }}: ' + name_for_box + '?" '
                     + ' data-title="{{  trans('general.delete') }}" onClick="return false;">'
@@ -1105,7 +1108,7 @@
             } else {
                 // Do not show the delete button on things that are already deleted
                 if ((row.available_actions) && (row.available_actions.restore != true)) {
-                    actions += '<span data-tooltip="true" title="{{ trans('general.cannot_be_deleted') }}"><a class="btn btn-danger btn-sm delete-asset disabled" onClick="return false;"><x-icon type="delete" class="fa-fw" /><span class="sr-only">{{ trans('general.cannot_be_deleted') }}</span></a></span>&nbsp;';
+                    actions += '<span data-tooltip="true" title="{{ trans('general.cannot_be_deleted') }}"><a class="btn btn-danger btn-sm delete-asset disabled hidden-print" onClick="return false;"><x-icon type="delete" class="fa-fw" /><span class="sr-only">{{ trans('general.cannot_be_deleted') }}</span></a></span>&nbsp;';
                 }
 
             }
@@ -1400,7 +1403,7 @@
 
     function changeLogFormatter(value) {
 
-        var result = '';
+        var result = '<div style="word-break: break-word;">';
         var pretty_index = '';
 
             for (var index in value) {
@@ -1418,7 +1421,7 @@
                 result += extra_pretty_index + ': <del>' + value[index].old + '</del>  <x-icon type="long-arrow-right" /> ' + value[index].new + '<br>'
             }
 
-        return result;
+        return result+'</div>';
 
     }
 

@@ -59,6 +59,8 @@ class UploadedFilesPresenter extends Presenter
                 'title' => trans('general.download'),
                 'visible' => true,
                 'formatter' => 'fileDownloadButtonsFormatter',
+                'printIgnore' => true,
+                'class' => 'hidden-print',
             ],
             [
                 'field' => 'note',
@@ -92,6 +94,8 @@ class UploadedFilesPresenter extends Presenter
                 'title' => trans('table.actions'),
                 'visible' => true,
                 'formatter' => 'deleteUploadFormatter',
+                'printIgnore' => true,
+                'class' => 'hidden-print',
             ],
         ];
 

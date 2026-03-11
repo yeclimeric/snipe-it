@@ -108,7 +108,7 @@ class _5520_A extends _5520
             static::writeText(
                 $pdf, $field['value'],
                 $currentX, $currentY,
-                'freemono', 'B', self::FIELD_SIZE, 'L',
+                'stsongstdlight', 'B', self::FIELD_SIZE, 'L',
                 $usableWidth, self::FIELD_SIZE, true, 0, 0.01
             );
             $currentY += self::FIELD_SIZE + self::FIELD_MARGIN;

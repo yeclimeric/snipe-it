@@ -74,6 +74,7 @@ class ComponentsTransformer
             'checkout' => Gate::allows('checkout', Component::class),
             'checkin' => Gate::allows('checkin', Component::class),
             'update' => Gate::allows('update', Component::class),
+            'clone' => Gate::allows('create', Component::class),
             'delete' => $component->isDeletable(),
         ];
         $array += $permissions_array;
@@ -90,7 +91,7 @@ class ComponentsTransformer
                 'id' => (int) $asset->id,
                 'name' =>  e($asset->model->display_name).' '.e($asset->display_name),
                 'qty' => $asset->pivot->assigned_qty,
-                'note' => $asset->pivot->note,
+                'note' => e($asset->pivot->note),
                 'type' => 'asset',
                 'created_at' => Helper::getFormattedDateObject($asset->pivot->created_at, 'datetime'),
                 'available_actions' => ['checkin' => true],
