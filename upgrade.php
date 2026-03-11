@@ -517,6 +517,8 @@ foreach ($unused_files as $unused_file) {
             shell_exec("rm -f ".escapeshellarg($unused_file));
             if (file_exists($unused_file)) {
                 echo $error_icon." STILL could not delete ".$unused_file.". You should delete this manually.\n";
+                echo "Aborting to prevent application crash.\n";
+                exit(1);
             } else {
                 echo $success_icon." Deleting ".$unused_file.". It is no longer used.\n";
             }
@@ -545,12 +547,17 @@ if (file_exists('composer.phar')) {
     // Use --no-dev only if we are in production mode.
     // This will cause errors otherwise, if the user is in develop or local for their APP_ENV
     if ($app_environment == 'production') {
-        $composer = shell_exec('php composer.phar install --no-dev --prefer-source --no-scripts');
+        system('php composer.phar install --no-dev --prefer-source --no-scripts --no-plugins --ignore-platform-reqs', $return_code);
     } else {
-        $composer = shell_exec('php composer.phar install --prefer-source --no-scripts');
+        system('php composer.phar install --prefer-source --no-scripts --no-plugins --ignore-platform-reqs', $return_code);
     }
 
-    $composer_dump = shell_exec('php composer.phar dump --no-scripts');
+    if ($return_code !== 0) {
+        echo "\e[91mComposer install failed! Aborting upgrade.\e[39m\n";
+        exit(1);
+    }
+
+    system('php composer.phar dump --no-scripts --no-plugins');
 
 } else {
 
@@ -560,18 +567,21 @@ if (file_exists('composer.phar')) {
     echo "before running this updater again\n\n";
 
     if ($app_environment == 'production') {
-        $composer = shell_exec('composer install --no-dev --prefer-source --no-scripts');
+        system('composer install --no-dev --prefer-source --no-scripts --no-plugins --ignore-platform-reqs', $return_code);
     } else {
-        $composer = shell_exec('composer install --prefer-source --no-scripts');
+        system('composer install --prefer-source --no-scripts --no-plugins --ignore-platform-reqs', $return_code);
     }
 
-    $composer_dump = shell_exec('composer dump --no-scripts');
+    if ($return_code !== 0) {
+        echo "\e[91mComposer install failed! Aborting upgrade.\e[39m\n";
+        exit(1);
+    }
+
+    system('composer dump --no-scripts --no-plugins');
 
 
 }
 
-echo $composer_dump."\n";
-echo $composer;
 
 // Force clear cache files again after composer update, just in case
 foreach ($unused_files as $unused_file) {
