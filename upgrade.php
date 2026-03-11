@@ -510,8 +510,18 @@ $unused_files = [
 
 foreach ($unused_files as $unused_file) {
     if (file_exists($unused_file)) {
-        echo $success_icon." Deleting ".$unused_file.". It is no longer used.\n";
-        @unlink($unused_file);
+        if (@unlink($unused_file)) {
+            echo $success_icon." Deleting ".$unused_file.". It is no longer used.\n";
+        } else {
+            echo $info_icon." Could not delete ".$unused_file." via PHP. Trying force delete.\n";
+            shell_exec("rm -f ".escapeshellarg($unused_file));
+            if (file_exists($unused_file)) {
+                echo $error_icon." STILL could not delete ".$unused_file.". You should delete this manually.\n";
+            } else {
+                echo $success_icon." Deleting ".$unused_file.". It is no longer used.\n";
+            }
+        }
+
     } else {
         echo $success_icon." No ".$unused_file.", so nothing to delete.\n";
     }
