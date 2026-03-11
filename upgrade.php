@@ -504,6 +504,7 @@ $unused_files = [
     "bootstrap/cache/compiled.php",
     "bootstrap/cache/services.php",
     "bootstrap/cache/config.php",
+    "bootstrap/cache/packages.php",
     "vendor/symfony/translation/TranslatorInterface.php",
 ];
 
