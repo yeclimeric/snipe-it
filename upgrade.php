@@ -545,12 +545,12 @@ if (file_exists('composer.phar')) {
     // Use --no-dev only if we are in production mode.
     // This will cause errors otherwise, if the user is in develop or local for their APP_ENV
     if ($app_environment == 'production') {
-        $composer = shell_exec('php composer.phar install --no-dev --prefer-source');
+        $composer = shell_exec('php composer.phar install --no-dev --prefer-source --no-scripts');
     } else {
-        $composer = shell_exec('php composer.phar install --prefer-source');
+        $composer = shell_exec('php composer.phar install --prefer-source --no-scripts');
     }
 
-    $composer_dump = shell_exec('php composer.phar dump');
+    $composer_dump = shell_exec('php composer.phar dump --no-scripts');
 
 } else {
 
@@ -560,18 +560,33 @@ if (file_exists('composer.phar')) {
     echo "before running this updater again\n\n";
 
     if ($app_environment == 'production') {
-        $composer = shell_exec('composer install --no-dev --prefer-source');
+        $composer = shell_exec('composer install --no-dev --prefer-source --no-scripts');
     } else {
-        $composer = shell_exec('composer install --prefer-source');
+        $composer = shell_exec('composer install --prefer-source --no-scripts');
     }
 
-    $composer_dump = shell_exec('composer dump');
+    $composer_dump = shell_exec('composer dump --no-scripts');
 
 
 }
 
 echo $composer_dump."\n";
 echo $composer;
+
+// Force clear cache files again after composer update, just in case
+foreach ($unused_files as $unused_file) {
+    if (file_exists($unused_file)) {
+        @unlink($unused_file);
+        // Try to force delete if unlink fails
+        if (file_exists($unused_file)) {
+             shell_exec("rm -f ".escapeshellarg($unused_file));
+        }
+    }
+}
+
+// Re-generate the packages manifest manually since we skipped scripts
+$package_discover = shell_exec('php artisan package:discover');
+echo $success_icon.' '.trim($package_discover)."\n";
 
 $config_clear = shell_exec('php artisan config:clear');
 $cache_clear = shell_exec('php artisan cache:clear');
