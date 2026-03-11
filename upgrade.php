@@ -91,13 +91,23 @@ echo "- run migrations to get your schema up to date \n";
 echo "- clear out old cache settings\e[39m\n\n";
 
 
-// Fetching most current upgrade requirements from github. Read more here: https://github.com/grokability/snipe-it/pull/14127
-$remote_requirements_file = "https://raw.githubusercontent.com/yeclimeric/snipe-it/$branch/.upgrade_requirements.json";
-$upgrade_requirements_raw = url_get_contents($remote_requirements_file);
+if ($pull_from_git) {
+    // Fetching most current upgrade requirements from github. Read more here: https://github.com/grokability/snipe-it/pull/14127
+    $remote_requirements_file = "https://raw.githubusercontent.com/yeclimeric/snipe-it/$branch/.upgrade_requirements.json";
+    $upgrade_requirements_raw = url_get_contents($remote_requirements_file);
+} else {
+    $remote_requirements_file = ".upgrade_requirements.json";
+    if (file_exists($remote_requirements_file)) {
+        $upgrade_requirements_raw = file_get_contents($remote_requirements_file);
+    } else {
+        $upgrade_requirements_raw = '{}';
+    }
+}
+
 $upgrade_requirements = json_decode($upgrade_requirements_raw, true);
 if (! $upgrade_requirements) {
     if(!$skip_php_checks){
-        echo "\n\e[91mERROR: Failed to retrieve remote requirements from $remote_requirements_file \e[39m\n\n";
+        echo "\n\e[91mERROR: Failed to retrieve requirements from $remote_requirements_file \e[39m\n\n";
         if ($branch_override){
             echo "\e[93mNOTE: You passed a custom branch: $branch\n";
             echo "If the above URL doesn't work, that may be why. Please check the branch spelling/existence\e[39m\n\n";
@@ -106,7 +116,7 @@ if (! $upgrade_requirements) {
         if (json_last_error()) {
             print "\e[91mJSON DECODE ERROR DETECTED:\n";
             print json_last_error_msg() . "\n\n";
-            print "Raw curl output:\n";
+            print "Raw output:\n";
             print $upgrade_requirements_raw . "\e[39m\n\n";
         }
 
