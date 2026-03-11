@@ -45,6 +45,7 @@ $branch_override = false;
 $no_interactive = false;
 $skip_backup = false;
 $pull_from_git = false;
+$is_docker = false;
 
 // Check for branch or other overrides
 if ($argc > 1){
@@ -58,6 +59,9 @@ if ($argc > 1){
                 break;
             case '--git':
                 $pull_from_git = true;
+                break;
+            case '--docker':
+                $is_docker = true;
                 break;
             case '--branch':
                 $arg++;
@@ -152,15 +156,19 @@ if ($yesno == "yes" || $yesno == "YES" ||$yesno == "y" ||$yesno == "Y"){
 
 echo "\n";
 
-if ((strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') || (!function_exists('posix_getpwuid'))) {
-	echo "Skipping user check as it is not supported on Windows or Posix is not installed on this server. \n";
-} else {
-	$pwu_data = posix_getpwuid(posix_geteuid());
-	$username = $pwu_data['name'];
+if (!$is_docker) {
+    if ((strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') || (!function_exists('posix_getpwuid'))) {
+        echo "Skipping user check as it is not supported on Windows or Posix is not installed on this server. \n";
+    } else {
+        $pwu_data = posix_getpwuid(posix_geteuid());
+        $username = $pwu_data['name'];
 
-	if (($username=='root') || ($username=='admin')) {
-		die("\n".$error_icon."ERROR: This script should not be run as root/admin. Exiting.\n\n");
-	}
+        if (($username=='root') || ($username=='admin')) {
+            die("\n".$error_icon."ERROR: This script should not be run as root/admin. Exiting.\n\n");
+        }
+    }
+} else {
+    echo "Skipping user check as --docker flag was passed. \n";
 }
 
 
