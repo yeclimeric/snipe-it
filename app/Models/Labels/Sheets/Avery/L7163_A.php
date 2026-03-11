@@ -82,7 +82,7 @@ class L7163_A extends L7163
             static::writeText(
                 $pdf, $record->get('tag'),
                 $pa->x1, $pa->y2 - self::TAG_SIZE,
-                'freemono', 'b', self::TAG_SIZE, 'C',
+                'stsongstdlight', 'b', self::TAG_SIZE, 'C',
                 $barcodeSize, self::TAG_SIZE, true, 0
             );
             static::write2DBarcode(
@@ -96,7 +96,7 @@ class L7163_A extends L7163
             static::writeText(
                 $pdf, $record->get('tag'),
                 $pa->x1, $pa->y2 - self::TAG_SIZE,
-                'freemono', 'b', self::TAG_SIZE, 'R',
+                'stsongstdlight', 'b', self::TAG_SIZE, 'R',
                 $usableWidth, self::TAG_SIZE, true, 0
             );
         }
@@ -118,14 +118,14 @@ class L7163_A extends L7163
             baseLabelPadding: 1.5,
             baseGap: 1.5,
             maxScale: 1.8,
-            labelFont: 'freesans',
+            labelFont: 'stsongstdlight',
         );
 
         if ($field_layout['hasTitle']) {
             static::writeText(
                 $pdf, $title,
                 $currentX, $currentY,
-                'freesans', 'b', $field_layout['titleSize'], 'L',
+                'stsongstdlight', 'b', $field_layout['titleSize'], 'L',
                 $usableWidth, $field_layout['titleSize'], true, 0
             );
             $currentY += $field_layout['titleAdvance'];
@@ -140,7 +140,7 @@ class L7163_A extends L7163
                 static::writeText(
                     $pdf, $value,
                     $currentX, $currentY,
-                    'freemono', 'B', $field_layout['fieldSize'], 'L',
+                    'stsongstdlight', 'B', $field_layout['fieldSize'], 'L',
                     $usableWidth, $field_layout['rowAdvance'], true, 0, 0.01
                 );
 
@@ -153,14 +153,14 @@ class L7163_A extends L7163
             static::writeText(
                 $pdf, $labelText,
                 $currentX, $currentY,
-                'freesans', '', $field_layout['labelSize'], 'L',
+                'stsongstdlight', '', $field_layout['labelSize'], 'L',
                 $field_layout['labelWidth'], $field_layout['rowAdvance'], true,
             );
 
             static::writeText(
                 $pdf, $field['value'],
                 $field_layout['valueX'], $currentY,
-                'freemono', 'B', $field_layout['fieldSize'], 'L',
+                'stsongstdlight', 'B', $field_layout['fieldSize'], 'L',
                 $field_layout['valueWidth'], $field_layout['rowAdvance'], true, 0, 0.01
             );
             $currentY += $field_layout['rowAdvance'];;

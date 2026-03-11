@@ -80,7 +80,7 @@ class L4736_A extends L4736
             static::writeText(
                 $pdf, $record->get('title'),
                 $pa->x1, $pa->y1,
-                'freesans', '', self::TITLE_SIZE, 'C',
+                'stsongstdlight', '', self::TITLE_SIZE, 'C',
                 $pa->w, self::TITLE_SIZE, true, 0
             );
 
@@ -111,7 +111,7 @@ class L4736_A extends L4736
             baseLabelPadding: 1.5,
             baseGap: 1.5,
             maxScale: 1.8,
-            labelFont: 'freesans',
+            labelFont: 'stsongstdlight',
         );
 
 
@@ -119,14 +119,14 @@ class L4736_A extends L4736
             static::writeText(
                 $pdf, $field['label'],
                 $currentX, $currentY,
-                'freesans', '', $field_layout['labelSize'], 'L',
+                'stsongstdlight', '', $field_layout['labelSize'], 'L',
                 $field_layout['labelWidth'], $field_layout['rowAdvance'], true, 0
             );
 
             static::writeText(
                 $pdf, $field['value'],
                 $field_layout['valueX'], $currentY,
-                'freemono', 'B', $field_layout['fieldSize'], 'L',
+                'stsongstdlight', 'B', $field_layout['fieldSize'], 'L',
                 $field_layout['valueWidth'], $field_layout['rowAdvance'], true, 0, 0.01
             );
             $currentY += $field_layout['rowAdvance'];

@@ -91,7 +91,7 @@ class _5267_A extends _5267
                 static::writeText(
                     $pdf, $field['value'],
                     $pa->x1, $fieldY,
-                    'freemono', 'B', self::FIELD_SIZE, 'C',
+                    'stsongstdlight', 'B', self::FIELD_SIZE, 'C',
                     $pa->w, self::FIELD_SIZE, true, 0, 0.01
                 );
             }
