@@ -253,7 +253,7 @@ class UsersController extends Controller
         }
 
         if ($request->filled('group_id')) {
-            $users = $users->ByGroup($request->get('group_id'));
+            $users = $users->ByGroup($request->input('group_id'));
         }
 
         if ($request->filled('department_id')) {
@@ -400,11 +400,11 @@ class UsersController extends Controller
 
         if ($request->filled('search')) {
             $users = $users->where(function ($query) use ($request) {
-                $query->SimpleNameSearch($request->get('search'))
-                    ->orWhere('username', 'LIKE', '%'.$request->get('search').'%')
-                    ->orWhere('display_name', 'LIKE', '%'.$request->get('search').'%')
-                    ->orWhere('email', 'LIKE', '%'.$request->get('search').'%')
-                    ->orWhere('employee_num', 'LIKE', '%'.$request->get('search').'%');
+                $query->SimpleNameSearch($request->input('search'))
+                    ->orWhere('username', 'LIKE', '%'.$request->input('search').'%')
+                    ->orWhere('display_name', 'LIKE', '%'.$request->input('search').'%')
+                    ->orWhere('email', 'LIKE', '%'.$request->input('search').'%')
+                    ->orWhere('employee_num', 'LIKE', '%'.$request->input('search').'%');
             });
         }
 
@@ -450,16 +450,24 @@ class UsersController extends Controller
         if ($request->has('permissions')) {
             $permissions_array = $request->input('permissions');
 
-            // Strip out the superuser permission if the API user isn't a superadmin
             if (! auth()->user()->isSuperUser()) {
-                unset($permissions_array['superuser']);
+                if ((is_array($permissions_array)) && (array_key_exists('superuser', $permissions_array))) {
+                    unset($permissions_array['superuser']);
+                }
             }
+
+            if (!auth()->user()->isAdmin()) {
+                if ((is_array($permissions_array)) && (array_key_exists('admin', $permissions_array))) {
+                    unset($permissions_array['admin']);
+                }
+            }
+
             $user->permissions = $permissions_array;
         }
 
         // 
         if ($request->filled('password')) {
-            $user->password = bcrypt($request->get('password'));
+            $user->password = bcrypt($request->input('password'));
         } else {
             $user->password = $user->noPassword();
         }
@@ -478,11 +486,21 @@ class UsersController extends Controller
 
             }
 
-            if ($request->filled('groups')) {
+
+            if (($request->has('groups')) && (auth()->user()->isSuperUser())) {
+
+                $validator = Validator::make($request->only('groups'), [
+                    'groups.*' => 'integer|exists:permission_groups,id',
+                ]);
+
+                if ($validator->fails()) {
+                    return response()->json(Helper::formatStandardApiResponse('error', null, $validator->errors()));
+                }
+
+                // Sync the groups since the user is a superuser and the groups pass validation
                 $user->groups()->sync($request->input('groups'));
-            } else {
-                $user->groups()->sync([]);
             }
+
 
             return response()->json(Helper::formatStandardApiResponse('success', (new UsersTransformer)->transformUser($user), trans('admin/users/message.success.create')));
         }
@@ -520,8 +538,6 @@ class UsersController extends Controller
      */
     public function update(SaveUserRequest $request, User $user): JsonResponse
     {
-        $this->authorize('update', User::class);
-
         $this->authorize('update', $user);
 
         /**
@@ -557,11 +573,43 @@ class UsersController extends Controller
                 $user->activated = $request->input('activated');
             }
 
+            // We need to use has()  instead of filled()
+            // here because we need to overwrite permissions
+            // if someone needs to null them out
+
+            if ($request->has('permissions')) {
+
+                $permissions_array = $request->input('permissions');
+                $orig_permissions_array = $user->decodePermissions();
+
+
+                // Strip out the individual superuser permission if the API user isn't a superadmin
+                if (!auth()->user()->isSuperUser()) {
+
+                    if (is_array($orig_permissions_array)) {
+                        if (array_key_exists('superuser', $orig_permissions_array)) {
+                            $permissions_array['superuser'] = $orig_permissions_array['superuser'];
+                        }
+                    }
+
+                }
+
+                // Strip out the individual admin permission if the API user isn't an admin
+                if ((!auth()->user()->isAdmin()) && (!auth()->user()->isSuperUser())) {
+
+                    if (is_array($orig_permissions_array)) {
+                        if (array_key_exists('admin', $orig_permissions_array)) {
+                            $permissions_array['admin'] = $orig_permissions_array['admin'];
+                        }
+                    }
+                }
+
+                // This is going to update the whole thing, not just what was passed
+                $user->permissions = $permissions_array;
+            }
+
         }
 
-        // We need to use has()  instead of filled()
-        // here because we need to overwrite permissions
-        // if someone needs to null them out
 
         if ($request->filled('display_name')) {
             $user->display_name = $request->input('display_name');
@@ -576,17 +624,7 @@ class UsersController extends Controller
         }
 
 
-        
-        if ($request->has('permissions')) {
-            $permissions_array = $request->input('permissions');
 
-            // Strip out the individual superuser permission if the API user isn't a superadmin
-            if (!auth()->user()->isSuperUser()) {
-                unset($permissions_array['superuser']);
-            }
-
-            $user->permissions = $permissions_array;
-        }
 
         if ($request->has('location_id')) {
             // Update the location of any assets checked out to this user
@@ -632,21 +670,27 @@ class UsersController extends Controller
 
             $this->authorize('delete', $user);
 
-            if ($user->delete()) {
+            if (auth()->user()->can('canEditAuthFields', $user) && auth()->user()->can('editableOnDemo')) {
 
-                // Remove the user's avatar if they have one
-                if (Storage::disk('public')->exists('avatars/' . $user->avatar)) {
-                    try {
-                        Storage::disk('public')->delete('avatars/' . $user->avatar);
-                    } catch (\Exception $e) {
-                        Log::debug($e);
-                    }
+                if ($user->delete()) {
+
+                    // Remove the user's avatar if they have one
+                    // @todo This should be done on purge, not here
+//                    if (Storage::disk('public')->exists('avatars/' . $user->avatar)) {
+//                        try {
+//                            Storage::disk('public')->delete('avatars/' . $user->avatar);
+//                        } catch (\Exception $e) {
+//                            Log::debug($e);
+//                        }
+//                    }
+
+                    return response()->json(Helper::formatStandardApiResponse('success', null, trans('admin/users/message.success.delete')));
                 }
 
-                return response()->json(Helper::formatStandardApiResponse('success', null, trans('admin/users/message.success.delete')));
+                return response()->json(Helper::formatStandardApiResponse('error', null, trans('admin/users/message.error.delete')));
             }
 
-            return response()->json(Helper::formatStandardApiResponse('error', null, trans('admin/users/message.error.delete')));
+            return response()->json(Helper::formatStandardApiResponse('error', null, trans('admin/users/message.cannot_delete')));
 
         }
 
@@ -795,7 +839,7 @@ class UsersController extends Controller
 
         if ($request->filled('id')) {
             try {
-                $user = User::find($request->get('id'));
+                $user = User::find($request->input('id'));
                 $this->authorize('update', $user);
                 $user->two_factor_secret = null;
                 $user->two_factor_enrolled = 0;

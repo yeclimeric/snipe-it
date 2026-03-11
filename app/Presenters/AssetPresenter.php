@@ -23,6 +23,7 @@ class AssetPresenter extends Presenter
                 'checkbox' => true,
                 'titleTooltip' => trans('general.select_all_none'),
                 'printIgnore' => true,
+                'class' => 'hidden-print'
             ], [
                 'field' => 'id',
                 'searchable' => false,
@@ -30,6 +31,21 @@ class AssetPresenter extends Presenter
                 'switchable' => true,
                 'title' => trans('general.id'),
                 'visible' => false,
+            ],  [
+                'field' => 'asset_tag',
+                'searchable' => true,
+                'sortable' => true,
+                'switchable' => false,
+                'title' => trans('admin/hardware/table.asset_tag'),
+                'visible' => true,
+                'formatter' => 'hardwareLinkFormatter',
+            ],  [
+                'field' => 'name',
+                'searchable' => true,
+                'sortable' => true,
+                'title' => trans('admin/hardware/form.name'),
+                'visible' => true,
+                'formatter' => 'hardwareLinkFormatter',
             ], [
                 'field' => 'company',
                 'searchable' => true,
@@ -39,13 +55,6 @@ class AssetPresenter extends Presenter
                 'visible' => false,
                 'formatter' => 'companiesLinkObjFormatter',
             ], [
-                'field' => 'name',
-                'searchable' => true,
-                'sortable' => true,
-                'title' => trans('admin/hardware/form.name'),
-                'visible' => true,
-                'formatter' => 'hardwareLinkFormatter',
-            ], [
                 'field' => 'image',
                 'searchable' => false,
                 'sortable' => true,
@@ -53,15 +62,7 @@ class AssetPresenter extends Presenter
                 'title' => trans('admin/hardware/table.image'),
                 'visible' => true,
                 'formatter' => 'imageFormatter',
-            ], [
-                'field' => 'asset_tag',
-                'searchable' => true,
-                'sortable' => true,
-                'switchable' => false,
-                'title' => trans('admin/hardware/table.asset_tag'),
-                'visible' => true,
-                'formatter' => 'hardwareLinkFormatter',
-            ], [
+            ],[
                 'field' => 'serial',
                 'searchable' => true,
                 'sortable' => true,
@@ -151,7 +152,16 @@ class AssetPresenter extends Presenter
                 'visible' => false,
                 'title' => trans('general.purchase_date'),
                 'formatter' => 'dateDisplayFormatter',
-            ], [
+            ],
+//            [
+//                'field' => 'first_checkout',
+//                'searchable' => true,
+//                'sortable' => true,
+//                'visible' => false,
+//                'title' => trans('general.first_checkout'),
+//                'formatter' => 'dateDisplayFormatter',
+//            ],
+            [
                 'field' => 'age',
                 'searchable' => false,
                 'sortable' => false,
@@ -349,6 +359,7 @@ class AssetPresenter extends Presenter
             'visible' => true,
             'formatter' => 'hardwareInOutFormatter',
             'printIgnore' => true,
+            'class' => 'hidden-print',
         ];
 
         $layout[] = [
@@ -359,6 +370,7 @@ class AssetPresenter extends Presenter
             'title' => trans('table.actions'),
             'formatter' => 'hardwareActionsFormatter',
             'printIgnore' => true,
+            'class' => 'hidden-print',
         ];
 
         return json_encode($layout);
@@ -439,7 +451,11 @@ class AssetPresenter extends Presenter
      */
     public function nameUrl()
     {
-        return (string) link_to_route('hardware.show', e($this->name), $this->id);
+        if (auth()->user()->can('view', ['\App\Models\Asset', $this])) {
+            return (string)link_to_route('hardware.show', e($this->display_name), $this->id);
+        } else {
+            return e($this->display_name);
+        }
     }
 
     public function modelUrl()

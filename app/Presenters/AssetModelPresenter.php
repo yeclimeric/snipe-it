@@ -17,6 +17,7 @@ class AssetModelPresenter extends Presenter
                 'checkbox' => true,
                 'titleTooltip' => trans('general.select_all_none'),
                 'printIgnore' => true,
+                'class' => 'hidden-print',
             ],
             [
                 'field' => 'id',
@@ -214,6 +215,7 @@ class AssetModelPresenter extends Presenter
             'title' => trans('table.actions'),
             'formatter' => 'modelsActionsFormatter',
             'printIgnore' => true,
+            'class' => 'hidden-print',
         ];
 
         return json_encode($layout);
@@ -304,10 +306,10 @@ class AssetModelPresenter extends Presenter
 
     public function formattedNameLink() {
 
-        if (auth()->user()->can('models.view', $this)) {
-            return '<a href="'.route('models.show', e($this->id)).'">'.e($this->name).'</a>';
+        if (auth()->user()->can('view', ['\App\Models\AssetModel', $this])) {
+            return '<a href="'.route('models.show', e($this->id)).'" class="'. (($this->deleted_at!='') ? 'deleted' : '').'">'.e($this->display_name).'</a>';
         }
 
-        return $this->name;
+        return '<span class="'. (($this->deleted_at!='') ? 'deleted' : '').'">'.e($this->display_name).'</span>';
     }
 }

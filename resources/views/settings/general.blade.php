@@ -35,9 +35,9 @@
                    <div class="col-md-12">
 
                        <fieldset>
-                           <x-form-legend>
+                           <x-form.legend>
                                {{ trans('admin/settings/general.legends.scoping') }}
-                           </x-form-legend>
+                           </x-form.legend>
                             <!-- Full Multiple Companies Support -->
                             <div class="form-group {{ $errors->has('full_multiple_companies_support') ? 'error' : '' }}">
                                 <div class="col-md-8 col-md-offset-3">
@@ -64,9 +64,9 @@
                        </fieldset>
 
                        <fieldset>
-                           <x-form-legend>
+                           <x-form.legend>
                                {{ trans('admin/settings/general.legends.formats') }}
-                           </x-form-legend>
+                           </x-form.legend>
                            <!-- Email domain -->
                            <div class="form-group {{ $errors->has('email_domain') ? 'error' : '' }}">
 
@@ -102,7 +102,12 @@
                                <label for="username_format" class="col-md-3 control-label">{{ trans('admin/settings/general.username_formats.username_format') }}</label>
 
                                <div class="col-md-8">
-                                   {!! Form::username_format('username_format', old('username_format', $setting->username_format), 'select2') !!}
+                                   <x-input.username-select
+                                       name="username_format"
+                                       :selected="old('username_format', $setting->username_format)"
+                                       style="width: 100%"
+                                       aria-label="username_format"
+                                   />
                                    {!! $errors->first('username_format', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
 
                                    <p class="help-block">
@@ -115,9 +120,9 @@
 
 
                        <fieldset>
-                           <x-form-legend>
+                           <x-form.legend>
                                {{ trans('admin/settings/general.legends.profiles') }}
-                           </x-form-legend>
+                           </x-form.legend>
                            <!-- user profile edit checkbox -->
                            <div class="form-group">
                                <div class="col-md-8 col-md-offset-3">
@@ -131,9 +136,9 @@
                        </fieldset>
 
                        <fieldset>
-                           <x-form-legend>
+                           <x-form.legend>
                                {{ trans('admin/settings/general.legends.eula') }}
-                           </x-form-legend>
+                           </x-form.legend>
 
                            <!-- Require signature for acceptance -->
                            <div class="form-group {{ $errors->has('require_accept_signature') ? 'error' : '' }}">
@@ -167,9 +172,9 @@
                        </fieldset>
 
                        <fieldset>
-                           <x-form-legend>
+                           <x-form.legend>
                                {{ trans('admin/settings/general.legends.misc_display') }}
-                           </x-form-legend>
+                           </x-form.legend>
 
                            <!-- Thumb Size -->
                            <div class="form-group {{ $errors->has('thumbnail_max_h') ? 'error' : '' }}">
@@ -248,9 +253,9 @@
 
 
                        <fieldset>
-                           <x-form-legend>
+                           <x-form.legend>
                                {{ trans('general.email') }}
-                           </x-form-legend>
+                           </x-form.legend>
 
                            <!-- Mail test -->
                            <div class="form-group">
@@ -292,9 +297,9 @@
 
 
                        <fieldset name="checkin-preferences"">
-                           <x-form-legend>
+                           <x-form.legend>
                                {{ trans('admin/settings/general.legends.checkin') }}
-                           </x-form-legend>
+                           </x-form.legend>
 
                            <!-- Require Notes on checkin/checkout checkbox -->
                                <div class="form-group">
@@ -313,9 +318,9 @@
 
 
                        <fieldset name="dashboard">
-                           <x-form-legend>
+                           <x-form.legend>
                                {{ trans('admin/settings/general.legends.dashboard') }}
-                           </x-form-legend>
+                           </x-form.legend>
 
                            <!-- login text -->
                            <div class="form-group {{ $errors->has('login_note') ? 'error' : '' }}">
@@ -375,9 +380,9 @@
 
 
                        <fieldset>
-                           <x-form-legend>
+                           <x-form.legend>
                                {{ trans('admin/settings/general.legends.misc') }}
-                           </x-form-legend>
+                           </x-form.legend>
 
                            <!-- Privacy Policy Footer-->
                            <div class="form-group {{ $errors->has('privacy_policy_link') ? 'error' : '' }}">
@@ -437,10 +442,8 @@
 
                            <!-- Manager View -->
                            <div class="form-group {{ $errors->has('manager_view_enabled') ? 'error' : '' }}">
-                               <div class="col-md-3">
-                                   <strong>{{ trans('admin/settings/general.manager_view') }}</strong>
-                               </div>
-                               <div class="col-md-8">
+
+                               <div class="col-md-8 col-md-offset-3">
                                    <label class="form-control">
                                        <input type="checkbox" value="1" name="manager_view_enabled" {{ (old('manager_view_enabled', $setting->manager_view_enabled)) == '1' ? ' checked="checked"' : '' }} aria-label="manager_view_enabled">
                                        {{ trans('admin/settings/general.manager_view_enabled_text') }}

@@ -34,7 +34,7 @@ class SaveUserRequest extends FormRequest
     {
         $rules = [
             'department_id' => 'nullable|integer|exists:departments,id',
-            'manager_id' => 'nullable|exists:users,id',
+            'manager_id' => 'nullable|integer|exists:users,id',
             'company_id' => ['nullable', 'integer', 'exists:companies,id']
         ];
 
@@ -44,7 +44,7 @@ class SaveUserRequest extends FormRequest
             case 'POST':
                 $rules['first_name'] = 'required|string|min:1';
                 $rules['username'] = 'required_unless:ldap_import,1|string|min:1';
-                if ($this->request->get('ldap_import') == false) {
+                if ($this->input('ldap_import') == false) {
                     $rules['password'] = Setting::passwordComplexityRulesSaving('store').'|confirmed';
                 }
                 break;

@@ -21,6 +21,13 @@ class ComponentPresenter extends Presenter
                 'switchable' => true,
                 'title' => trans('general.id'),
                 'visible' => false,
+            ], [
+                'field' => 'name',
+                'searchable' => true,
+                'sortable' => true,
+                'title' => trans('general.name'),
+                'visible' => true,
+                'formatter' => 'componentsLinkFormatter',
             ],
             [
                 'field' => 'company',
@@ -31,14 +38,7 @@ class ComponentPresenter extends Presenter
                 'visible' => false,
                 'formatter' => 'companiesLinkObjFormatter',
             ],
-            [
-                'field' => 'name',
-                'searchable' => true,
-                'sortable' => true,
-                'title' => trans('general.name'),
-                'visible' => true,
-                'formatter' => 'componentsLinkFormatter',
-            ], [
+             [
                 'field' => 'image',
                 'searchable' => false,
                 'sortable' => true,
@@ -186,6 +186,65 @@ class ComponentPresenter extends Presenter
             'title' => trans('table.actions'),
             'formatter' => 'componentsActionsFormatter',
             'printIgnore' => true,
+            'class' => 'hidden-print',
+        ];
+
+        return json_encode($layout);
+    }
+
+    public static function checkedOut() {
+        $layout = [
+            [
+                'field' => 'id',
+                'searchable' => false,
+                'sortable' => true,
+                'switchable' => true,
+                'title' => trans('general.id'),
+                'visible' => false,
+            ],
+            [
+                'field' => 'name',
+                'searchable' => true,
+                'sortable' => true,
+                'title' => trans('general.name'),
+                'visible' => true,
+                'formatter' => 'hardwareLinkFormatter',
+            ],
+            [
+                'field' => 'qty',
+                'searchable' => true,
+                'sortable' => true,
+                'switchable' => true,
+                'title' => trans('general.qty'),
+                'visible' => true,
+            ],
+            [
+                'field' => 'note',
+                'searchable' => true,
+                'sortable' => true,
+                'visible' => true,
+                'title' => trans('general.notes'),
+                'formatter' => 'notesFormatter',
+            ],[
+                'field' => 'created_at',
+                'searchable' => false,
+                'sortable' => true,
+                'visible' => false,
+                'title' => trans('general.created_at'),
+                'formatter' => 'dateDisplayFormatter',
+            ],
+            $layout[] = [
+                'field' => 'available_actions',
+                'searchable' => false,
+                'sortable' => false,
+                'switchable' => false,
+                'title' => trans('general.checkin').'/'.trans('general.checkout'),
+                'visible' => true,
+                'formatter' => 'componentsInOutFormatter',
+                'printIgnore' => true,
+                'class' => 'hidden-print',
+
+            ],
         ];
 
         return json_encode($layout);
@@ -197,7 +256,11 @@ class ComponentPresenter extends Presenter
      */
     public function nameUrl()
     {
-        return (string) link_to_route('consumables.show', e($this->name), $this->id);
+        if (auth()->user()->can('view', ['\App\Models\Component', $this])) {
+            return (string)link_to_route('components.show', e($this->display_name), $this->id);
+        } else {
+            return e($this->display_name);
+        }
     }
 
     /**

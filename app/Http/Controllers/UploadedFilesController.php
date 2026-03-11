@@ -56,7 +56,7 @@ class UploadedFilesController extends Controller
             foreach ($request->file('file') as $file) {
                 $file_name = $request->handleFile(self::$map_storage_path[$object_type], self::$map_file_prefix[$object_type].'-'.$object->id, $file);
                 $files[] = $file_name;
-                $object->logUpload($file_name, $request->get('notes'));
+                $object->logUpload($file_name, $request->input('notes'));
             }
 
             $files = Actionlog::select('action_logs.*')->where('action_type', '=', 'uploaded')
@@ -133,7 +133,7 @@ class UploadedFilesController extends Controller
 
         // Check the permissions to make sure the user can view the object
         $object = self::$map_object_type[$object_type]::withTrashed()->find($id);
-        $this->authorize('update', self::$map_object_type[$object_type]);
+        $this->authorize('update', $object);
 
         if (!$object) {
             return redirect()->back()->withFragment('files')->with('error',trans('general.file_upload_status.invalid_object'));
