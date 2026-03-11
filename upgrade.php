@@ -427,6 +427,12 @@ $dirs_not_writable = '';
 
 // Loop through the directories that need to be writable
 foreach ($writable_dirs_array as $writable_dir) {
+    if (!is_dir($writable_dir)) {
+        if (!mkdir($writable_dir, 0775, true)) {
+            $dirs_not_writable .= $error_icon.' ERROR: '.getcwd().'/'.$writable_dir." could not be created\n";
+            continue;
+        }
+    }
     if (is_writable($writable_dir)) {
         $dirs_writable .= $success_icon.' '.getcwd().'/'.$writable_dir." is writable \n";
     } else {
